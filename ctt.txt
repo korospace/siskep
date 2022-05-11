@@ -1,0 +1,4 @@
+bug
+1- field subagian masih ada di akun kabag
+2- kabag bisa delete diri sendiri dan akun selevel
+2- kasubag bisa delete diri sendiri dan akun selevel
