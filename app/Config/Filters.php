@@ -12,6 +12,8 @@ use CodeIgniter\Filters\SecureHeaders;
 use App\Filters\AdminApiGuard;
 use App\Filters\AdminKabagApiGuard;
 use App\Filters\NonPegawaiApiGuard;
+use App\Filters\DashboardGuard;
+use App\Filters\LoggedGuard;
 
 class Filters extends BaseConfig
 {
@@ -30,6 +32,8 @@ class Filters extends BaseConfig
         'AdminApiGuard' => AdminApiGuard::class,
         'AdminKabagApiGuard' => AdminKabagApiGuard::class,
         'NonPegawaiApiGuard' => NonPegawaiApiGuard::class,
+        'LoggedGuard'        => LoggedGuard::class,
+        'DashboardGuard'     => DashboardGuard::class,
     ];
 
     /**

@@ -31,9 +31,23 @@ $routes->setAutoRoute(true);
 
 // Login & Logout
 $routes->group("login", function ($routes) {
+    $routes->get(
+        '/', 
+        'Login::index', 
+        ['filter' => 'LoggedGuard']
+    );
     $routes->get('show',      'Login::show');  
     $routes->post('create',   'Login::create');
     $routes->delete('delete', 'Login::delete');
+});
+
+// Dashboard
+$routes->group("dashboard", function ($routes) {
+    $routes->get(
+        '/', 
+        'Dashboard::index', 
+        ['filter' => 'DashboardGuard']
+    );
 });
 
 // crud bagian

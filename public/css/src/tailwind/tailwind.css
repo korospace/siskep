@@ -1,0 +1,26 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.label_fly input::placeholder{
+    transition: all 0.5s;
+    color: white;
+    opacity: 1; /* Firefox */
+}
+
+.label_fly input:focus-within ~ label,
+.label_fly input:not(:placeholder-shown) ~ label {
+  @apply z-0 ml-3 px-1.5 py-0 text-zinc-600 transform scale-75 -translate-x-4 -translate-y-7;
+}
+
+.alert-success{
+    @apply bg-emerald-300 text-green-700 border border-emerald-400;
+}
+
+.alert-warning{
+    @apply bg-amber-200 text-yellow-700 border border-amber-300;
+}
+
+.alert-danger{
+    @apply bg-red-200 text-red-700 border border-red-300;
+}
