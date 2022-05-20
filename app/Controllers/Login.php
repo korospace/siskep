@@ -24,7 +24,8 @@ class Login extends ResourceController
     public function index()
     {
         $data = [
-            'title' => 'login'
+            'title'   => 'login',
+            'lasturl' => (isset($_COOKIE['lasturl'])) ? $_COOKIE['lasturl'] : '',
         ];
 
         return view("Login/index",$data);
@@ -71,9 +72,8 @@ class Login extends ResourceController
                 ]; 
             } 
             else {
-                
                 $dbresult = (array)$this->db->table("users")
-                ->select("users.id as id,users.username,users.password,users.id_previlege,user_type.type as previlege,user_detail.nik,user_detail.email,user_detail.nama_lengkap,user_detail.agama,user_detail.tgl_lahir,user_detail.pendidikan,user_detail.golongan,user_detail.masa_kerja,user_detail.alamat,user_detail.kelamin,user_detail.notelp,user_detail_bag.bag_name as bagian,user_detail_subag.subag_name as subagian")
+                ->select("users.id as id,users.password,users.id_previlege,user_type.type as previlege,user_detail_bag.bag_name as bagian,user_detail_subag.subag_name as subagian")
                 ->join("user_type"        ,"users.id_previlege = user_type.id")
                 ->join("user_detail"      ,"users.id = user_detail.user_id", 'left')
                 ->join("user_detail_bag"  ,"users.id = user_detail_bag.user_id", 'left')
@@ -101,19 +101,7 @@ class Login extends ResourceController
                             "user_id" => $dbresult["id"],
                             "token"   => TokenUtil::generateToken([
                                 "user_id"      => $dbresult["id"],
-                                "username"     => $post["username"],
                                 "password"     => $post["password"],
-                                "nik"          => $dbresult["nik"],
-                                "email"        => $dbresult["email"],
-                                "nama_lengkap" => $dbresult["nama_lengkap"],
-                                "agama"        => $dbresult["agama"],
-                                "tgl_lahir"    => $dbresult["tgl_lahir"],
-                                "pendidikan"   => $dbresult["pendidikan"],
-                                "golongan"     => $dbresult["golongan"],
-                                "masa_kerja"   => $dbresult["masa_kerja"],
-                                "alamat"       => $dbresult["alamat"],
-                                "kelamin"      => $dbresult["kelamin"],
-                                "notelp"       => $dbresult["notelp"],
                                 "id_previlege" => $dbresult["id_previlege"],
                                 "previlege"    => $dbresult["previlege"],
                                 "bagian"       => $dbresult["bagian"],

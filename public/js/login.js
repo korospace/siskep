@@ -1,3 +1,4 @@
+
 $('#form_login').on('submit', function(e) {
     e.preventDefault();
 
@@ -13,9 +14,14 @@ $('#form_login').on('submit', function(e) {
         })
         .then((response) => {
             hideLoadingSpinner();
+            
+            let url = BASE_URL;
+            if (LASTURL != '' && LASTURL != 'null' && LASTURL != null) {
+                url = LASTURL;
+            }
 
             document.cookie = `token=${response.data.data.token}; path=/;SameSite=None; Secure`;
-            window.location.replace(`${BASE_URL}`);
+            window.location.replace(url);
         })
         .catch((error) => {
             hideLoadingSpinner();

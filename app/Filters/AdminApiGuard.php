@@ -31,7 +31,7 @@ class AdminApiGuard implements FilterInterface
         $authHeader = $request->getHeader('token');
         $token      = ($authHeader != null) ? $authHeader->getValue() : null;
         $result     = TokenUtil::checkToken($token);
-        $GLOBALS["previlege"] = $result['data']['previlege'];
+        $GLOBALS["g_previlege"] = $result['data']['previlege'];
 
         if ($result['data']['previlege'] != 'admin') {
             Utils::httpResponse([

@@ -10,12 +10,12 @@
 <?= $this->section('jsComponent'); ?>
     <script>
         async function getDataProfile() {
-            let httpResponse = await httpRequestGet(`${BASE_URL}/login/show`);
-            
+            let httpResponse = await httpRequestGet(`${BASE_URL}/user/profile`);
+
             if (httpResponse.status === 200) {
                 let data = httpResponse.data.data;
                 $("#edit_prof_admin #username").val(data.username);
-                $("#edit_prof_admin #new_password").val(data.password);
+                $("#edit_prof_admin #new_password").val(PASSWORD);
             }
         }
 
@@ -64,18 +64,20 @@
                         type:'success'
                     })
 
-                    setTimeout(() => {
-                        Swal.fire({
-                            icon  : 'info',
-                            title : '<strong>INFO</strong>',
-                            html  : 'Profile telah diupdate, silahkan login ulang',
-                            showCancelButton: false,
-                            confirmButtonText: 'ok',
-                        })
-                        .then(() => {
-                            doLogout();
-                        })
-                    }, 2000);
+                    if (form.get("new_password") !== PASSWORD) {
+                        setTimeout(() => {
+                            Swal.fire({
+                                icon  : 'info',
+                                title : '<strong>INFO</strong>',
+                                html  : 'Password telah diubah, silahkan login ulang',
+                                showCancelButton: false,
+                                confirmButtonText: 'ok',
+                            })
+                            .then(() => {
+                                doLogout();
+                            })
+                        }, 2000);
+                    }
                 }
                 else if (httpResponse.status === 400) {
                     if (httpResponse.message.username) {
@@ -104,7 +106,7 @@
             let status = true;
 
             // clear error message first
-            $('#username_wraper').addClass('border-zinc-400');
+            $('.label_fly').addClass('border-zinc-400');
             $('.label_fly').removeClass('border-red-500');
 
             // email validation

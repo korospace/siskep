@@ -30,10 +30,11 @@
   <script src="<?= base_url('js/plugins/axios.min.js'); ?>"></script>
   <script src="<?= base_url('js/plugins/sweetalert2.min.js'); ?>"></script>
   <script src="<?= base_url('js/plugins/font-awesome.min.js'); ?>"></script>
-  <!-- <script src="https://kit.fontawesome.com/8b503c378c.js" crossorigin="anonymous"></script> -->
   <script>
     const TOKEN    = "<?= (isset($token)) ? $token : null; ?>";
+    const PASSWORD = "<?= (isset($password)) ? $password : null; ?>";
     const BASE_URL = "<?= base_url() ?>";
+    const LASTURL  = "<?= (isset($lasturl)) ? $lasturl : null; ?>"; //login controller
   </script>
   <script src="<?= base_url('js/parent.js'); ?>"></script>
   <?= $this->renderSection('jsComponent'); ?>

@@ -67,7 +67,7 @@ $('#toggle_nav').on('click', function(e) {
     let newForm = new FormData();
 
     for (var pair of form.entries()) {
-        let noPair = ['username','new_password'];
+        let noPair = ['username','password','new_password','email'];
 
         if (noPair.includes(pair[0]) == false) {
             // newForm.set(pair[0], pair[1].trim().toLowerCase());

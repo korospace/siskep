@@ -9,6 +9,7 @@
 <?= $this->section('jsComponent'); ?>
     <script>
         function showAlert(data) {
+            $('#alert').removeClass('alert-success alert-danger alert-warning alert-info');
             $('#alert #message').html(data.message);
             $('#alert').removeClass(`none -translate-y-4 opacity-0`);
             $('#alert').addClass(`alert-${data.type}`);

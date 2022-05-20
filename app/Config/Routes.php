@@ -36,6 +36,13 @@ $routes->get(
     ['filter' => 'DashboardGuard']
 );
 
+// Edit profile
+$routes->get(
+    '/update_profile', 
+    'Dashboard::updateProfile', 
+    ['filter' => 'DashboardGuard']
+);
+
 // Login & Logout
 $routes->group("login", function ($routes) {
     $routes->get(
@@ -92,6 +99,11 @@ $routes->group("user", function ($routes) {
         'previlege', 
         'Users::getPrevilege', 
         ['filter' => 'AdminKabagApiGuard']
+    );
+    $routes->get(
+        'profile', 
+        'Users::getProfile', 
+        ['filter' => 'ApiGuard']
     );
     $routes->get(
         'show', 

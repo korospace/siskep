@@ -126,7 +126,7 @@ class Validation
 		'email' => [
             'rules'  => 'required|max_length[255]|is_unique[user_detail.email]|valid_email',
             'errors' => [
-                'required'    => 'email is required',
+                'required'    => 'email harus diisi',
                 'is_unique'   => 'email sudah terdaftar',
                 'valid_email' => 'email is not in format',
                 'max_length'  => 'maximal 255 character',
@@ -142,7 +142,7 @@ class Validation
         'pendidikan' => [
             'rules'  => 'required|max_length[255]',
             'errors' => [
-                'required'    => 'pendidikan is required',
+                'required'    => 'pendidikan harus diisi',
                 'max_length'  => 'maximal 255 character',
             ],
 		],
@@ -259,7 +259,7 @@ class Validation
 		'email' => [
             'rules'  => 'required|max_length[255]|is_unique[user_detail.email,user_detail.user_id,{id}]|valid_email',
             'errors' => [
-                'required'    => 'email is required',
+                'required'    => 'email harus diisi',
                 'is_unique'   => 'email sudah terdaftar',
                 'valid_email' => 'email is not in format',
                 'max_length'  => 'maximal 255 character',
@@ -275,7 +275,7 @@ class Validation
         'pendidikan' => [
             'rules'  => 'required|max_length[255]',
             'errors' => [
-                'required'    => 'pendidikan is required',
+                'required'    => 'pendidikan harus diisi',
                 'max_length'  => 'maximal 255 character',
             ],
 		],
@@ -365,8 +365,8 @@ class Validation
             'rules'  => 'required|min_length[8]|max_length[20]|is_unique[users.username,users.id,{id}]',
             'errors' => [
                 'required'    => 'username harus diisi',
-                'min_length'  => 'minimal 8 character',
-                'max_length'  => 'maximal 20 character',
+                'min_length'  => 'username minimal 8 character',
+                'max_length'  => 'username maximal 20 character',
                 'is_unique'   => 'username sudah terdaftar',
             ],
 		],
@@ -374,69 +374,69 @@ class Validation
             'rules'  => 'required|max_length[20]|is_unique[user_detail.nik,user_detail.user_id,{id}]|is_natural',
             'errors' => [
                 'required'    => 'nik harus diisi',
-                'max_length'  => 'maximal 20 character',
+                'max_length'  => 'nik maximal 20 character',
                 'is_unique'   => 'nik sudah terdaftar',
-                'is_natural'  => 'hanya boleh angka',
+                'is_natural'  => 'nik hanya boleh angka',
             ],
 		],
 		'nama_lengkap' => [
             'rules'  => 'required|max_length[255]',
             'errors' => [
                 'required'    => 'nama lengkap harus diisi',
-                'max_length'  => 'maximal 255 character',
+                'max_length'  => 'nama lengkap maximal 255 character',
             ],
 		],
 		'email' => [
             'rules'  => 'required|max_length[255]|is_unique[user_detail.email,user_detail.user_id,{id}]|valid_email',
             'errors' => [
-                'required'    => 'email is required',
+                'required'    => 'email harus diisi',
                 'is_unique'   => 'email sudah terdaftar',
                 'valid_email' => 'email is not in format',
-                'max_length'  => 'maximal 255 character',
+                'max_length'  => 'email maximal 255 character',
             ],
 		],
 		'agama' => [
             'rules'  => 'required|in_list[islam,protestan,katolik,budha,hindu,khonghucu]',
             'errors' => [
                 'required'    => 'agama harus disi',
-                'in_list'     => "nilai harus 'islam/protestan/katolik/budha/hindu/khonghucu'",
+                'in_list'     => "agama harus 'islam/protestan/katolik/budha/hindu/khonghucu'",
             ],
 		],
         'pendidikan' => [
-            'rules'  => 'required|max_length[255]',
+            'rules'  => 'required|max_length[20]',
             'errors' => [
-                'required'    => 'pendidikan is required',
-                'max_length'  => 'maximal 255 character',
+                'required'    => 'pendidikan harus diisi',
+                'max_length'  => 'pendidikan maximal 20 character',
             ],
 		],
 		'tgl_lahir' => [
             'rules'  => 'required|regex_match[/^(0[1-9]|[12][0-9]|3[01])[\-\ ](0[1-9]|1[012])[\-\ ](19|20)\d\d$/]',
             'errors' => [
                 'required'    => 'tgl lahir harus diisi',
-                'regex_match' => 'format must be dd-mm-yyyy',
+                'regex_match' => 'format tgl lahir harus dd-mm-yyyy',
             ],
 		],
 		'alamat' => [
             'rules'  => 'required|max_length[255]',
             'errors' => [
                 'required'    => 'alamat harus diisi',
-                'max_length'  => 'maximal 255 character',
+                'max_length'  => 'alamat maximal 255 character',
             ],
 		],
 		'kelamin' => [
             'rules'  => 'required|in_list[laki-laki,perempuan]',
             'errors' => [
                 'required'    => 'kelamin harus disi',
-                'in_list'     => "nilai harus 'laki-laki' atau 'perempuan'",
+                'in_list'     => "kelamin harus 'laki-laki' atau 'perempuan'",
             ],
 		],
 		'notelp' => [
             'rules'  => 'required|max_length[20]|is_unique[user_detail.notelp,user_detail.user_id,{id}]|is_natural',
             'errors' => [
-                'required'    => 'nomor telepon harus diisi',
-                'max_length'  => 'maximal 20 character',
+                'required'    => 'no.telp harus diisi',
+                'max_length'  => 'no.telp maximal 20 character',
                 'is_unique'   => 'no.telp sudah dipakai',
-                'is_natural'  => 'hanya boleh angka',
+                'is_natural'  => 'no.telp hanya boleh angka',
             ],
 		]
     ];

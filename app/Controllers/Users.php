@@ -54,6 +54,37 @@ class Users extends ResourceController
     }
 
     /**
+     * Get Data Profile
+     * ============
+     * - api for display profle user
+     * - previlege     : admin
+     * - url           : /user/proflie
+     * - Method        : GET
+     * - request header: token
+     */
+    public function getProfile()
+    {
+        global $g_user_id;
+
+        $dbresult = (array)$this->db->table("users")
+        ->select("users.id as id,users.username,users.password,users.id_previlege,user_type.type as previlege,user_detail.nik,user_detail.email,user_detail.nama_lengkap,user_detail.agama,user_detail.tgl_lahir,user_detail.pendidikan,user_detail.golongan,user_detail.masa_kerja,user_detail.alamat,user_detail.kelamin,user_detail.notelp,user_detail_bag.bag_name as bagian,user_detail_subag.subag_name as subagian")
+        ->join("user_type"        ,"users.id_previlege = user_type.id")
+        ->join("user_detail"      ,"users.id = user_detail.user_id", 'left')
+        ->join("user_detail_bag"  ,"users.id = user_detail_bag.user_id", 'left')
+        ->join("user_detail_subag","users.id = user_detail_subag.user_id", 'left')
+        ->getWhere(["users.id"=>$g_user_id])
+        ->getFirstRow();
+
+        $respond  = [
+            "code"  => 200,
+            "error" => false,
+            "data"  => $dbresult
+        ];
+
+        return $this->respond($respond,$respond['code']);
+    }
+
+    /**
      * Show All users
      * ============
      * - api for get users data

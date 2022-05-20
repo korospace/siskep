@@ -38,6 +38,7 @@ class DashboardGuard implements FilterInterface
         } 
         else {
             $GLOBALS["g_token"]        = $token;
+            $GLOBALS["g_password"]     = $result['data']['password'];
             $GLOBALS["g_previlege"]    = $result['data']['previlege'];
             $GLOBALS["g_id_previlege"] = $result['data']['id_previlege'];
             $GLOBALS["g_bagian"]   = isset($result['data']['bagian'])   ? $result['data']['bagian']   : null;

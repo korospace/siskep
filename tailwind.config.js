@@ -521,6 +521,7 @@ module.exports = {
       4: 'repeat(4, minmax(0, 1fr))',
       5: 'repeat(5, minmax(0, 1fr))',
       6: 'repeat(6, minmax(0, 1fr))',
+      11: 'repeat(11, minmax(0, 1fr))',
     },
     height: ({ theme }) => ({
       auto: 'auto',
