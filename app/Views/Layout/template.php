@@ -1,12 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <title>instansi | <?= $title ?></title>
+  <title>SISKEP | <?= $title ?></title>
 
   <!-- Required meta tags -->
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  
+  <link rel="shortcut icon" href="<?= base_url('images/logo-kemendagri.webp') ?>" type="image/x-icon">
+
   <!-- Render Css -->
   <?= $this->renderSection('contentCss'); ?>
   <link rel="stylesheet" href="<?= base_url('css/dist/tailwind/tailwind.css') ?>">

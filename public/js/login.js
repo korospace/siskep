@@ -15,7 +15,7 @@ $('#form_login').on('submit', function(e) {
             hideLoadingSpinner();
 
             document.cookie = `token=${response.data.data.token}; path=/;SameSite=None; Secure`;
-            window.location.replace(`${BASE_URL}/dashboard`);
+            window.location.replace(`${BASE_URL}`);
         })
         .catch((error) => {
             hideLoadingSpinner();
@@ -44,16 +44,19 @@ function validateLogin() {
     let status = true;
 
     // clear error message first
+    $('#username_wraper').addClass('border-zinc-400');
     $('.label_fly').removeClass('border-red-500');
 
     // email validation
     if ($('#username').val() == '') {
-        $('#username_wraper').addClass('border-2 border-red-500');
+        $('#username_wraper').removeClass('border-zinc-400');
+        $('#username_wraper').addClass('border-red-500');
         status = false;
     }
     // password validation
     if ($('#password').val() == '') {
-        $('#password_wraper').addClass('border-2 border-red-500');
+        $('#password_wraper').removeClass('border-zinc-400');
+        $('#password_wraper').addClass('border-red-500');
         status = false;
     }
 

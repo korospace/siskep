@@ -162,20 +162,20 @@ class Users extends ResourceController
             if (isset($post["id_previlege"]) && in_array($post["id_previlege"],["2","3","4"])) 
             {
                 if ($g_bagian != null) {
-                    $put["bagian"] = $g_bagian;
+                    $post["bagian"] = $g_bagian;
                 }
                 else {
-                    $put["bagian"] = isset($put["bagian"]) ? $put["bagian"] : "";
+                    $post["bagian"] = isset($post["bagian"]) ? $post["bagian"] : "";
                 }
                 $this->validation->run($post,'createUserBagValidate');
             }
             if (isset($post["id_previlege"]) && in_array($post["id_previlege"],["3","4"])) 
             {
                 if ($g_subagian != null) {
-                    $put["subagian"] = $g_subagian;
+                    $post["subagian"] = $g_subagian;
                 }
                 else {
-                    $put["subagian"] = isset($put["subagian"]) ? $put["subagian"] : "";
+                    $post["subagian"] = isset($post["subagian"]) ? $post["subagian"] : "";
                 }
                 $this->validation->run($post,'createUserSubagValidate');
             }
@@ -209,6 +209,7 @@ class Users extends ResourceController
                     "agama"        => htmlspecialchars(strtolower($post["agama"])),
                     "pendidikan"   => htmlspecialchars(strtolower($post["pendidikan"])),
                     "golongan"     => htmlspecialchars(strtolower($post["golongan"])),
+                    "masa_kerja"   => $post["masa_kerja"],
                     "tgl_lahir"    => $post["tgl_lahir"],
                     "alamat"       => htmlspecialchars(strtolower($post["alamat"])),
                     "kelamin"      => $post["kelamin"],
@@ -371,18 +372,17 @@ class Users extends ResourceController
                     "agama"        => htmlspecialchars(strtolower($put["agama"])),
                     "pendidikan"   => htmlspecialchars(strtolower($put["pendidikan"])),
                     "golongan"     => htmlspecialchars(strtolower($put["golongan"])),
+                    "masa_kerja"   => $put["masa_kerja"],
                     "tgl_lahir"    => $put["tgl_lahir"],
                     "alamat"       => htmlspecialchars(strtolower($put["alamat"])),
                     "kelamin"      => $put["kelamin"],
                     "notelp"       => $put["notelp"],
                 ];
 
-                $this->db->table("users")
+                $updateStatus = $this->db->table("users")
                     ->where("id",$put["id"])
                     ->whereIn("id_previlege",$allowedPrevilegeArr)
                     ->update($data_users);
-
-                $affectedRows = $this->db->affectedRows();
 
                 $this->db->table("user_detail")
                     ->where("user_id",$put["id"])
@@ -404,17 +404,117 @@ class Users extends ResourceController
                 }
                 
                 $respond = [
-                    'code'    => ($affectedRows) ? 201   : 401,
-                    'error'   => ($affectedRows) ? false : true,
-                    'message' => ($affectedRows) ? "pegawai dengan nama:".$put["nama_lengkap"]." berhasil diupdate" : "access denied"
+                    'code'    => ($updateStatus) ? 201   : 401,
+                    'error'   => ($updateStatus) ? false : true,
+                    'message' => ($updateStatus) ? "pegawai dengan nama:".$put["nama_lengkap"]." berhasil diupdate" : "access denied"
                 ];
 
-                if ($affectedRows) {
+                if ($updateStatus) {
                     $this->db->transCommit();
                 } 
                 else {
                     $this->db->transRollback();
                 }
+            }
+        } 
+        catch (\Throwable $th) {
+            $this->db->transRollback();
+            $respond = [
+                "error"   => true,
+                "code"    => 500,
+                "message" => $th->getMessage(),
+                "debug"   => $th->getTraceAsString()
+            ];
+        }
+
+        return $this->respond($respond,$respond['code']);
+    }
+
+    /**
+     * Update Profile
+     * ============
+     * - api for update profile
+     * - previlege     : admin,kabag,kasubag,pegawau
+     * - url           : /user/update_profile
+     * - Method        : PUT
+     * - request header: token
+     */
+    public function updateProfile()
+    {
+        try {
+            Utils::_methodParser("put");
+            global $put;
+            global $g_user_id;
+            global $g_previlege;
+
+            $put["id"] = $g_user_id;
+
+            if ($g_previlege=="admin") {
+                $this->validation->run($put,'updateProfileAdminValidate');
+            } 
+            else {
+                $this->validation->run($put,'updateProfileValidate');
+            }
+
+            if (isset($put["new_password"])) {
+                $this->validation->run($put,'newPasswordValidate');
+            }
+
+            $errors = $this->validation->getErrors();
+            
+            if ($errors) {
+                $respond = [
+                    'code'    => 400,
+                    'error'   => true,
+                    'message' => $errors,
+                ]; 
+            } 
+            else {
+                $this->db->transBegin();
+
+                $data_users = [
+                    "username" => htmlspecialchars($put["username"]),
+                ];
+
+                if (isset($put["new_password"])) {
+                    $data_users["password"] = password_hash($put["new_password"],PASSWORD_DEFAULT); 
+                }
+
+                $this->db->table("users")
+                    ->where("id",$put["id"])
+                    ->update($data_users);
+                $affectedRows1 = $this->db->affectedRows();
+                $affectedRows2 = 0;
+                
+                if ($g_previlege!="admin") {
+                    $data_user_detail = [
+                        "nik"          => htmlspecialchars($put["nik"]),
+                        "nama_lengkap" => htmlspecialchars(strtolower($put["nama_lengkap"])),
+                        "email"        => $put["email"],
+                        "agama"        => htmlspecialchars(strtolower($put["agama"])),
+                        "pendidikan"   => htmlspecialchars(strtolower($put["pendidikan"])),
+                        "tgl_lahir"    => $put["tgl_lahir"],
+                        "alamat"       => htmlspecialchars(strtolower($put["alamat"])),
+                        "kelamin"      => $put["kelamin"],
+                        "notelp"       => $put["notelp"],
+                    ];
+
+                    $this->db->table("user_detail")
+                        ->where("user_id",$put["id"])
+                        ->update($data_user_detail);
+                    
+                    $affectedRows2 = $this->db->affectedRows();
+                }
+
+                $affectedRows = $affectedRows1+$affectedRows2;
+                
+                $respond = [
+                    'code'    => 201,
+                    'error'   => false,
+                    'message' => ($affectedRows!=0) ? "profile berhasil diupdate!" : "tidak ada yang diubah"
+                ];
+
+                $this->db->transCommit();
             }
         } 
         catch (\Throwable $th) {

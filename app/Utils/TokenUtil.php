@@ -54,6 +54,8 @@ class TokenUtil {
             $decoded = (array)$decoded;
 
             if ($dbcheck == false) {
+                $decoded["expired"] = $decoded["expired"]-time();
+                
                 return [
                     'error' => false,
                     'code'  => 200,
@@ -64,7 +66,9 @@ class TokenUtil {
                 $dbresult = self::dbconnect()->table("user_token")
                     ->getWhere(["token" => $token])
                     ->getFirstRow();
-
+                
+                $decoded["expired"] = $decoded["expired"]-time();
+                
                 if (!is_null($dbresult)) {
                     return [
                         'error' => false,

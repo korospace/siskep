@@ -9,6 +9,128 @@ $('#toggle_nav').on('click', function(e) {
 })
 
 /**
+ * API REQUEST GET
+ */
+ const httpRequestGet = (url) => {
+
+    return axios
+        .get(url,{
+            headers: {
+                token: TOKEN
+            }
+        })
+        .then((response) => {
+            return {
+                'status':200,
+                'data':response.data
+            };
+        })
+        .catch((error) => {
+            // unauthorized
+            if (error.response.status == 401) {
+                if (error.response.data.messages == 'token expired') {
+                    Swal.fire({
+                        icon : 'error',
+                        title : '<strong>LOGIN EXPIRED</strong>',
+                        text: 'silahkan login ulang untuk perbaharui login anda',
+                        showCancelButton: false,
+                        confirmButtonText: 'ok',
+                    }).then(() => {
+                        document.cookie = `token=null;expires=;path=/;SameSite=None; Secure`;
+                        window.location.replace(`${BASE_URL}/login`);
+                    })
+                }
+                else{
+                    document.cookie = `token=null;expires=;path=/;SameSite=None; Secure`;
+                    window.location.replace(`${BASE_URL}/login`);
+                }
+            }
+            // server error
+            else if (error.response.status == 500){
+                showAlert({
+                    message: `<strong>Ups...</strong> terjadi kesalahan pada server, silahkan refresh halaman.`,
+                    autohide: true,
+                    type:'danger' 
+                })
+            }
+            
+            return {
+                'status':error.response.status,
+            };
+        })
+};
+
+/**
+ * API REQUEST PUT
+ */
+ const httpRequestPut = (url,form) => {
+    let newForm = new FormData();
+
+    for (var pair of form.entries()) {
+        let noPair = ['username','new_password'];
+
+        if (noPair.includes(pair[0]) == false) {
+            // newForm.set(pair[0], pair[1].trim().toLowerCase());
+            newForm.set(pair[0], pair[1].trim());
+        }
+        else{
+            if (pair[1].type) {
+                newForm.set(pair[0], pair[1], pair[1].name);
+            } 
+            else {
+                newForm.set(pair[0], pair[1]);                
+            }
+        }
+    }
+
+    return axios
+        .put(url,newForm, {
+            headers: {
+                token: TOKEN
+            }
+        })
+        .then(() => {
+            return {
+                'status':201,
+            };
+        })
+        .catch((error) => {
+            // unauthorized
+            if (error.response.status == 401) {
+                if (error.response.data.messages == 'token expired') {
+                    Swal.fire({
+                        icon : 'error',
+                        title : '<strong>LOGIN EXPIRED</strong>',
+                        text: 'silahkan login ulang untuk perbaharui login anda',
+                        showCancelButton: false,
+                        confirmButtonText: 'ok',
+                    }).then(() => {
+                        document.cookie = `token=null;expires=;path=/;SameSite=None; Secure`;
+                        window.location.replace(`${BASE_URL}/login`);
+                    })
+                }
+                else{
+                    document.cookie = `token=null;expires=;path=/;SameSite=None; Secure`;
+                    window.location.replace(`${BASE_URL}/login`);
+                }
+            }
+            // error server
+            else if (error.response.status == 500){
+                showAlert({
+                    message: `<strong>Ups . . .</strong> terjadi kesalahan pada server, coba sekali lagi`,
+                    autohide: true,
+                    type:'danger'
+                })
+            }
+            
+            return {
+                'status':error.response.status,
+                'message':error.response.data.message
+            };
+        })
+};
+
+/**
 * LOGOUT
 */
 $('#btn_logout').on('click', function(e) {
@@ -56,3 +178,24 @@ $('#btn_logout').on('click', function(e) {
         allowOutsideClick: () => !Swal.isLoading()
     })
 })
+
+// logout
+function doLogout() {
+    showLoadingSpinner();
+    axios
+        .delete(`${BASE_URL}/login/delete`, {
+            headers: {
+                token: TOKEN
+            }
+        })
+        .then(() => {
+            hideLoadingSpinner();
+            document.cookie = `token=null; path=/;SameSite=None; Secure`;
+            window.location.replace(`${BASE_URL}/login`);
+        })
+        .catch(error => {
+            hideLoadingSpinner();
+            document.cookie = `token=null; path=/;SameSite=None; Secure`;
+            window.location.replace(`${BASE_URL}/login`);
+        })
+}

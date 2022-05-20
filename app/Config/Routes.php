@@ -17,7 +17,7 @@ if (file_exists(SYSTEMPATH . 'Config/Routes.php')) {
  * --------------------------------------------------------------------
  */
 $routes->setDefaultNamespace('App\Controllers');
-$routes->setDefaultController('Home');
+$routes->setDefaultController('Dashboard');
 $routes->setDefaultMethod('index');
 $routes->setTranslateURIDashes(false);
 $routes->set404Override();
@@ -29,6 +29,13 @@ $routes->setAutoRoute(true);
  * --------------------------------------------------------------------
  */
 
+// Dashboard
+$routes->get(
+    '/', 
+    'Dashboard::index', 
+    ['filter' => 'DashboardGuard']
+);
+
 // Login & Logout
 $routes->group("login", function ($routes) {
     $routes->get(
@@ -39,15 +46,6 @@ $routes->group("login", function ($routes) {
     $routes->get('show',      'Login::show');  
     $routes->post('create',   'Login::create');
     $routes->delete('delete', 'Login::delete');
-});
-
-// Dashboard
-$routes->group("dashboard", function ($routes) {
-    $routes->get(
-        '/', 
-        'Dashboard::index', 
-        ['filter' => 'DashboardGuard']
-    );
 });
 
 // crud bagian
@@ -74,17 +72,17 @@ $routes->group("subagian", function ($routes) {
     $routes->get(
         'show', 
         'Subagian::show', 
-        ['filter' => 'AdminApiGuard']
+        ['filter' => 'NonPegawaiApiGuard']
     );
     $routes->post(
         'create', 
         'Subagian::create', 
-        ['filter' => 'AdminApiGuard']
+        ['filter' => 'NonPegawaiApiGuard']
     );
     $routes->delete(
         'delete/(:any)', 
         'Subagian::delete/$1', 
-        ['filter' => 'AdminApiGuard']
+        ['filter' => 'NonPegawaiApiGuard']
     );
 });
 
@@ -114,6 +112,11 @@ $routes->group("user", function ($routes) {
         'update/(:any)', 
         'Users::update/$1', 
         ['filter' => 'NonPegawaiApiGuard']
+    );
+    $routes->put(
+        'update_profile', 
+        'Users::updateProfile', 
+        ['filter' => 'ApiGuard']
     );
     $routes->delete(
         'delete/(:any)', 

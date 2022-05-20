@@ -56,7 +56,7 @@
 <?= $this->section('contentHtml'); ?>
   <div
     id="alert" 
-    class="flex none justify-between items-start fixed top-0 left-0 right-0 p-4 transition transform -translate-y-4 opacity-0 rounded-md">
+    class="flex none justify-between items-start fixed z-70 top-0 left-0 right-0 p-4 transition transform -translate-y-4 opacity-0 rounded-md">
       <span class="text-lg" id="message">lorem</span>
       <span
         id="close" 

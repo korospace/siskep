@@ -56,6 +56,11 @@ class UserDetail extends Migration
                 'constraint' => ['asn', 'non-asn'],
                 'null'       => false,
             ],
+            'masa_kerja' => [
+                'type'       => "integer",                    
+                'constraint' => 11,
+                'null'       => false,
+            ],
             'alamat' => [
                 'type'       => 'varchar',
                 'constraint' => 255,

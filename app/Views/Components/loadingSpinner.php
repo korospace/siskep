@@ -12,7 +12,7 @@
         // show spinner
         function showLoadingSpinner() {
             $('#bg_loading').removeClass('-z-1 none');
-            $('#bg_loading').addClass('z-50 flex');
+            $('#bg_loading').addClass('z-60 flex');
             setTimeout(() => {
                 $('#bg_loading').removeClass('opacity-0');
                 $('#loading').removeClass('scale-75');
@@ -24,7 +24,7 @@
             $('#loading').addClass('scale-75');
             $('#bg_loading').addClass('opacity-0');
             setTimeout(() => {
-                $('#bg_loading').removeClass('z-50 flex');
+                $('#bg_loading').removeClass('z-60 flex');
                 $('#bg_loading').addClass('-z-1 none');
             }, 500);
         }

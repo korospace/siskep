@@ -20,8 +20,10 @@
       >
         <!-- **** Alert info **** -->
         <?= $this->include('Components/alertInfo'); ?>
-        <!-- **** Loading Spinner ****  -->
+        <!-- **** Loading Spinner **** -->
         <?= $this->include('Components/loadingSpinner'); ?>
+        <!-- **** Edit Profile Admin **** -->
+        <?= $this->include('Components/EditProfileAdmin'); ?>
         
         <div
          id="wraper"
@@ -88,7 +90,8 @@
                         <span class="text-indigo-900">Laporan</span>
                     </a>
                     <a
-                      href=""
+                      href="<?= base_url("/edit_profile"); ?>"
+                      <?= ($previlege == 'admin') ? "onclick='showEditProfAdmin(this,event);'" :"" ?>
                       class="mt-5 p-3 flex items-center rounded-xl">
                         <div
                           class="bg-indigo-900 w-8 h-8 flex justify-center items-center mr-3 rounded-md">
@@ -96,7 +99,7 @@
                         </div>
                         <span class="text-indigo-900">Profile</span>
                     </a>
-                    <hr class="mt-5 border border-indigo-900">
+                    <hr class="mt-5 border border-indigo-300">
                     <a
                       id="btn_logout"
                       href=""
