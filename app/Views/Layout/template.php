@@ -20,25 +20,27 @@
 
 </head>
 
-<body>
+<body  
+  style="background-image: url('<?= base_url('images/bg.webp'); ?>');"
+  class="bg-cover bg-no-repeat">
 
-  <!-- // Render Html // -->
-  <?= $this->renderSection('contentHtml'); ?>
-  
-  <!-- Render Js -->
-  <script src="<?= base_url('js/plugins/jquery-2.1.0.min.js'); ?>"></script>
-  <script src="<?= base_url('js/plugins/axios.min.js'); ?>"></script>
-  <script src="<?= base_url('js/plugins/sweetalert2.min.js'); ?>"></script>
-  <script src="<?= base_url('js/plugins/font-awesome.min.js'); ?>"></script>
-  <script>
-    const TOKEN    = "<?= (isset($token)) ? $token : null; ?>";
-    const PASSWORD = "<?= (isset($password)) ? $password : null; ?>";
-    const BASE_URL = "<?= base_url() ?>";
-    const LASTURL  = "<?= (isset($lasturl)) ? $lasturl : null; ?>"; //login controller
-  </script>
-  <script src="<?= base_url('js/parent.js'); ?>"></script>
-  <?= $this->renderSection('jsComponent'); ?>
-  <?= $this->renderSection('contentJs'); ?>
+    <!-- // Render Html // -->
+    <?= $this->renderSection('contentHtml'); ?>
+    
+    <!-- Render Js -->
+    <script src="<?= base_url('js/plugins/jquery-2.1.0.min.js'); ?>"></script>
+    <script src="<?= base_url('js/plugins/axios.min.js'); ?>"></script>
+    <script src="<?= base_url('js/plugins/sweetalert2.min.js'); ?>"></script>
+    <script src="<?= base_url('js/plugins/font-awesome.min.js'); ?>"></script>
+    <script>
+      const TOKEN    = "<?= (isset($token)) ? $token : null; ?>";
+      const PASSWORD = "<?= (isset($password)) ? $password : null; ?>";
+      const BASE_URL = "<?= base_url() ?>";
+      const LASTURL  = "<?= (isset($lasturl)) ? $lasturl : null; ?>"; //login controller
+    </script>
+    <script src="<?= base_url('js/parent.js'); ?>"></script>
+    <?= $this->renderSection('jsComponent'); ?>
+    <?= $this->renderSection('contentJs'); ?>
 
 </body>
 

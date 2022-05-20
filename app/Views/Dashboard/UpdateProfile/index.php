@@ -15,8 +15,7 @@
 
     <div
       id="container" 
-      style="background-image: url('<?= base_url('images/bg.webp'); ?>');"
-      class="h-screen bg-cover bg-no-repeat"
+      class="h-screen max-w-w-2xl m-auto"
       >
         <!-- **** Alert info **** -->
         <?= $this->include('Components/alertInfo'); ?>
@@ -25,18 +24,25 @@
         
         <div
          id="wraper"
-         class="w-full flex">
+         class="w-full h-full flex">
             <!-- side bar -->
             <?= $this->include('Components/SideBar'); ?>
 
             <main
-              class="flex-1 max-h-screen overflow-auto pl-4 sm:pl-6 pr-4 py-5">
+              class="flex-1 max-h-full h-full flex flex-col overflow-auto pl-4 sm:pl-6 pr-4 py-5">
                 <!-- nav bar -->
                 <?= $this->include('Components/Navbar'); ?>
                 
+                <div
+                  class="relative h-max mt-5 rounded-xl">
+                    <div class="max-h-64 overflow-hidden rounded-xl">
+                        <img class="w-full" src="<?= base_url('images/gedung.webp'); ?>" alt="">
+                    </div>
+                </div>
+
                 <form
                   id="update_profile"
-                  class="h-max overflow-auto mt-10 backdrop-blur-md rounded-xl shadow-lg">
+                  class="h-max flex-1 mt-5 backdrop-blur-md rounded-xl shadow-lg">
                   <div
                     class="px-5 pt-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 grid-rows-11 md:grid-rows-6 lg:grid-rows-3 gap-x-4 gap-y-10 md:gap-y-12">
                       <!-- Username -->

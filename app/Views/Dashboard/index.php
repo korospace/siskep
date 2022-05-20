@@ -14,8 +14,7 @@
 
     <div
       id="container" 
-      style="background-image: url('<?= base_url('images/bg.webp'); ?>');"
-      class="h-screen bg-cover bg-no-repeat"
+      class="h-screen max-w-w-2xl m-auto"
       >
         <!-- **** Alert info **** -->
         <?= $this->include('Components/alertInfo'); ?>
