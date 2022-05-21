@@ -41,7 +41,7 @@
         class="bg-white px-5 py-4 flex justify-center items-center rounded-md shadow-2xl transition duration-500 scale-75">
           <div class="w-8 xs:w-12">
               <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" style="margin: auto; background: rgba(0, 0, 0, 0) none repeat scroll 0% 0%; display: block; shape-rendering: auto;" width="100%" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid">
-                  <circle cx="50" cy="50" fill="none" stroke="#000000" stroke-width="10" r="35" stroke-dasharray="164.93361431346415 56.97787143782138">
+                  <circle cx="50" cy="50" fill="none" stroke="#4b5563" stroke-width="10" r="35" stroke-dasharray="164.93361431346415 56.97787143782138">
                   <animateTransform attributeName="transform" type="rotate" repeatCount="indefinite" dur="1s" values="0 50 50;360 50 50" keyTimes="0;1"></animateTransform>
                   </circle>
               </svg>

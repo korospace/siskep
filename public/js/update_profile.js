@@ -7,7 +7,9 @@ async function getDataProfile() {
     hideLoadingSpinner();
     
     if (httpResponse.status === 200) {
-        let data = httpResponse.data.data;
+        let data     = httpResponse.data.data;
+        let spanData = "";
+        let notShow  = ['id_previlege','previlege','password'];
         
         for (const key in data) {
             if (key=="tgl_lahir") {
@@ -20,11 +22,38 @@ async function getDataProfile() {
             else{
                 $(`#${key}`).val(data[key]);
             }
+
+            if (notShow.includes(key) == false) {
+                spanData += `<span class="capitalize text-gray-600 text-lg">
+                    ${key.replace("_"," ")}
+                </span>
+                <span>:</span>
+                <span class="${key == "nama_lengkap" ? "capitalize" : ""} text-gray-600 text-lg">
+                    ${data[key]}
+                </span>`;
+            }
         }
+        
+        $("#data_wraper").html(spanData);
     }
 }
 
 getDataProfile();
+
+$("#btn_show_form").on("click", function () {
+    $("#title").html("update information");
+    $("#btn_show_form").toggleClass("hidden");
+    $("#data_wraper").toggleClass("hidden grid");
+    $("#inputs_wraper").toggleClass("hidden grid");
+    $("#btn_wraper").toggleClass("hidden flex");
+})
+$("#btn_hide_form").on("click", function () {
+    $("#title").html("personal information");
+    $("#btn_show_form").toggleClass("hidden");
+    $("#data_wraper").toggleClass("hidden grid");
+    $("#inputs_wraper").toggleClass("hidden grid");
+    $("#btn_wraper").toggleClass("hidden flex");
+})
 
 /**
  * Form On Submit
@@ -37,11 +66,15 @@ getDataProfile();
         let newTgl = form.get('tgl_lahir').split('-');
         form.set('tgl_lahir',`${newTgl[2]}-${newTgl[1]}-${newTgl[0]}`)
 
-        showLoadingSpinner();
+        $("#btn_simpan #text").toggleClass("hidden inline");
+        $("#btn_simpan #spinner").toggleClass("inline hidden");
         let httpResponse = await httpRequestPut(`${BASE_URL}/user/update_profile`,form);
-        hideLoadingSpinner();
+        $("#btn_simpan #text").toggleClass("hidden inline");
+        $("#btn_simpan #spinner").toggleClass("inline hidden");
 
         if (httpResponse.status === 201) {
+            getDataProfile();
+            
             showAlert({
                 message: `<strong>Success...</strong> edit profile berhasil!`,
                 autohide: true,
@@ -74,7 +107,7 @@ getDataProfile();
             
             showAlert({
                 message: `<ul class="list-disc list-inside">${msgList}</ul>`,
-                autohide: false,
+                autohide: true,
                 type:'warning'
             })
         }
