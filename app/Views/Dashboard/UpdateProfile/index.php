@@ -46,7 +46,7 @@
                   <div
                     id="title_wraper"
                     class="px-8 pt-8 pb-4 flex justify-between items-center border-b border-gay-400">
-                        <p id="title" class="text-2xl text-gray-600 font-bold capitalize">
+                        <p id="title" class="text-lg md:text-2xl text-gray-600 font-bold capitalize">
                             personal information
                         </p>
                         <div id="btn_show_form" class="shadow-md rounded-md bg-white active:bg-gray-200 py-2 pl-3 pr-2 cursor-pointer transition duration-300 active:scale-90">

@@ -1182,6 +1182,11 @@ Ensure the default browser behavior of the `hidden` attribute.
   .md\:gap-y-12 {
     row-gap: 3rem;
   }
+
+  .md\:text-2xl {
+    font-size: 1.5rem;
+    line-height: 2rem;
+  }
 }
 
 @media (min-width: 1024px) {
