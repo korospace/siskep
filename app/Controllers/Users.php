@@ -36,6 +36,9 @@ class Users extends ResourceController
         if (in_array($g_previlege,["kabag"])) {
             $types = ["admin","kabag"];
         }
+        if (in_array($g_previlege,["kasubag"])) {
+            $types = ["admin","kabag","kasubag"];
+        }
 
         $rows = $this->db->table("user_type")->select("*")->whereNotIn("type",$types)->get()->getResultArray();
 
@@ -65,20 +68,22 @@ class Users extends ResourceController
     public function getProfile()
     {
         global $g_user_id;
+        global $g_password;
 
         $dbresult = (array)$this->db->table("users")
-        ->select("users.id as id,users.username,users.password,users.id_previlege,user_type.type as previlege,user_detail.nik,user_detail.email,user_detail.nama_lengkap,user_detail.agama,user_detail.tgl_lahir,user_detail.pendidikan,user_detail.golongan,user_detail.masa_kerja,user_detail.alamat,user_detail.kelamin,user_detail.notelp,user_detail_bag.bag_name as bagian,user_detail_subag.subag_name as subagian")
+        ->select("users.id as id,users.username,users.password,users.id_previlege,user_type.type as previlege,user_detail.nik,user_detail.email,user_detail.nama_lengkap,user_detail.agama,user_detail.tgl_lahir,user_detail.pendidikan,user_detail.golongan,user_detail.status,user_detail.masa_kerja,user_detail.alamat,user_detail.kelamin,user_detail.notelp,user_detail_bag.bag_name as bagian,user_detail_subag.subag_name as subagian")
         ->join("user_type"        ,"users.id_previlege = user_type.id")
         ->join("user_detail"      ,"users.id = user_detail.user_id", 'left')
         ->join("user_detail_bag"  ,"users.id = user_detail_bag.user_id", 'left')
         ->join("user_detail_subag","users.id = user_detail_subag.user_id", 'left')
         ->getWhere(["users.id"=>$g_user_id])
         ->getFirstRow();
+        $dbresult["password"] = $g_password;
 
         $respond  = [
             "code"  => 200,
             "error" => false,
-            "data"  => $dbresult
+            "data"  => Utils::removeNullObjEl($dbresult)
         ];
 
         return $this->respond($respond,$respond['code']);
@@ -95,39 +100,51 @@ class Users extends ResourceController
      */
     public function show($id = null)
     {
+        $get    = $this->request->getGet();
+        $urutan = (isset($get['urutan']) && strtolower($get['urutan']) == "terlama") ? "ASC" : "DESC";
+        // var_dump($get);die;
+
         global $g_previlege;
         global $g_bagian;
         global $g_subagian;
 
         $rows = $this->db->table("users");
 
-        if ($id) {
-            $rows = $rows->select("users.id,users.username,users.id_previlege,user_detail.nik,user_detail.email,user_detail.nama_lengkap,user_detail.agama,user_detail.tgl_lahir,user_detail.pendidikan,user_detail.golongan,user_detail.alamat,user_detail.kelamin,user_detail.notelp,user_detail_bag.bag_name as bagian,user_detail_subag.subag_name as subagian");
+        if (isset($get['id'])) {
+            $rows = $rows->select("users.id,users.username,users.id_previlege,user_detail.nik,user_detail.email,user_detail.nama_lengkap,user_detail.agama,user_detail.tgl_lahir,user_detail.pendidikan,user_detail.golongan,user_detail.status,user_detail.masa_kerja,user_detail.alamat,user_detail.kelamin,user_detail.notelp,user_detail_bag.bag_name as bagian,user_detail_subag.subag_name as subagian");
         } 
         else {
-            $rows = $rows->select("users.id,users.username,users.id_previlege,user_detail.nik,user_detail.nama_lengkap,user_detail.golongan,user_detail_bag.bag_name as bagian,user_detail_subag.subag_name as subagian");
+            $rows = $rows->select("users.id,users.username,user_type.type as previlege,user_detail.nik,user_detail.nama_lengkap,user_detail.golongan,user_detail_bag.bag_name as bagian,user_detail_subag.subag_name as subagian");
         }
 
         $rows = $rows->join("user_detail"      ,"users.id = user_detail.user_id")
+        ->join("user_type"        ,"users.id_previlege = user_type.id")
         ->join("user_detail_bag"  ,"users.id = user_detail_bag.user_id", 'left')
         ->join("user_detail_subag","users.id = user_detail_subag.user_id", 'left')
         ->where("users.id_previlege !=",1);
+
+        if (isset($get['bagian']) && in_array($g_previlege,["admin"])) {
+            $rows = $rows->where("user_detail_bag.bag_name",$get['bagian']);
+        }
+        if (isset($get['subagian']) && in_array($g_previlege,["admin","kabag"])) {
+            $rows = $rows->where("user_detail_subag.subag_name",$get['subagian']);
+        }
 
         if (in_array($g_previlege,["kabag"])) {
             $rows = $rows->where("user_detail_bag.bag_name",$g_bagian)
                 ->whereIn("users.id_previlege",[3,4]);
         }
-        if (in_array($g_previlege,["kasubag"])) {
+        else if (in_array($g_previlege,["kasubag"])) {
             $rows = $rows->where("user_detail_subag.subag_name",$g_subagian)
                 ->whereIn("users.id_previlege",[4]);
         }
 
-        if ($id) {
-            $rows = $rows->where("users.id",$id);
+        if (isset($get['id'])) {
+            $rows = $rows->where("users.id",$get['id']);
             $rows = (array)$rows->get()->getFirstRow();
         }
         else {
-            $rows = $rows->get()->getResultArray();
+            $rows = $rows->orderBy("user_detail.id",$urutan)->get()->getResultArray();
         }
 
         $respond  = [
@@ -228,7 +245,8 @@ class Users extends ResourceController
                 $data_users = [
                     "id" => $id,
                     "username" => htmlspecialchars($post["username"]),
-                    "password" => password_hash(preg_replace("/-/","",$post["tgl_lahir"]),PASSWORD_DEFAULT),
+                    // "password" => password_hash(preg_replace("/-/","",$post["tgl_lahir"]),PASSWORD_DEFAULT),
+                    "password" => password_hash($post["username"],PASSWORD_DEFAULT),
                     "id_previlege" => (int) $post["id_previlege"],
                 ];
 
@@ -240,6 +258,7 @@ class Users extends ResourceController
                     "agama"        => htmlspecialchars(strtolower($post["agama"])),
                     "pendidikan"   => htmlspecialchars(strtolower($post["pendidikan"])),
                     "golongan"     => htmlspecialchars(strtolower($post["golongan"])),
+                    "status"       => "active",
                     "masa_kerja"   => $post["masa_kerja"],
                     "tgl_lahir"    => $post["tgl_lahir"],
                     "alamat"       => htmlspecialchars(strtolower($post["alamat"])),
@@ -375,6 +394,8 @@ class Users extends ResourceController
                         unset($errors[$key]);
                     }
                 }
+
+                $errors = $errors["id"];
             }
 
             if ($errors) {
@@ -403,6 +424,7 @@ class Users extends ResourceController
                     "agama"        => htmlspecialchars(strtolower($put["agama"])),
                     "pendidikan"   => htmlspecialchars(strtolower($put["pendidikan"])),
                     "golongan"     => htmlspecialchars(strtolower($put["golongan"])),
+                    "status"       => $put["status"],
                     "masa_kerja"   => $put["masa_kerja"],
                     "tgl_lahir"    => $put["tgl_lahir"],
                     "alamat"       => htmlspecialchars(strtolower($put["alamat"])),
@@ -425,13 +447,33 @@ class Users extends ResourceController
                         ->update([
                             "bag_name" => $put["bagian"]
                         ]);
+                    
+                    if ($put["id_previlege"] == "2") {
+                        $this->db->table("user_detail_subag")
+                            ->where("user_id",$put["id"])
+                            ->delete();
+                    }
                 }
                 if (in_array($put["id_previlege"],["3","4"])) {
-                    $this->db->table("user_detail_subag")
+                    $isExist = $this->db->table("user_detail_subag")
                         ->where("user_id",$put["id"])
-                        ->update([
-                            "subag_name" => $put["subagian"]
-                        ]);
+                        ->get()
+                        ->getFirstRow();
+                    
+                    if ($isExist) {
+                        $this->db->table("user_detail_subag")
+                            ->where("user_id",$put["id"])
+                            ->update([
+                                "subag_name" => $put["subagian"]
+                            ]);
+                    }
+                    else {
+                        $this->db->table("user_detail_subag")
+                            ->insert([
+                                "user_id" => $put["id"],
+                                "subag_name" => $put["subagian"]
+                            ]);
+                    }
                 }
                 
                 $respond = [

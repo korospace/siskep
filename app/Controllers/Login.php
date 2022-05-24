@@ -73,7 +73,7 @@ class Login extends ResourceController
             } 
             else {
                 $dbresult = (array)$this->db->table("users")
-                ->select("users.id as id,users.password,users.id_previlege,user_type.type as previlege,user_detail_bag.bag_name as bagian,user_detail_subag.subag_name as subagian")
+                ->select("users.id as id,users.password,users.id_previlege,user_type.type as previlege,user_detail.status,user_detail_bag.bag_name as bagian,user_detail_subag.subag_name as subagian")
                 ->join("user_type"        ,"users.id_previlege = user_type.id")
                 ->join("user_detail"      ,"users.id = user_detail.user_id", 'left')
                 ->join("user_detail_bag"  ,"users.id = user_detail_bag.user_id", 'left')
@@ -102,6 +102,7 @@ class Login extends ResourceController
                             "token"   => TokenUtil::generateToken([
                                 "user_id"      => $dbresult["id"],
                                 "password"     => $post["password"],
+                                "status"       => $dbresult["status"],
                                 "id_previlege" => $dbresult["id_previlege"],
                                 "previlege"    => $dbresult["previlege"],
                                 "bagian"       => $dbresult["bagian"],

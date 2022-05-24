@@ -33,6 +33,53 @@ class Utils {
     }
 
     /**
+     * Remove Null Obj Element
+     */
+    public static function removeNullObjEl(Array $data): Array
+    {
+        foreach ($data as $key => $value) {
+            if ($value == null) {
+                unset($data[$key]);
+            }
+        }
+
+        return $data;
+    }
+
+    /**
+     * Modif Image Path
+     */
+    public static function modifImgPath($data,$targetKey,$targetPath): array
+    {
+        $newData = [];
+
+        if (is_array($data)==false) {
+            foreach ($data as $key => $value) {
+                if($key == $targetKey){
+                    $newData[$key] = base_url().$targetPath.$value;
+                }
+                else{
+                    $newData[$key] = $value;
+                }
+            }
+        } 
+        else {
+
+            foreach ($data as $array) {
+                foreach ($array as $key => $value) {
+                    if($key === $targetKey){
+                        $array[$key] = base_url().$targetPath.$array[$targetKey];
+                        $newData[]   = $array; 
+                    }
+                    
+                }
+            }
+        }
+
+        return (array)$newData;
+    }
+
+    /**
      * Method Parser.
      */
     public static function _methodParser(string $variableName): void

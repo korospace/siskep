@@ -7,8 +7,9 @@ use CodeIgniter\HTTP\RequestInterface;
 use CodeIgniter\HTTP\ResponseInterface;
 use App\Utils\Utils;
 use App\Utils\TokenUtil;
+use LDAP\Result;
 
-class ApiGuard implements FilterInterface
+class DashboardLogged implements FilterInterface
 {
     /**
      * Do whatever processing this filter needs to do.
@@ -27,16 +28,12 @@ class ApiGuard implements FilterInterface
      */
     public function before(RequestInterface $request, $arguments = null)
     {
-        $request    = \Config\Services::request();
-        $authHeader = $request->getHeader('token');
-        $token      = ($authHeader != null) ? $authHeader->getValue() : null;
-        $result     = TokenUtil::checkToken($token);
-        $GLOBALS["g_user_id"]      = $result['data']['user_id'];
-        $GLOBALS["g_password"]     = $result['data']['password'];
-        $GLOBALS["g_previlege"]    = $result['data']['previlege'];
-        $GLOBALS["g_id_previlege"] = $result['data']['id_previlege'];
-        $GLOBALS["g_bagian"]   = isset($result['data']['bagian'])   ? $result['data']['bagian']   : null;
-        $GLOBALS["g_subagian"] = isset($result['data']['subagian']) ? $result['data']['subagian'] : null;
+        $token  = (isset($_COOKIE['token'])) ? $_COOKIE['token'] : null;
+        $result = TokenUtil::checkToken($token,false);
+        
+        if($result['error'] == false) {
+            return redirect()->to(base_url());
+        }
     }
 
     /**

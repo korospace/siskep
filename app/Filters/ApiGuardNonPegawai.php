@@ -8,7 +8,7 @@ use CodeIgniter\HTTP\ResponseInterface;
 use App\Utils\Utils;
 use App\Utils\TokenUtil;
 
-class AdminKabagApiGuard implements FilterInterface
+class ApiGuardNonPegawai implements FilterInterface
 {
     /**
      * Do whatever processing this filter needs to do.
@@ -31,9 +31,12 @@ class AdminKabagApiGuard implements FilterInterface
         $authHeader = $request->getHeader('token');
         $token      = ($authHeader != null) ? $authHeader->getValue() : null;
         $result     = TokenUtil::checkToken($token);
-        $GLOBALS["g_previlege"] = $result['data']['previlege'];
+        $GLOBALS["g_previlege"]    = $result['data']['previlege'];
+        $GLOBALS["g_id_previlege"] = $result['data']['id_previlege'];
+        $GLOBALS["g_bagian"]   = isset($result['data']['bagian'])   ? $result['data']['bagian']   : null;
+        $GLOBALS["g_subagian"] = isset($result['data']['subagian']) ? $result['data']['subagian'] : null;
 
-        if (!in_array($result['data']['previlege'],["admin","kabag"])) {
+        if (!in_array($result['data']['previlege'],["admin","kabag","kasubag"])) {
             Utils::httpResponse([
                 'code'    => 401,
                 'error'   => true,

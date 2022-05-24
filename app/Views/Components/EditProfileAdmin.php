@@ -9,21 +9,17 @@
 <!-- JS -->
 <?= $this->section('jsComponent'); ?>
     <script>
-        async function getDataProfile() {
-            let httpResponse = await httpRequestGet(`${BASE_URL}/user/profile`);
-
-            if (httpResponse.status === 200) {
-                let data = httpResponse.data.data;
-                $("#edit_prof_admin #username").val(data.username);
-                $("#edit_prof_admin #new_password").val(PASSWORD);
-            }
+        function fillInputForm() {
+            let data = JSON.parse(localStorage.getItem('data_profile'));
+            PASSWORD = data.password;
+            $("#edit_prof_admin #username_epa").val(data.username);
+            $("#edit_prof_admin #new_password_epa").val(PASSWORD);
         }
 
-        getDataProfile();
-
-        // show spinner
+        // show popup
         function showEditProfAdmin(el=null,event=null) {
             event.preventDefault();
+            fillInputForm();
 
             $('#bg_edit_prof_admin').removeClass('-z-1 none');
             $('#bg_edit_prof_admin').addClass('z-50 flex');
@@ -33,7 +29,7 @@
             }, 50);
         }
 
-        // hide spinner
+        // hide popup
         function hideEditProfAdmin() {
             $('#edit_prof_admin').addClass('scale-75');
             $('#bg_edit_prof_admin').addClass('opacity-0');
@@ -43,7 +39,7 @@
             }, 500);
         }
 
-        $("#close_popup").on("click",() => {
+        $("#close_popup_editprofadmin").on("click",() => {
             hideEditProfAdmin();
         });
 
@@ -110,13 +106,13 @@
             $('.label_fly').removeClass('border-red-500');
 
             // email validation
-            if ($('#edit_prof_admin #username').val() == '') {
+            if ($('#edit_prof_admin #username_epa').val() == '') {
                 $('#edit_prof_admin #username_wraper').removeClass('border-zinc-400');
                 $('#edit_prof_admin #username_wraper').addClass('border-red-500');
                 status = false;
             }
             // password validation
-            if ($('#edit_prof_admin #new_password').val() == '') {
+            if ($('#edit_prof_admin #new_password_epa').val() == '') {
                 $('#edit_prof_admin #new_password_wraper').removeClass('border-zinc-400');
                 $('#edit_prof_admin #new_password_wraper').addClass('border-red-500');
                 status = false;
@@ -141,7 +137,7 @@
                     Edit Profile
                 </p>
                 <span
-                    id="close_popup" 
+                    id="close_popup_editprofadmin" 
                     class="text-gray-500 text-2xl cursor-pointer">
                     &times;
                 </span>
@@ -152,11 +148,11 @@
                     id="username_wraper"
                     class="label_fly w-full v-340:w-64 relative mt-8 border-2 border-zinc-400 focus-within:border-zinc-600 rounded-xl">
                     <input
-                        id="username" type="text" name="username" placeholder="username" autocomplete="off" 
+                        id="username_epa" type="text" name="username" placeholder="username" autocomplete="off" 
                         class="block px-5 py-3 w-full appearance-none focus:outline-none transition-all bg-white text-zinc-600 rounded-xl" />
                     <label 
-                        for="username" 
-                        class="px-5 py-3 absolute top-0 text-zinc-400 duration-300 origin-0 cursor-text">
+                        for="username_epa" 
+                        class="py-3 absolute top-0 left-5 text-zinc-400 duration-300 origin-0 cursor-text">
                         username
                     </label>
                 </div>
@@ -165,18 +161,18 @@
                     id="new_password_wraper"
                     class="label_fly w-full v-340:w-64 relative mt-8 border-2 border-zinc-400 focus-within:border-zinc-600 rounded-xl">
                     <input
-                        id="new_password" type="password" name="new_password" placeholder="password" autocomplete="off" 
+                        id="new_password_epa" type="password" name="new_password" placeholder="password" autocomplete="off" 
                         class="block px-5 py-3 w-full appearance-none focus:outline-none transition-all bg-white text-zinc-600 rounded-xl" />
                     <label 
-                        for="new_password" 
-                        class="px-5 py-3 absolute top-0 text-zinc-400 duration-300 origin-0 cursor-text">
+                        for="new_password_epa" 
+                        class="py-3 absolute top-0 left-5 text-zinc-400 duration-300 origin-0 cursor-text">
                         password 
                     </label>
                 </div>
 
                 <button
-                  class="w-max mt-7 mb-2 px-10 py-2 bg-violet-500 text-white rounded-full">
-                    edit
+                  class="w-full mt-7 px-10 py-2 bg-emerald-400 active:bg-emerald-600 text-white text-center rounded-md">
+                    simpan
                 </button>
             </div>
         </form>

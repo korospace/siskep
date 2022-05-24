@@ -11,17 +11,15 @@ class Dashboard extends BaseController
     public function index()
     {
         global $g_token;
-        global $g_password;
         global $g_previlege;
 
         $data = [
             'title' => 'dashboard',
             'token' => $g_token,
-            'password'  => $g_password,
             'previlege' => $g_previlege,
         ];
 
-        return view("Dashboard/index",$data);
+        return view("DashboardPage/Main/index",$data);
     }
 
     /**
@@ -31,21 +29,55 @@ class Dashboard extends BaseController
     public function updateProfile()
     {
         global $g_token;
-        global $g_password;
         global $g_previlege;
 
         $data = [
             'title' => 'update profile',
             'token' => $g_token,
-            'password'  => $g_password,
             'previlege' => $g_previlege,
         ];
 
         if ($g_previlege == "admin") {
-            return redirect()->to(base_url().'/login');
+            return redirect()->to(base_url());
         }
         else {
-            return view("Dashboard/UpdateProfile/index",$data);
+            return view("DashboardPage/UpdateProfile/index",$data);
         }
+    }
+
+    /**
+     * PAGE: List Users
+     * - show list users page in dashboard
+     */
+    public function listUsers()
+    {
+        global $g_token;
+        global $g_previlege;
+
+        $data = [
+            'title' => 'pegawai',
+            'token' => $g_token,
+            'previlege' => $g_previlege,
+        ];
+
+        return view("DashboardPage/Users/index",$data);
+    }
+
+    /**
+     * PAGE: Crud Users
+     * - show crud users page in dashboard
+     */
+    public function crudUsers($title = null,$id = null)
+    {
+        global $g_token;
+        global $g_previlege;
+
+        $data = [
+            'title' => $title,
+            'token' => $g_token,
+            'previlege' => $g_previlege,
+        ];
+
+        return view("DashboardPage/CrudUsers/index",$data);
     }
 }

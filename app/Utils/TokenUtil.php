@@ -30,12 +30,7 @@ class TokenUtil {
     {
         $payload = $data;
         $payload["expired"] = time()+3600;
-
-        foreach ($payload as $key => $value) {
-            if ($value == null) {
-                unset($payload[$key]);
-            }
-        }
+        $payload = Utils::removeNullObjEl($payload);
 
         return JWT::encode($payload, self::getKey(), 'HS256');
     }

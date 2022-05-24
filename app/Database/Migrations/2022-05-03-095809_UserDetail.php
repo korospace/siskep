@@ -56,6 +56,11 @@ class UserDetail extends Migration
                 'constraint' => ['asn', 'non-asn'],
                 'null'       => false,
             ],
+            'status' => [
+                'type'       => "ENUM",                    
+                'constraint' => ['active', 'nonactive'],
+                'null'       => false,
+            ],
             'masa_kerja' => [
                 'type'       => "integer",                    
                 'constraint' => 11,

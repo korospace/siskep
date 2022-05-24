@@ -1,5 +1,5 @@
 <div
-    class="sticky top-0 z-10 w-full px-7 py-3 backdrop-blur-md bg-white/30 flex justify-between items-center text-indigo-900 rounded-xl shadow-lg">
+    class="sticky top-0 z-20 w-full px-7 py-3 backdrop-blur-md bg-white/30 flex justify-between items-center text-indigo-900 rounded-xl shadow-lg">
     <div>
         <span class="opacity-80 text-xs">Pages / <?= $title; ?></span>
         <p class="text-sm text-bold capitalize"><?= $title; ?></p>

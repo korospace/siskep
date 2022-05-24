@@ -9,12 +9,13 @@ use CodeIgniter\Filters\Honeypot;
 use CodeIgniter\Filters\InvalidChars;
 use CodeIgniter\Filters\SecureHeaders;
 
-use App\Filters\AdminApiGuard;
-use App\Filters\AdminKabagApiGuard;
-use App\Filters\NonPegawaiApiGuard;
 use App\Filters\ApiGuard;
-use App\Filters\DashboardGuard;
-use App\Filters\LoggedGuard;
+use App\Filters\ApiGuardAdmin;
+use App\Filters\ApiGuardAdminKabag;
+use App\Filters\ApiGuardNonPegawai;
+use App\Filters\Dashboard;
+use App\Filters\DashboardLogged;
+use App\Filters\DashboardNonPegawai;
 
 class Filters extends BaseConfig
 {
@@ -30,12 +31,13 @@ class Filters extends BaseConfig
         'honeypot'      => Honeypot::class,
         'invalidchars'  => InvalidChars::class,
         'secureheaders' => SecureHeaders::class,
-        'AdminApiGuard' => AdminApiGuard::class,
-        'AdminKabagApiGuard' => AdminKabagApiGuard::class,
-        'NonPegawaiApiGuard' => NonPegawaiApiGuard::class,
         'ApiGuard'           => ApiGuard::class,
-        'LoggedGuard'        => LoggedGuard::class,
-        'DashboardGuard'     => DashboardGuard::class,
+        'ApiGuardAdmin'      => ApiGuardAdmin::class,
+        'ApiGuardAdminKabag' => ApiGuardAdminKabag::class,
+        'ApiGuardNonPegawai' => ApiGuardNonPegawai::class,
+        'Dashboard'          => Dashboard::class,
+        'DashboardLogged'    => DashboardLogged::class,
+        'DashboardNonPegawai'=> DashboardNonPegawai::class,
     ];
 
     /**

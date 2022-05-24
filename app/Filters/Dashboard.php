@@ -9,7 +9,7 @@ use App\Utils\Utils;
 use App\Utils\TokenUtil;
 use LDAP\Result;
 
-class LoggedGuard implements FilterInterface
+class Dashboard implements FilterInterface
 {
     /**
      * Do whatever processing this filter needs to do.
@@ -31,8 +31,19 @@ class LoggedGuard implements FilterInterface
         $token  = (isset($_COOKIE['token'])) ? $_COOKIE['token'] : null;
         $result = TokenUtil::checkToken($token,false);
         
-        if($result['error'] == false) {
-            return redirect()->to(base_url());
+        if($result['error'] == true) {
+            setcookie('token', null, -1, '/');
+            unset($_COOKIE['token']);
+            return redirect()->to(base_url().'/login');
+        } 
+        else {
+            $GLOBALS["g_token"]        = $token;
+            $GLOBALS["g_password"]     = $result['data']['password'];
+            $GLOBALS["g_previlege"]    = $result['data']['previlege'];
+            $GLOBALS["g_id_previlege"] = $result['data']['id_previlege'];
+            $GLOBALS["g_bagian"]   = isset($result['data']['bagian'])   ? $result['data']['bagian']   : null;
+            $GLOBALS["g_subagian"] = isset($result['data']['subagian']) ? $result['data']['subagian'] : null;
+            setcookie('token',$token,Utils::cookieOps($result['data']['expired']));
         }
     }
 

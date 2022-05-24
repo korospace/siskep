@@ -1,44 +1,44 @@
 /**
  * Get Data Profile
  */
-async function getDataProfile() {
-    showLoadingSpinner();
-    let httpResponse = await httpRequestGet(`${BASE_URL}/user/profile`);
-    hideLoadingSpinner();
-    
-    if (httpResponse.status === 200) {
-        let data     = httpResponse.data.data;
-        let spanData = "";
-        let notShow  = ['id_previlege','previlege','password'];
-        
-        for (const key in data) {
-            if (key=="tgl_lahir") {
-                let tglLahir = data[key].split('-');
-                $(`#${key}`).val(`${tglLahir[2]}-${tglLahir[1]}-${tglLahir[0]}`);
-            }
-            else if (key=="password") {
-                $(`#${key}`).val(PASSWORD);
-            }
-            else{
-                $(`#${key}`).val(data[key]);
-            }
-
-            if (notShow.includes(key) == false) {
-                spanData += `<span class="capitalize text-gray-600 text-lg">
-                    ${key.replace("_"," ")}
-                </span>
-                <span>:</span>
-                <span class="${key == "nama_lengkap" ? "capitalize" : ""} text-gray-600 text-lg">
-                    ${data[key]}
-                </span>`;
-            }
-        }
-        
-        $("#data_wraper").html(spanData);
+function fillInputForm(updateVarPass = true) {
+    let data = JSON.parse(localStorage.getItem('data_profile'));
+    if (updateVarPass) {
+        PASSWORD = data.password;
     }
-}
+    
+    let spanData = "";
+    let notShow  = ['id','username','id_previlege','previlege','password'];
 
-getDataProfile();
+    $("#username_profile").html(data.username);
+    $("#id_profile").html(data.id);
+    
+    for (const key in data) {
+        if (key=="tgl_lahir") {
+            let tglLahir = data[key].split('-');
+            $(`#update_profile #${key}_uprof`).val(`${tglLahir[2]}-${tglLahir[1]}-${tglLahir[0]}`);
+        }
+        else if (key=="password") {
+            $(`#update_profile #${key}_uprof`).val(PASSWORD);
+        }
+        else{
+            $(`#update_profile #${key}_uprof`).val(data[key]);
+        }
+
+        if (notShow.includes(key) == false) {
+            spanData += `<span class="capitalize text-gray-600 text-lg">
+                ${key.replace("_"," ")}
+            </span>
+            <span>:</span>
+            <span class="${key == "nama_lengkap" ? "capitalize" : ""} text-gray-600 text-lg">
+                ${data[key]}
+            </span>`;
+        }
+    }
+    
+    $("#data_wraper").html(spanData);
+}
+fillInputForm();
 
 $("#btn_show_form").on("click", function () {
     $("#title").html("update information");
@@ -66,14 +66,27 @@ $("#btn_hide_form").on("click", function () {
         let newTgl = form.get('tgl_lahir').split('-');
         form.set('tgl_lahir',`${newTgl[2]}-${newTgl[1]}-${newTgl[0]}`)
 
-        $("#btn_simpan #text").toggleClass("hidden inline");
-        $("#btn_simpan #spinner").toggleClass("inline hidden");
+        $("#btn_simpan_uprof #text").toggleClass("hidden inline");
+        $("#btn_simpan_uprof #spinner").toggleClass("inline hidden");
+        
         let httpResponse = await httpRequestPut(`${BASE_URL}/user/update_profile`,form);
-        $("#btn_simpan #text").toggleClass("hidden inline");
-        $("#btn_simpan #spinner").toggleClass("inline hidden");
+
+        $("#btn_simpan_uprof #text").toggleClass("hidden inline");
+        $("#btn_simpan_uprof #spinner").toggleClass("inline hidden");
 
         if (httpResponse.status === 201) {
-            getDataProfile();
+            let newDataProfile = {};
+
+            for (var pair of form.entries()) {
+                if (pair[0] == "new_password") {
+                    newDataProfile["password"] = pair[1];
+                } else {
+                    newDataProfile[pair[0]] = pair[1];
+                }
+            }
+
+            localStorage.setItem("data_profile",JSON.stringify(newDataProfile));
+            fillInputForm(false);
             
             showAlert({
                 message: `<strong>Success...</strong> edit profile berhasil!`,
@@ -101,8 +114,8 @@ $("#btn_hide_form").on("click", function () {
             
             for (const key in httpResponse.message) {
                 msgList += `<li>${httpResponse.message[key]}</li>`;
-                $(`#update_profile #${key}_wraper`).removeClass('border-zinc-400 focus-within:border-zinc-600');
-                $(`#update_profile #${key}_wraper`).addClass('border-red-500 focus-within:border-red-500');
+                $(`#update_profile #${key}_wraper_uprof`).removeClass('border-zinc-400 focus-within:border-zinc-600');
+                $(`#update_profile #${key}_wraper_uprof`).addClass('border-red-500 focus-within:border-red-500');
             }
             
             showAlert({
@@ -121,8 +134,9 @@ function validateUpdateProfile() {
     $('.label_fly').addClass('border-zinc-400 focus-within:border-zinc-600');
     $('.label_fly').removeClass('border-red-500 focus-within:border-red-500');
 
-    $('.validate').each(function() {
+    $('#update_profile .validate').each(function() {
         if ($(this).val() == "") {
+            console.log($(this));
             $(this).parent().removeClass('border-zinc-400 focus-within:border-zinc-600');
             $(this).parent().addClass('border-red-500 focus-within:border-red-500');
             status = false;

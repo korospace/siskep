@@ -28,7 +28,7 @@
           id="form_login"
           class="bg-white w-full v-340:w-max px-8 py-5 flex flex-col justify-center items-center border border-zinc-400 rounded-lg shadow-md">
             <div
-              class="rounded-full w-24 h-24 p-5 shadow-md">
+              class="rounded-full w-24 h-24 p-2">
                 <img
                   src="<?= base_url('images/logo-kemendagri.webp'); ?>" 
                   alt="logo kemendagri"
@@ -48,7 +48,7 @@
                   class="block px-5 py-3 w-full appearance-none focus:outline-none transition-all bg-white text-zinc-600 rounded-xl" />
                 <label 
                   for="username" 
-                  class="px-5 py-3 absolute top-0 text-zinc-400 duration-300 origin-0 cursor-text">
+                  class="py-3 absolute top-0 left-5 text-zinc-400 duration-300 origin-0 cursor-text">
                     username
                 </label>
             </div>
@@ -61,7 +61,7 @@
                   class="block px-5 py-3 w-full appearance-none focus:outline-none transition-all bg-white text-zinc-600 rounded-xl" />
                 <label 
                   for="password" 
-                  class="px-5 py-3 absolute top-0 text-zinc-400 duration-300 origin-0 cursor-text">
+                  class="py-3 absolute top-0 left-5 text-zinc-400 duration-300 origin-0 cursor-text">
                     password
                 </label>
             </div>

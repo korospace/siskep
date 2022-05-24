@@ -12,13 +12,10 @@
             $('#alert').removeClass('alert-success alert-danger alert-warning alert-info');
             $('#alert #message').html(data.message);
             $('#alert').removeClass(`none -translate-y-4 opacity-0`);
-            $('#alert').addClass(`alert-${data.type}`);
+            $('#alert').addClass(`flex alert-${data.type}`);
             if (data.autohide) {
                 setTimeout(() => {
-                    $('#alert').addClass(`none -translate-y-4 opacity-0`);
-                    setTimeout(() => {
-                        $('#alert').removeClass('alert-success alert-danger alert-warning alert-info');
-                    }, 1000);
+                    close();
                 }, 5000);    
             }     
         }
@@ -26,7 +23,7 @@
         function close() {
             $('#alert').addClass(`none -translate-y-4 opacity-0`);
             setTimeout(() => {
-                $('#alert').removeClass('alert-success alert-danger alert-warning alert-info');
+                $('#alert').removeClass('flex alert-success alert-danger alert-warning alert-info');
             }, 1000);
         }
 
@@ -57,7 +54,7 @@
 <?= $this->section('contentHtml'); ?>
   <div
     id="alert" 
-    class="flex none justify-between items-start fixed z-70 top-0 left-0 right-0 p-4 transition transform -translate-y-4 opacity-0 rounded-md">
+    class="none justify-between items-start fixed z-70 top-0 left-0 right-0 p-4 transition transform -translate-y-4 opacity-0 rounded-md">
       <span class="text-lg" id="message">lorem</span>
       <span
         id="close" 

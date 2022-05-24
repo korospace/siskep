@@ -95,8 +95,8 @@ class Validation
             'rules'  => 'required|min_length[8]|max_length[20]|is_unique[users.username]',
             'errors' => [
                 'required'    => 'username harus diisi',
-                'min_length'  => 'minimal 8 character',
-                'max_length'  => 'maximal 20 character',
+                'min_length'  => 'username minimal 8 character',
+                'max_length'  => 'username maximal 20 character',
                 'is_unique'   => 'username sudah terdaftar',
             ],
 		],
@@ -111,16 +111,16 @@ class Validation
             'rules'  => 'required|max_length[20]|is_unique[user_detail.nik]|is_natural',
             'errors' => [
                 'required'    => 'nik harus diisi',
-                'max_length'  => 'maximal 20 character',
+                'max_length'  => 'nik maximal 20 character',
                 'is_unique'   => 'nik sudah terdaftar',
-                'is_natural'  => 'hanya boleh angka',
+                'is_natural'  => 'nik hanya boleh angka nondecimal',
             ],
 		],
 		'nama_lengkap' => [
             'rules'  => 'required|max_length[255]',
             'errors' => [
                 'required'    => 'nama lengkap harus diisi',
-                'max_length'  => 'maximal 255 character',
+                'max_length'  => 'nama maximal 255 character',
             ],
 		],
 		'email' => [
@@ -129,65 +129,65 @@ class Validation
                 'required'    => 'email harus diisi',
                 'is_unique'   => 'email sudah terdaftar',
                 'valid_email' => 'email is not in format',
-                'max_length'  => 'maximal 255 character',
+                'max_length'  => 'email maximal 255 character',
             ],
 		],
 		'agama' => [
             'rules'  => 'required|in_list[islam,protestan,katolik,budha,hindu,khonghucu]',
             'errors' => [
                 'required'    => 'agama harus disi',
-                'in_list'     => "nilai harus 'islam/protestan/katolik/budha/hindu/khonghucu'",
+                'in_list'     => "agama harus bernilai 'islam/protestan/katolik/budha/hindu/khonghucu'",
             ],
 		],
         'pendidikan' => [
             'rules'  => 'required|max_length[255]',
             'errors' => [
                 'required'    => 'pendidikan harus diisi',
-                'max_length'  => 'maximal 255 character',
+                'max_length'  => 'pendidikan maximal 255 character',
             ],
 		],
         'golongan' => [
             'rules'  => 'required|in_list[asn,non-asn]',
             'errors' => [
                 'required'    => 'golongan harus disi',
-                'in_list'     => "nilai harus 'asn/non-asn'",
+                'in_list'     => "golongan harus bernilai 'asn/non-asn'",
             ],
 		],
         'masa_kerja' => [
             'rules'  => 'required|is_natural',
             'errors' => [
                 'required'   => 'masa kerja harus disi',
-                'is_natural' => 'harus angka non-decimal',
+                'is_natural' => 'masa kerja harus bernilai angka nondecimal',
             ],
 		],
 		'tgl_lahir' => [
             'rules'  => 'required|regex_match[/^(0[1-9]|[12][0-9]|3[01])[\-\ ](0[1-9]|1[012])[\-\ ](19|20)\d\d$/]',
             'errors' => [
                 'required'    => 'tgl lahir harus diisi',
-                'regex_match' => 'format must be dd-mm-yyyy',
+                'regex_match' => 'tgl lahir harus berformat dd-mm-yyyy',
             ],
 		],
 		'alamat' => [
             'rules'  => 'required|max_length[255]',
             'errors' => [
                 'required'    => 'alamat harus diisi',
-                'max_length'  => 'maximal 255 character',
+                'max_length'  => 'alamat maximal 255 character',
             ],
 		],
 		'kelamin' => [
             'rules'  => 'required|in_list[laki-laki,perempuan]',
             'errors' => [
                 'required'    => 'kelamin harus disi',
-                'in_list'     => "nilai harus 'laki-laki' atau 'perempuan'",
+                'in_list'     => "kelamin harus bernilai 'laki-laki' atau 'perempuan'",
             ],
 		],
 		'notelp' => [
             'rules'  => 'required|max_length[20]|is_unique[user_detail.notelp]|is_natural',
             'errors' => [
-                'required'    => 'nomor telepon harus diisi',
-                'max_length'  => 'maximal 20 character',
+                'required'    => 'no.telp harus diisi',
+                'max_length'  => 'no.telp maximal 20 character',
                 'is_unique'   => 'no.telp sudah dipakai',
-                'is_natural'  => 'hanya boleh angka',
+                'is_natural'  => 'no.telp hanya boleh angka nondecimal',
             ],
 		]
     ];
@@ -284,6 +284,20 @@ class Validation
             'errors' => [
                 'required'    => 'golongan harus disi',
                 'in_list'     => "nilai harus 'asn/non-asn'",
+            ],
+		],
+		'status' => [
+            'rules'  => 'required|in_list[active,nonactive]',
+            'errors' => [
+                'required'    => 'status harus disi',
+                'in_list'     => "status harus bernilai 'active' atau 'nonactive'",
+            ],
+		],
+        'masa_kerja' => [
+            'rules'  => 'required|is_natural',
+            'errors' => [
+                'required'   => 'masa kerja harus disi',
+                'is_natural' => 'masa kerja harus angka non-decimal',
             ],
 		],
 		'tgl_lahir' => [
@@ -440,6 +454,52 @@ class Validation
             ],
 		]
     ];
+
+	public $updateInformationValidate = [
+		'id' => [
+            'rules'  => 'required|is_not_unique[information.id]',
+            'errors' => [
+                'required'      => 'id harus diisi',
+                'is_not_unique' => 'id ({value}) tidak ditemukan',
+            ],
+		],
+		'title' => [
+            'rules'  => 'required|max_length[255]',
+            'errors' => [
+                'required'    => 'title harus diisi',
+                'max_length'  => 'title maximal 255 character',
+            ],
+		],
+		'visi' => [
+            'rules'  => 'required',
+            'errors' => [
+                'required' => 'visi harus diisi',
+            ],
+		],
+		'misi' => [
+            'rules'  => 'required',
+            'errors' => [
+                'required' => 'misi harus diisi',
+            ],
+		],
+		'pengumuman' => [
+            'rules'  => 'required',
+            'errors' => [
+                'required' => 'pengumuman harus diisi',
+            ],
+		]
+	];
+
+	public $newLogoValidate = [
+        'new_logo' => [
+            'rules'  => 'max_size[new_logo,2000]|mime_in[new_logo,image/png,image/jpg,image/jpeg,image/webp]',
+            'errors' => [
+                'max_size' => 'ukuran maximal 2mb',
+                // 'is_image' => 'your file is not image',
+                'mime_in'  => 'format yang tersedia adalah (png/jpg/jpeg/webp)',
+            ],
+        ],
+	];
 
     /**
      * Delete

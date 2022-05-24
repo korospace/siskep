@@ -33,8 +33,8 @@
     <script src="<?= base_url('js/plugins/sweetalert2.min.js'); ?>"></script>
     <script src="<?= base_url('js/plugins/font-awesome.min.js'); ?>"></script>
     <script>
+      let PASSWORD   = "";
       const TOKEN    = "<?= (isset($token)) ? $token : null; ?>";
-      const PASSWORD = "<?= (isset($password)) ? $password : null; ?>";
       const BASE_URL = "<?= base_url() ?>";
       const LASTURL  = "<?= (isset($lasturl)) ? $lasturl : null; ?>"; //login controller
     </script>

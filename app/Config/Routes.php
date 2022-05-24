@@ -33,14 +33,28 @@ $routes->setAutoRoute(true);
 $routes->get(
     '/', 
     'Dashboard::index', 
-    ['filter' => 'DashboardGuard']
+    ['filter' => 'Dashboard']
 );
 
 // Edit profile
 $routes->get(
     '/update_profile', 
     'Dashboard::updateProfile', 
-    ['filter' => 'DashboardGuard']
+    ['filter' => 'Dashboard']
+);
+
+// List User Page
+$routes->get(
+    '/pegawai', 
+    'Dashboard::listUsers', 
+    ['filter' => 'DashboardNonPegawai']
+);
+
+// Create User Page
+$routes->get(
+    '/pegawai/tambah', 
+    'Dashboard::crudUsers/tambah pegawai', 
+    ['filter' => 'DashboardNonPegawai']
 );
 
 // Login & Logout
@@ -48,7 +62,7 @@ $routes->group("login", function ($routes) {
     $routes->get(
         '/', 
         'Login::index', 
-        ['filter' => 'LoggedGuard']
+        ['filter' => 'DashboardLogged']
     );
     $routes->get('show',      'Login::show');  
     $routes->post('create',   'Login::create');
@@ -60,17 +74,17 @@ $routes->group("bagian", function ($routes) {
     $routes->get(
         'show', 
         'Bagian::show', 
-        ['filter' => 'AdminApiGuard']
+        ['filter' => 'ApiGuardAdmin']
     );
     $routes->post(
         'create', 
         'Bagian::create', 
-        ['filter' => 'AdminApiGuard']
+        ['filter' => 'ApiGuardAdmin']
     );
     $routes->delete(
         'delete/(:any)', 
         'Bagian::delete/$1', 
-        ['filter' => 'AdminApiGuard']
+        ['filter' => 'ApiGuardAdmin']
     );
 });
 
@@ -79,17 +93,17 @@ $routes->group("subagian", function ($routes) {
     $routes->get(
         'show', 
         'Subagian::show', 
-        ['filter' => 'NonPegawaiApiGuard']
+        ['filter' => 'ApiGuardAdminKabag']
     );
     $routes->post(
         'create', 
         'Subagian::create', 
-        ['filter' => 'NonPegawaiApiGuard']
+        ['filter' => 'ApiGuardAdmin']
     );
     $routes->delete(
         'delete/(:any)', 
         'Subagian::delete/$1', 
-        ['filter' => 'NonPegawaiApiGuard']
+        ['filter' => 'ApiGuardAdmin']
     );
 });
 
@@ -98,7 +112,7 @@ $routes->group("user", function ($routes) {
     $routes->get(
         'previlege', 
         'Users::getPrevilege', 
-        ['filter' => 'AdminKabagApiGuard']
+        ['filter' => 'ApiGuardNonPegawai']
     );
     $routes->get(
         'profile', 
@@ -108,22 +122,17 @@ $routes->group("user", function ($routes) {
     $routes->get(
         'show', 
         'Users::show', 
-        ['filter' => 'NonPegawaiApiGuard']
-    );
-    $routes->get(
-        'show/(:any)', 
-        'Users::show/$1', 
-        ['filter' => 'NonPegawaiApiGuard']
+        ['filter' => 'ApiGuardNonPegawai']
     );
     $routes->post(
         'create', 
         'Users::create', 
-        ['filter' => 'NonPegawaiApiGuard']
+        ['filter' => 'ApiGuardNonPegawai']
     );
     $routes->put(
         'update/(:any)', 
         'Users::update/$1', 
-        ['filter' => 'NonPegawaiApiGuard']
+        ['filter' => 'ApiGuardNonPegawai']
     );
     $routes->put(
         'update_profile', 
@@ -133,7 +142,20 @@ $routes->group("user", function ($routes) {
     $routes->delete(
         'delete/(:any)', 
         'Users::delete/$1', 
-        ['filter' => 'NonPegawaiApiGuard']
+        ['filter' => 'ApiGuardNonPegawai']
+    );
+});
+
+// crud Information
+$routes->group("information", function ($routes) {
+    $routes->get(
+        'show', 
+        'Information::show'
+    );
+    $routes->put(
+        'update', 
+        'Information::update', 
+        ['filter' => 'ApiGuardAdmin']
     );
 });
 

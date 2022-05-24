@@ -10,7 +10,7 @@
 
 .label_fly input:focus-within ~ label,
 .label_fly input:not(:placeholder-shown) ~ label {
-  @apply z-0 px-0 py-0 text-zinc-600 transform scale-75 -translate-y-7;
+  @apply z-0 px-0 py-0 text-zinc-600 text-xs -top-6 left-2;
 }
 
 .alert-success{
