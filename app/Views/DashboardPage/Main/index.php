@@ -2,7 +2,8 @@
 
 <!-- Css -->
 <?= $this->section('dashboardCss'); ?>
-
+    <style>
+    </style>
 <?= $this->endSection(); ?>
 
 <!-- JS -->

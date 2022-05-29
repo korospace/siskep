@@ -33,10 +33,13 @@
     <script src="<?= base_url('js/plugins/sweetalert2.min.js'); ?>"></script>
     <script src="<?= base_url('js/plugins/font-awesome.min.js'); ?>"></script>
     <script>
-      let PASSWORD   = "";
-      const TOKEN    = "<?= (isset($token)) ? $token : null; ?>";
-      const BASE_URL = "<?= base_url() ?>";
-      const LASTURL  = "<?= (isset($lasturl)) ? $lasturl : null; ?>"; //login controller
+      let PASSWORD     = "";
+      const TOKEN      = "<?= (isset($token)) ? $token : null; ?>";
+      const PREVILEGE  = "<?= (isset($previlege)) ? $previlege : null; ?>";
+      const IDBAGIAN   = "<?= (isset($idbagian)) ? $idbagian : null; ?>";
+      const IDSUBAGIAN = "<?= (isset($idsubagian)) ? $idsubagian : null; ?>";
+      const BASE_URL   = "<?= base_url() ?>";
+      const LASTURL    = "<?= (isset($lasturl)) ? $lasturl : null; ?>"; //login controller
     </script>
     <script src="<?= base_url('js/parent.js'); ?>"></script>
     <?= $this->renderSection('jsComponent'); ?>

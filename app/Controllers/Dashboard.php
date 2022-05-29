@@ -23,26 +23,25 @@ class Dashboard extends BaseController
     }
 
     /**
-     * PAGE: Update profile
-     * - show update profile page in dashboard
+     * PAGE: Tugas Dan Fungsi
+     * - show tugas & fungsi page in dashboard
      */
-    public function updateProfile()
+    public function tugasFungsi()
     {
         global $g_token;
         global $g_previlege;
+        global $g_idbagian;
+        global $g_idsubagian;
 
         $data = [
-            'title' => 'update profile',
+            'title' => 'tugas & fungsi',
             'token' => $g_token,
-            'previlege' => $g_previlege,
+            'previlege'  => $g_previlege,
+            'idbagian'   => $g_idbagian,
+            'idsubagian' => $g_idsubagian,
         ];
 
-        if ($g_previlege == "admin") {
-            return redirect()->to(base_url());
-        }
-        else {
-            return view("DashboardPage/UpdateProfile/index",$data);
-        }
+        return view("DashboardPage/TugasFungsi/index",$data);
     }
 
     /**
@@ -64,20 +63,25 @@ class Dashboard extends BaseController
     }
 
     /**
-     * PAGE: Crud Users
-     * - show crud users page in dashboard
+     * PAGE: Update profile
+     * - show update profile page in dashboard
      */
-    public function crudUsers($title = null,$id = null)
+    public function updateProfile()
     {
         global $g_token;
         global $g_previlege;
 
         $data = [
-            'title' => $title,
+            'title' => 'update profile',
             'token' => $g_token,
             'previlege' => $g_previlege,
         ];
 
-        return view("DashboardPage/CrudUsers/index",$data);
+        if ($g_previlege == "admin") {
+            return redirect()->to(base_url());
+        }
+        else {
+            return view("DashboardPage/UpdateProfile/index",$data);
+        }
     }
 }

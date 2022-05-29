@@ -11,8 +11,8 @@
         function showAlert(data) {
             $('#alert').removeClass('alert-success alert-danger alert-warning alert-info');
             $('#alert #message').html(data.message);
-            $('#alert').removeClass(`none -translate-y-4 opacity-0`);
-            $('#alert').addClass(`flex alert-${data.type}`);
+            $('#alert').removeClass(`none -z-1 -translate-y-4 opacity-0`);
+            $('#alert').addClass(`flex z-70 alert-${data.type}`);
             if (data.autohide) {
                 setTimeout(() => {
                     close();
@@ -21,9 +21,9 @@
         }
 
         function close() {
-            $('#alert').addClass(`none -translate-y-4 opacity-0`);
+            $('#alert').addClass(`none -z-1 -translate-y-4 opacity-0`);
             setTimeout(() => {
-                $('#alert').removeClass('flex alert-success alert-danger alert-warning alert-info');
+                $('#alert').removeClass('alert-success alert-danger alert-warning alert-info flex z-70');
             }, 1000);
         }
 

@@ -47,10 +47,10 @@
                 let option = "<option value=''>-- pilih bagian --</option>";
                 
                 dataStorage.forEach(e => {
-                    option += `<option value="${e.name}">${e.name}</option>`;
+                    option += `<option value="${e.id}">${e.name}</option>`;
                 });
 
-                $("#bagian_crudu").html(option);
+                $("#id_bagian_crudu").html(option);
             }
             getDataBagian();
         <?php } ?>
@@ -74,29 +74,27 @@
             let text =e.options[e.selectedIndex].text;
 
             if (text == "kabag") {
-                $("#subagian_wraper_crudu").addClass('hidden');
+                $("#id_subagian_wraper_crudu").addClass('hidden');
             }
             else {
-                $("#subagian_wraper_crudu").removeClass('hidden');
+                $("#id_subagian_wraper_crudu").removeClass('hidden');
+                $("#id_bagian_crudu").val("")
             }
         }
 
-        function bagianOnChange(bagName = null){
-            let e    = document.getElementById("bagian_crudu");
-            let text = bagName ? bagName : e.options[e.selectedIndex].text;
+        function bagianOnChange1(bagId = null){
+            let e     = document.getElementById("id_bagian_crudu");
+            let value = bagId ? bagId : e.options[e.selectedIndex].value;
                     
             let option = "<option value=''>-- pilih subagian --</option>";
+
             arrSubag.forEach(e => {
-                if (e.bagian == text) {
-                    option += `<option value="${e.name}">${e.name}</option>`;
+                if (e.id_bagian == value) {
+                    option += `<option value="${e.id}">${e.name}</option>`;
                 }
             });
 
-            $("#subagian_crudu").html(option);
-        }
-
-        function fillInputForm() {
-            
+            $("#id_subagian_crudu").html(option);
         }
 
         // show popup
@@ -106,18 +104,18 @@
             <?php if ($previlege == 'kabag') { ?>
                 let dataStorage = JSON.parse(localStorage.getItem("data_profile"));
                 
-                $("#bagian_crudu").html(`<option value="${dataStorage.bagian}">
+                $("#id_bagian_crudu").html(`<option value="${dataStorage.id_bagian}">
                     ${dataStorage.bagian}
                 </option>`);
 
-                bagianOnChange(dataStorage.bagian);
+                bagianOnChange1(dataStorage.id_bagian);
             <?php } else if ($previlege == 'kasubag') {?>
                 let dataStorage = JSON.parse(localStorage.getItem("data_profile"));
 
-                $("#bagian_crudu").html(`<option value="${dataStorage.bagian}">
+                $("#id_bagian_crudu").html(`<option value="${dataStorage.id_bagian}">
                     ${dataStorage.bagian}
                 </option>`);
-                $("#subagian_crudu").html(`<option value="${dataStorage.subagian}">
+                $("#id_subagian_crudu").html(`<option value="${dataStorage.id_subagian}">
                     ${dataStorage.subagian}
                 </option>`);
             <?php } ?>
@@ -163,17 +161,18 @@
             
             let httpResponse = await httpRequestGet(`${BASE_URL}/user/show?id=${userId}`);
             let data         = httpResponse.data.data;
+
             $('.label_fly').removeClass('py-3 bg-zinc-400 animate-pulse');
             $('.label_fly >* ').removeClass('hidden');
 
             if (data.subagian == null) {
-                $("#subagian_wraper_crudu").addClass('hidden');
+                $("#id_subagian_wraper_crudu").addClass('hidden');
             }
             else {
                 <?php if ($previlege != 'kasubag') {?>
-                    bagianOnChange(data.bagian);
+                    bagianOnChange1(data.id_bagian);
                 <?php } ?>
-                $("#subagian_wraper_crudu").removeClass('hidden');
+                $("#id_subagian_wraper_crudu").removeClass('hidden');
             }
 
             for (const key in data) {
@@ -269,8 +268,8 @@
         }
 
         function cleanForm() {
-            $("#subagian_wraper_crudu").removeClass('hidden');
-            $("#subagian_crudu").html(`<option value="">-- pilih subagian --</option>`);
+            $("#id_subagian_wraper_crudu").removeClass('hidden');
+            $("#id_subagian_crudu").html(`<option value="">-- pilih subagian --</option>`);
 
             // clear error message first
             $('.label_fly').addClass('border-zinc-400 focus-within:border-zinc-600');
@@ -536,7 +535,7 @@
                         <select
                         id="id_previlege_crudu" name="id_previlege" placeholder="jenis akun" autocomplete="off" 
                         class="validate block px-4 py-2 w-full appearance-none focus:outline-none transition-all bg-white text-zinc-600 rounded-md"  
-                        oninput="previlegeOnChange()">
+                        onchange="previlegeOnChange()">
                             <option value="">-- pilih jenis akun --</option>
                         </select>
                         <label 
@@ -548,17 +547,17 @@
 
                     <!-- bagian -->
                     <div
-                    id="bagian_wraper_crudu"
+                    id="id_bagian_wraper_crudu"
                     class="label_fly w-full h-max relative border-2 border-zinc-400 focus-within:border-zinc-600 rounded-md">
                         <select
-                        id="bagian_crudu" name="bagian" placeholder="bagian" autocomplete="off" 
+                        id="id_bagian_crudu" name="id_bagian" placeholder="bagian" autocomplete="off" 
                         class="validate block px-4 py-2 w-full appearance-none focus:outline-none transition-all bg-white text-zinc-600 rounded-md" 
-                        onchange="bagianOnChange();"
+                        onchange="bagianOnChange1();"
                         >
                             <option value="">-- pilih bagian --</option>
                         </select>
                         <label 
-                        for="bagian_crudu" 
+                        for="id_bagian_crudu" 
                         class="py-2 absolute left-2 -top-8 z-0 text-zinc-600 cursor-text text-xs">
                             bagian
                         </label>
@@ -566,15 +565,15 @@
 
                     <!-- subagian -->
                     <div
-                    id="subagian_wraper_crudu"
+                    id="id_subagian_wraper_crudu"
                     class="label_fly w-full h-max relative border-2 border-zinc-400 focus-within:border-zinc-600 rounded-md">
                         <select
-                        id="subagian_crudu" name="subagian" placeholder="subagian" autocomplete="off" 
+                        id="id_subagian_crudu" name="id_subagian" placeholder="subagian" autocomplete="off" 
                         class="validate block px-4 py-2 w-full appearance-none focus:outline-none transition-all bg-white text-zinc-600 rounded-md" >
                             <option value="">-- pilih subagian --</option>
                         </select>
                         <label 
-                        for="subagian_crudu" 
+                        for="id_subagian_crudu" 
                         class="py-2 absolute left-2 -top-8 z-0 text-zinc-600 cursor-text text-xs">
                             subagian
                             <small class="w-max text-gray-400 italic">

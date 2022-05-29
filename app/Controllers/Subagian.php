@@ -2,6 +2,7 @@
 
 namespace App\Controllers;
 
+use App\Utils\Utils;
 use CodeIgniter\RESTful\ResourceController;
 
 class Subagian extends ResourceController
@@ -26,7 +27,11 @@ class Subagian extends ResourceController
      */
     public function show($id = null)
     {
-        $rows = $this->db->table("subagian")->select("*")->get()->getResultArray();
+        $get  = $this->request->getGet();
+        $rows = $this->db->table("subagian")->select("subagian.id,subagian.name,subagian.id_bagian,bagian.name as bagian")
+        ->join("bagian","bagian.id = subagian.id_bagian")
+        ->get()
+        ->getResultArray();
 
         $respond  = [
             "code"  => count($rows) == 0 ? 404  : 200,
@@ -37,6 +42,28 @@ class Subagian extends ResourceController
         if (count($rows) == 0) {
             unset($respond["data"]);
             $respond["message"] = "subagian belum ditambah";
+        }
+
+        return $this->respond($respond,$respond['code']);
+    }
+
+    public function detail($id = null)
+    {
+        $rows = $this->db->table("subagian")->select("subagian.id,subagian.name,subagian.id_bagian,bagian.name as bagian,subagian.description")
+            ->join("bagian","bagian.id = subagian.id_bagian")
+            ->where("subagian.id",$id)  
+            ->get()
+            ->getFirstRow();
+
+        $respond  = [
+            "code"  => empty($rows) ? 404  : 200,
+            "error" => empty($rows) ? true : false,
+            "data"  => empty($rows) ? [] : $rows
+        ];
+
+        if (empty($rows)) {
+            unset($respond["data"]);
+            $respond["message"] = "subagian dengan id ($id) tidak ditemukan";
         }
 
         return $this->respond($respond,$respond['code']);
@@ -69,8 +96,9 @@ class Subagian extends ResourceController
                 $this->db->transBegin();
 
                 $data = [
-                    "bagian" => $post["bagian"],
-                    "name"   => htmlspecialchars(strtolower($post["name"])),
+                    "id_bagian" => $post["id_bagian"],
+                    "name"      => htmlspecialchars(strtolower($post["name"])),
+                    "description" => $post["description"],
                 ];
 
                 $this->db->table("subagian")->insert($data);
@@ -89,6 +117,76 @@ class Subagian extends ResourceController
                     $respond['message'] = "Rollback: terjadi kesalahan saat input data";
                     $this->db->transRollback();
                 }
+            }
+        } 
+        catch (\Throwable $th) {
+            $this->db->transRollback();
+            $respond = [
+                "error"   => true,
+                "code"    => 500,
+                "message" => $th->getMessage(),
+                "debug"   => $th->getTraceAsString()
+            ];
+        }
+
+        return $this->respond($respond,$respond['code']);
+    }
+
+    /**
+     * Update bagian
+     * ============
+     * - api for update bagian
+     * - previlege     : admin
+     * - url           : /bagian/update
+     * - Method        : PUT
+     * - request header: token
+     */
+    public function update($id = null)
+    {
+        try {
+            Utils::_methodParser("put");
+            global $put;
+
+            $this->validation->run($put,'updateSubagValidate');
+            $errors = $this->validation->getErrors();
+            
+            if (isset($errors["id"])) {
+                foreach ($errors as $key => $value) {
+                    if ($key != "id") {
+                        unset($errors[$key]);
+                    }
+                }
+
+                $errors = $errors["id"];
+            }
+
+            if ($errors) {
+                $respond = [
+                    'code'    => 400,
+                    'error'   => true,
+                    'message' => $errors,
+                ]; 
+            } 
+            else {
+                $this->db->transBegin();
+
+                $data = [
+                    "name"        => htmlspecialchars($put["name"]),
+                    "id_bagian"   => $put["id_bagian"],
+                    "description" => $put["description"],
+                ];
+
+                $this->db->table("subagian")
+                    ->where("id",$put["id"])
+                    ->update($data);
+
+                $respond = [
+                    'code'    => 201,
+                    'error'   => false,
+                    'message' => "subagian dengan id:".$put["id"]." berhasil diupdate"
+                ];
+
+                $this->db->transCommit();
             }
         } 
         catch (\Throwable $th) {

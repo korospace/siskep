@@ -73,11 +73,13 @@ class Login extends ResourceController
             } 
             else {
                 $dbresult = (array)$this->db->table("users")
-                ->select("users.id as id,users.password,users.id_previlege,user_type.type as previlege,user_detail.status,user_detail_bag.bag_name as bagian,user_detail_subag.subag_name as subagian")
+                ->select("users.id as id,users.password,users.id_previlege,user_type.type as previlege,user_detail.status,bagian.id as id_bagian,bagian.name as bagian,subagian.id as id_subagian,subagian.name as subagian")
                 ->join("user_type"        ,"users.id_previlege = user_type.id")
                 ->join("user_detail"      ,"users.id = user_detail.user_id", 'left')
                 ->join("user_detail_bag"  ,"users.id = user_detail_bag.user_id", 'left')
+                ->join("bagian"           ,"bagian.id = user_detail_bag.id_bagian", 'left')
                 ->join("user_detail_subag","users.id = user_detail_subag.user_id", 'left')
+                ->join("subagian"         ,"subagian.id = user_detail_subag.id_subagian", 'left')
                 ->getWhere(["users.username"=>$post["username"]])
                 ->getFirstRow();
 
@@ -106,7 +108,9 @@ class Login extends ResourceController
                                 "id_previlege" => $dbresult["id_previlege"],
                                 "previlege"    => $dbresult["previlege"],
                                 "bagian"       => $dbresult["bagian"],
+                                "id_bagian"    => $dbresult["id_bagian"],
                                 "subagian"     => $dbresult["subagian"],
+                                "id_subagian"  => $dbresult["id_subagian"],
                             ])
                         ];
 

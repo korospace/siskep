@@ -20,16 +20,16 @@ class UserDetailBagian extends Migration
                 'unique'     => true,
                 'null'       => false,
             ],
-            'bag_name' => [
-                'type'       => 'varchar',
-                'constraint' => 255,
+            'id_bagian' => [
+                'type'       => 'int',
+                'constraint' => 11,  
                 'null'       => false,
             ]
         ]);
 
         $this->forge->addPrimaryKey('id');
         $this->forge->addForeignKey('user_id','users','id','CASCADE','CASCADE');
-        $this->forge->addForeignKey('bag_name','bagian','name','CASCADE','CASCADE');
+        $this->forge->addForeignKey('id_bagian','bagian','id','CASCADE','CASCADE');
         $this->forge->createTable('user_detail_bag');
     }
 

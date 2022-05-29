@@ -2,6 +2,17 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer base {
+    ul, ol {
+      list-style: revert;
+      @apply ml-5;
+    }
+}
+
+li {
+  @apply mb-4;
+}
+
 .label_fly input::placeholder{
     transition: all 0.5s;
     color: white;

@@ -20,6 +20,10 @@ class Bagian extends Migration
                 'unique'     => true,
                 'null'       => false,
             ],
+            'description' => [
+                'type'       => 'longtext',
+                'null'       => false,
+            ]
         ]);
 
         $this->forge->addPrimaryKey('id');

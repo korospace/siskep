@@ -11,8 +11,12 @@ async function getUsers(queries = "") {
     
     if (httpResponse.status === 200) {
         arrUser = httpResponse.data.data;
-        createTableRow(arrUser);
+    } 
+    else {
+      arrUser = [];
     }
+    
+    createTableRow(arrUser);
 }
 getUsers();
 
@@ -78,6 +82,9 @@ function createTableRow(data) {
   $("#body_main").html(list); 
 }
 
+/**
+ * Delete User
+ */
 function deleteUser(userId,el) {
   Swal.fire({
       title: 'DELETE AKUN',

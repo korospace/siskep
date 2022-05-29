@@ -36,10 +36,10 @@ $routes->get(
     ['filter' => 'Dashboard']
 );
 
-// Edit profile
+// Tugas & Fungsi
 $routes->get(
-    '/update_profile', 
-    'Dashboard::updateProfile', 
+    '/tugas_fungsi', 
+    'Dashboard::tugasFungsi', 
     ['filter' => 'Dashboard']
 );
 
@@ -50,11 +50,11 @@ $routes->get(
     ['filter' => 'DashboardNonPegawai']
 );
 
-// Create User Page
+// Edit profile
 $routes->get(
-    '/pegawai/tambah', 
-    'Dashboard::crudUsers/tambah pegawai', 
-    ['filter' => 'DashboardNonPegawai']
+    '/update_profile', 
+    'Dashboard::updateProfile', 
+    ['filter' => 'Dashboard']
 );
 
 // Login & Logout
@@ -76,9 +76,19 @@ $routes->group("bagian", function ($routes) {
         'Bagian::show', 
         ['filter' => 'ApiGuardAdmin']
     );
+    $routes->get(
+        'detail/(:any)', 
+        'Bagian::detail/$1', 
+        ['filter' => 'ApiGuard']
+    );
     $routes->post(
         'create', 
         'Bagian::create', 
+        ['filter' => 'ApiGuardAdmin']
+    );
+    $routes->put(
+        'update', 
+        'Bagian::update', 
         ['filter' => 'ApiGuardAdmin']
     );
     $routes->delete(
@@ -95,9 +105,19 @@ $routes->group("subagian", function ($routes) {
         'Subagian::show', 
         ['filter' => 'ApiGuardAdminKabag']
     );
+    $routes->get(
+        'detail/(:any)', 
+        'Subagian::detail/$1', 
+        ['filter' => 'ApiGuard']
+    );
     $routes->post(
         'create', 
         'Subagian::create', 
+        ['filter' => 'ApiGuardAdmin']
+    );
+    $routes->put(
+        'update', 
+        'Subagian::update', 
         ['filter' => 'ApiGuardAdmin']
     );
     $routes->delete(

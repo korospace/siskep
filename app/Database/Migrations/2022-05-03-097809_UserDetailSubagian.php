@@ -20,16 +20,16 @@ class UserDetailSubagian extends Migration
                 'unique'     => true,
                 'null'       => false,
             ],
-            'subag_name' => [
-                'type'       => 'varchar',
-                'constraint' => 255,
+            'id_subagian' => [
+                'type'       => 'int',
+                'constraint' => 11,  
                 'null'       => false,
             ]
         ]);
 
         $this->forge->addPrimaryKey('id');
         $this->forge->addForeignKey('user_id','users','id','CASCADE','CASCADE');
-        $this->forge->addForeignKey('subag_name','subagian','name','CASCADE','CASCADE');
+        $this->forge->addForeignKey('id_subagian','subagian','id','CASCADE','CASCADE');
         $this->forge->createTable('user_detail_subag');
     }
 

@@ -23,7 +23,7 @@
         <!-- **** Loading Spinner **** -->
         <?= $this->include('Components/loadingSpinner'); ?>
         
-        <?php if ($previlege != 'pegawai' && $title == 'pegawai') { ?>
+        <?php if ($previlege != 'pegawai') { ?>
           <!-- **** PopUp Crud Users **** -->
           <?= $this->include('Components/CrudUsers'); ?>
 
@@ -32,6 +32,12 @@
         <?php } ?>
 
         <?php if ($previlege == 'admin') { ?>
+          <!-- **** Crud bagian **** -->
+          <?= $this->include('Components/CrudBagian'); ?>
+
+          <!-- **** Crud subagian **** -->
+          <?= $this->include('Components/CrudSubagian'); ?>
+
           <!-- **** Edit Information **** -->
           <?= $this->include('Components/EditInformation'); ?>
 

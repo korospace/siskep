@@ -29,27 +29,27 @@ class AppSeed extends Seeder
          */
         $dataSubagian = [
             [
-                "bagian" => "bagian 1",
+                "id_bagian" => 1,
                 "name"   => "subagian 1"
             ],
             [
-                "bagian" => "bagian 1",
+                "id_bagian" => 1,
                 "name"   => "subagian 2"
             ],
             [
-                "bagian" => "bagian 1",
+                "id_bagian" => 1,
                 "name"   => "subagian 3"
             ],
             [
-                "bagian" => "bagian 2",
+                "id_bagian" => 2,
                 "name"   => "subagian 2.1"
             ],
             [
-                "bagian" => "bagian 2",
+                "id_bagian" => 2,
                 "name"   => "subagian 2.2"
             ],
             [
-                "bagian" => "bagian 2",
+                "id_bagian" => 2,
                 "name"   => "subagian 2.3"
             ],
         ];
@@ -302,44 +302,44 @@ class AppSeed extends Seeder
          */
         $dataUserDetailBag = [
             [
+                "id_bagian" => 1,
                 "user_id"  => "k1",
-                "bag_name" => "bagian 1"
             ],
             [
+                "id_bagian" => 2,
                 "user_id"  => "k2",
-                "bag_name" => "bagian 2"
             ],
             [
+                "id_bagian" => 1,
                 "user_id" => "ks1",
-                "bag_name" => "bagian 1"
             ],
             [
+                "id_bagian" => 1,
                 "user_id" => "ks2",
-                "bag_name" => "bagian 1"
             ],
             [
+                "id_bagian" => 2,
                 "user_id" => "ks3",
-                "bag_name" => "bagian 2"
             ],
             [
+                "id_bagian" => 2,
                 "user_id" => "ks4",
-                "bag_name" => "bagian 2"
             ],
             [
+                "id_bagian" => 1,
                 "user_id" => "st1",
-                "bag_name" => "bagian 1"
             ],
             [
+                "id_bagian" => 1,
                 "user_id" => "st2",
-                "bag_name" => "bagian 1"
             ],
             [
+                "id_bagian" => 2,
                 "user_id" => "st3",
-                "bag_name" => "bagian 2"
             ],
             [
+                "id_bagian" => 2,
                 "user_id" => "st4",
-                "bag_name" => "bagian 2"
             ],
         ];
 
@@ -352,36 +352,36 @@ class AppSeed extends Seeder
          */
         $dataUserDetailSubag = [
             [
+                "id_subagian" => 1,
                 "user_id" => "ks1",
-                "subag_name" => "subagian 1"
             ],
             [
+                "id_subagian" => 2,
                 "user_id" => "ks2",
-                "subag_name" => "subagian 2"
             ],
             [
+                "id_subagian" => 3,
                 "user_id" => "ks3",
-                "subag_name" => "subagian 2.1"
             ],
             [
+                "id_subagian" => 4,
                 "user_id" => "ks4",
-                "subag_name" => "subagian 2.2"
             ],
             [
+                "id_subagian" => 1,
                 "user_id" => "st1",
-                "subag_name" => "subagian 1"
             ],
             [
+                "id_subagian" => 2,
                 "user_id" => "st2",
-                "subag_name" => "subagian 2"
             ],
             [
+                "id_subagian" => 3,
                 "user_id" => "st3",
-                "subag_name" => "subagian 2.1"
             ],
             [
+                "id_subagian" => 4,
                 "user_id" => "st4",
-                "subag_name" => "subagian 2.2"
             ],
         ];
 

@@ -14,9 +14,9 @@ class Subagian extends Migration
                 'constraint' => 11,      
                 'auto_increment' => true,
             ],
-            'bagian' => [
-                'type'       => 'varchar',
-                'constraint' => 255,
+            'id_bagian' => [
+                'type'       => 'int',
+                'constraint' => 11,  
                 'null'       => false,  
             ],
             'name' => [
@@ -25,10 +25,14 @@ class Subagian extends Migration
                 'unique'     => true,
                 'null'       => false,
             ],
+            'description' => [
+                'type'       => 'longtext',
+                'null'       => false,
+            ]
         ]);
 
         $this->forge->addPrimaryKey('id');
-        $this->forge->addForeignKey('bagian','bagian','name','CASCADE','CASCADE');
+        $this->forge->addForeignKey('id_bagian','bagian','id','CASCADE','CASCADE');
         $this->forge->createTable('subagian');
     }
 

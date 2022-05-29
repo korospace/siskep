@@ -69,15 +69,21 @@ class Validation
                 'max_length' => 'maximal 255 character',
                 'is_unique'  => 'nama bagian sudah terdaftar',
             ]
-        ]
+        ],
+		'description' => [
+            'rules'  => 'required',
+            'errors' => [
+                'required' => 'deskripsi harus diisi',
+            ],
+		],
     ];
 
     public $createSubagianValidate = [
-        'bagian' => [
-            'rules'  => 'required|is_not_unique[bagian.name]',
+        'id_bagian' => [
+            'rules'  => 'required|is_not_unique[bagian.id]',
             'errors' => [
-                'required'      => 'nama bagian harus diisi',
-                'is_not_unique' => 'nama bagian tidak terdaftar',
+                'required'      => 'id_bagian bagian harus diisi',
+                'is_not_unique' => 'id_bagian tidak terdaftar',
             ]
         ],
         'name' => [
@@ -87,7 +93,13 @@ class Validation
                 'max_length' => 'maximal 255 character',
                 'is_unique'  => 'nama subagian sudah terdaftar',
             ]
-        ]
+        ],
+		'description' => [
+            'rules'  => 'required',
+            'errors' => [
+                'required' => 'deskripsi harus diisi',
+            ],
+		],
     ];
 
     public $createUserValidate = [
@@ -193,21 +205,21 @@ class Validation
     ];
 
     public $createUserBagValidate = [
-		'bagian' => [
-            'rules'  => 'required|is_not_unique[bagian.name]',
+		'id_bagian' => [
+            'rules'  => 'required|is_not_unique[bagian.id]',
             'errors' => [
-                'required'      => 'bagian harus diisi',
-                'is_not_unique' => 'bagian tidak terdaftar',
+                'required'      => 'id_bagian harus diisi',
+                'is_not_unique' => 'id_bagian tidak terdaftar',
             ],
 		]
     ];
 
     public $createUserSubagValidate = [
-        'subagian' => [
+        'id_subagian' => [
             'rules'  => 'required|in_list[{allowedSubagian}]',
             'errors' => [
-                'required' => 'subagian harus diisi',
-                'in_list'  => 'subagian tidak terdaftar',
+                'required' => 'id_subagian harus diisi',
+                'in_list'  => 'id_subagian tidak terdaftar',
             ],
 		],
     ];
@@ -216,6 +228,58 @@ class Validation
      * Update
      * =============================
      */
+    public $updateBagValidate = [
+		'id' => [
+            'rules'  => 'is_not_unique[bagian.id]',
+            'errors' => [
+                'is_not_unique' => 'id bagian ({value}) tidak terdaftar',
+            ],
+		],
+        'name' => [
+            'rules'  => 'required|max_length[255]|is_unique[bagian.name,bagian.id,{id}]',
+            'errors' => [
+                'required'   => 'nama bagian harus diisi',
+                'max_length' => 'maximal 255 character',
+                'is_unique'  => 'nama bagian sudah terdaftar',
+            ]
+        ],
+		'description' => [
+            'rules'  => 'required',
+            'errors' => [
+                'required' => 'deskripsi harus diisi',
+            ],
+		],
+    ];
+
+    public $updateSubagValidate = [
+		'id' => [
+            'rules'  => 'is_not_unique[subagian.id]',
+            'errors' => [
+                'is_not_unique' => 'id subagian ({value}) tidak terdaftar',
+            ],
+		],
+        'name' => [
+            'rules'  => 'required|max_length[255]|is_unique[subagian.name,subagian.id,{id}]',
+            'errors' => [
+                'required'   => 'nama subagian harus diisi',
+                'max_length' => 'maximal 255 character',
+                'is_unique'  => 'nama subagian sudah terdaftar',
+            ]
+        ],
+        'id_bagian' => [
+            'rules'  => 'required|is_not_unique[bagian.id]',
+            'errors' => [
+                'required'      => 'id_bagian harus diisi',
+                'is_not_unique' => 'id_bagian tidak terdaftar',
+            ]
+        ],
+		'description' => [
+            'rules'  => 'required',
+            'errors' => [
+                'required' => 'deskripsi harus diisi',
+            ],
+		],
+    ];
 
     public $updateUserValidate = [
 		'id' => [
@@ -343,21 +407,21 @@ class Validation
     ];
 
     public $updateUserBagValidate = [
-		'bagian' => [
-            'rules'  => 'required|is_not_unique[bagian.name]',
+		'id_bagian' => [
+            'rules'  => 'required|is_not_unique[bagian.id]',
             'errors' => [
-                'required'      => 'bagian harus diisi',
-                'is_not_unique' => 'bagian tidak terdaftar',
+                'required'      => 'id_bagian harus diisi',
+                'is_not_unique' => 'id_bagian tidak terdaftar',
             ],
 		]
     ];
 
     public $updateUserSubagValidate = [
-        'subagian' => [
+        'id_subagian' => [
             'rules'  => 'required|in_list[{allowedSubagian}]',
             'errors' => [
-                'required' => 'subagian harus diisi',
-                'in_list'  => 'subagian tidak terdaftar di bagian anda',
+                'required' => 'id_subagian harus diisi',
+                'in_list'  => 'id_subagian tidak terdaftar di bagian anda',
             ],
 		],
     ];

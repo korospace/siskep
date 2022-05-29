@@ -354,7 +354,6 @@ $('#btn_logout').on('click', function(e) {
                 Swal.close();
 
                 localStorage.removeItem('data_login');
-                localStorage.removeItem('data_info');
                 localStorage.removeItem('data_bagian');
                 localStorage.removeItem('data_profile');
                 document.cookie = `token=null; path=/;SameSite=None; Secure`;
@@ -400,7 +399,6 @@ function doLogout(removeLastUrl = false) {
             hideLoadingSpinner();
 
             localStorage.removeItem('data_login');
-            localStorage.removeItem('data_info');
             localStorage.removeItem('data_bagian');
             localStorage.removeItem('data_profile');
             if (removeLastUrl) {
@@ -413,7 +411,6 @@ function doLogout(removeLastUrl = false) {
             hideLoadingSpinner();
 
             localStorage.removeItem('data_login');
-            localStorage.removeItem('data_info');
             localStorage.removeItem('data_bagian');
             localStorage.removeItem('data_profile');
             if (removeLastUrl) {

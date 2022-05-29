@@ -37,15 +37,6 @@
             </a>
             <!-- <a
                 href=""
-                class="<?= ($title=='tugas & fungsi') ? 'bg-gray-300 sm:bg-white shadow-md' : ''?> mt-5 p-3 flex items-center rounded-xl">
-                <div
-                    class="bg-indigo-900 w-8 h-8 flex justify-center items-center mr-3 rounded-md">
-                    <i class="fas fa-clipboard-check text-white text-md"></i>
-                </div>
-                <span class="text-indigo-900">Tugas & Fungsi</span>
-            </a>
-            <a
-                href=""
                 class="<?= ($title=='pembuatan sk') ? 'bg-gray-300 sm:bg-white shadow-md' : ''?> mt-5 p-3 flex items-center rounded-xl">
                 <div
                     class="bg-indigo-900 w-8 h-8 flex justify-center items-center mr-3 rounded-md">
@@ -53,16 +44,25 @@
                 </div>
                 <span class="text-indigo-900">Pembuatan SK</span>
             </a> -->
-            <?php if ($previlege != 'pegawai') { ?>
             <a
-                href="<?= base_url("/pegawai"); ?>"
-                class="<?= ($title=='pegawai') ? 'bg-gray-300 sm:bg-white shadow-md' : ''?> mt-5 p-3 flex items-center rounded-xl">
+                href="<?= base_url("/tugas_fungsi"); ?>"
+                class="<?= ($title=='tugas & fungsi') ? 'bg-gray-300 sm:bg-white shadow-md' : ''?> mt-5 p-3 flex items-center rounded-xl">
                 <div
                     class="bg-indigo-900 w-8 h-8 flex justify-center items-center mr-3 rounded-md">
-                    <i class="fas fa-user-friends text-white text-md"></i>
+                    <i class="fas fa-clipboard-check text-white text-md"></i>
                 </div>
-                <span class="text-indigo-900">Pegawai</span>
+                <span class="text-indigo-900">Tugas & Fungsi</span>
             </a>
+            <?php if ($previlege != 'pegawai') { ?>
+                <a
+                    href="<?= base_url("/pegawai"); ?>"
+                    class="<?= ($title=='pegawai') ? 'bg-gray-300 sm:bg-white shadow-md' : ''?> mt-5 p-3 flex items-center rounded-xl">
+                    <div
+                        class="bg-indigo-900 w-8 h-8 flex justify-center items-center mr-3 rounded-md">
+                        <i class="fas fa-user-friends text-white text-md"></i>
+                    </div>
+                    <span class="text-indigo-900">Pegawai</span>
+                </a>
             <?php } ?>
             <!-- <a
                 href=""
@@ -74,15 +74,15 @@
                 <span class="text-indigo-900">Laporan</span>
             </a> -->
             <?php if ($previlege == 'admin') { ?>
-            <div
-                class="mt-5 p-3 flex items-center rounded-xl cursor-pointer"
-                onclick="showEditInformation();">
                 <div
-                    class="bg-indigo-900 w-8 h-8 flex justify-center items-center mr-3 rounded-md">
-                    <i class="fas fa-info-circle text-white text-md"></i>
+                    class="mt-5 p-3 flex items-center rounded-xl cursor-pointer"
+                    onclick="showEditInformation();">
+                    <div
+                        class="bg-indigo-900 w-8 h-8 flex justify-center items-center mr-3 rounded-md">
+                        <i class="fas fa-info-circle text-white text-md"></i>
+                    </div>
+                    <span class="text-indigo-900">Information</span>
                 </div>
-                <span class="text-indigo-900">Information</span>
-            </div>
             <?php } ?>
             <a
                 href="<?= base_url("/update_profile"); ?>"

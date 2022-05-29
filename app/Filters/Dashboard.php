@@ -42,7 +42,9 @@ class Dashboard implements FilterInterface
             $GLOBALS["g_previlege"]    = $result['data']['previlege'];
             $GLOBALS["g_id_previlege"] = $result['data']['id_previlege'];
             $GLOBALS["g_bagian"]   = isset($result['data']['bagian'])   ? $result['data']['bagian']   : null;
+            $GLOBALS["g_idbagian"] = isset($result['data']['id_bagian'])   ? $result['data']['id_bagian']   : null;
             $GLOBALS["g_subagian"] = isset($result['data']['subagian']) ? $result['data']['subagian'] : null;
+            $GLOBALS["g_idsubagian"] = isset($result['data']['id_subagian'])   ? $result['data']['id_subagian']   : null;
             setcookie('token',$token,Utils::cookieOps($result['data']['expired']));
         }
     }

@@ -71,11 +71,13 @@ class Users extends ResourceController
         global $g_password;
 
         $dbresult = (array)$this->db->table("users")
-        ->select("users.id as id,users.username,users.password,users.id_previlege,user_type.type as previlege,user_detail.nik,user_detail.email,user_detail.nama_lengkap,user_detail.agama,user_detail.tgl_lahir,user_detail.pendidikan,user_detail.golongan,user_detail.status,user_detail.masa_kerja,user_detail.alamat,user_detail.kelamin,user_detail.notelp,user_detail_bag.bag_name as bagian,user_detail_subag.subag_name as subagian")
+        ->select("users.id as id,users.username,users.password,users.id_previlege,user_type.type as previlege,user_detail.nik,user_detail.email,user_detail.nama_lengkap,user_detail.agama,user_detail.tgl_lahir,user_detail.pendidikan,user_detail.golongan,user_detail.status,user_detail.masa_kerja,user_detail.alamat,user_detail.kelamin,user_detail.notelp,bagian.id as id_bagian,bagian.name as bagian,subagian.id as id_subagian,subagian.name as subagian")
         ->join("user_type"        ,"users.id_previlege = user_type.id")
-        ->join("user_detail"      ,"users.id = user_detail.user_id", 'left')
-        ->join("user_detail_bag"  ,"users.id = user_detail_bag.user_id", 'left')
-        ->join("user_detail_subag","users.id = user_detail_subag.user_id", 'left')
+        ->join("user_detail"      ,"users.id  = user_detail.user_id", 'left')
+        ->join("user_detail_bag"  ,"users.id  = user_detail_bag.user_id", 'left')
+        ->join("bagian"           ,"bagian.id = user_detail_bag.id_bagian", 'left')
+        ->join("user_detail_subag","users.id  = user_detail_subag.user_id", 'left')
+        ->join("subagian"         ,"subagian.id = user_detail_subag.id_subagian", 'left')
         ->getWhere(["users.id"=>$g_user_id])
         ->getFirstRow();
         $dbresult["password"] = $g_password;
@@ -111,31 +113,33 @@ class Users extends ResourceController
         $rows = $this->db->table("users");
 
         if (isset($get['id'])) {
-            $rows = $rows->select("users.id,users.username,users.id_previlege,user_detail.nik,user_detail.email,user_detail.nama_lengkap,user_detail.agama,user_detail.tgl_lahir,user_detail.pendidikan,user_detail.golongan,user_detail.status,user_detail.masa_kerja,user_detail.alamat,user_detail.kelamin,user_detail.notelp,user_detail_bag.bag_name as bagian,user_detail_subag.subag_name as subagian");
+            $rows = $rows->select("users.id,users.username,users.id_previlege,user_detail.nik,user_detail.email,user_detail.nama_lengkap,user_detail.agama,user_detail.tgl_lahir,user_detail.pendidikan,user_detail.golongan,user_detail.status,user_detail.masa_kerja,user_detail.alamat,user_detail.kelamin,user_detail.notelp,,bagian.id as id_bagian,bagian.name as bagian,subagian.id as id_subagian,subagian.name as subagian");
         } 
         else {
-            $rows = $rows->select("users.id,users.username,user_type.type as previlege,user_detail.nik,user_detail.nama_lengkap,user_detail.golongan,user_detail_bag.bag_name as bagian,user_detail_subag.subag_name as subagian");
+            $rows = $rows->select("users.id,users.username,user_type.type as previlege,user_detail.nik,user_detail.nama_lengkap,user_detail.golongan,bagian.name as bagian,subagian.name as subagian");
         }
 
         $rows = $rows->join("user_detail"      ,"users.id = user_detail.user_id")
         ->join("user_type"        ,"users.id_previlege = user_type.id")
         ->join("user_detail_bag"  ,"users.id = user_detail_bag.user_id", 'left')
+        ->join("bagian"           ,"bagian.id = user_detail_bag.id_bagian", 'left')
         ->join("user_detail_subag","users.id = user_detail_subag.user_id", 'left')
+        ->join("subagian"         ,"subagian.id = user_detail_subag.id_subagian", 'left')
         ->where("users.id_previlege !=",1);
 
         if (isset($get['bagian']) && in_array($g_previlege,["admin"])) {
-            $rows = $rows->where("user_detail_bag.bag_name",$get['bagian']);
+            $rows = $rows->where("bagian.name",$get['bagian']);
         }
         if (isset($get['subagian']) && in_array($g_previlege,["admin","kabag"])) {
-            $rows = $rows->where("user_detail_subag.subag_name",$get['subagian']);
+            $rows = $rows->where("subagian.name",$get['subagian']);
         }
 
         if (in_array($g_previlege,["kabag"])) {
-            $rows = $rows->where("user_detail_bag.bag_name",$g_bagian)
+            $rows = $rows->where("bagian.name",$g_bagian)
                 ->whereIn("users.id_previlege",[3,4]);
         }
         else if (in_array($g_previlege,["kasubag"])) {
-            $rows = $rows->where("user_detail_subag.subag_name",$g_subagian)
+            $rows = $rows->where("subagian.name",$g_subagian)
                 ->whereIn("users.id_previlege",[4]);
         }
 
@@ -174,8 +178,8 @@ class Users extends ResourceController
     {
         try {
             global $g_previlege;
-            global $g_bagian;
-            global $g_subagian;
+            global $g_idbagian;
+            global $g_idsubagian;
             
             // Set allowed previlege
             if ($g_previlege=="admin") {
@@ -190,14 +194,14 @@ class Users extends ResourceController
 
             // Set allowed subagian
             $dbsubag = $this->db->table("subagian")->select("*");
-            if ($g_bagian != null) {
-                $dbsubag = $dbsubag->where("bagian",$g_bagian);
+            if ($g_idbagian != null) {
+                $dbsubag = $dbsubag->where("id_bagian",$g_idbagian);
             }
             $dbsubag = $dbsubag->get()->getResultArray();
             
             $allowedSubag = "";
             foreach ($dbsubag as $value) {
-                $allowedSubag .= $value["name"].",";
+                $allowedSubag .= $value["id"].",";
             }
             $allowedSubag = trim($allowedSubag,",");
 
@@ -209,21 +213,21 @@ class Users extends ResourceController
 
             if (isset($post["id_previlege"]) && in_array($post["id_previlege"],["2","3","4"])) 
             {
-                if ($g_bagian != null) {
-                    $post["bagian"] = $g_bagian;
+                if ($g_idbagian != null) {
+                    $post["id_bagian"] = $g_idbagian;
                 }
                 else {
-                    $post["bagian"] = isset($post["bagian"]) ? $post["bagian"] : "";
+                    $post["id_bagian"] = isset($post["id_bagian"]) ? $post["id_bagian"] : "";
                 }
                 $this->validation->run($post,'createUserBagValidate');
             }
             if (isset($post["id_previlege"]) && in_array($post["id_previlege"],["3","4"])) 
             {
-                if ($g_subagian != null) {
-                    $post["subagian"] = $g_subagian;
+                if ($g_idsubagian != null) {
+                    $post["id_subagian"] = $g_idsubagian;
                 }
                 else {
-                    $post["subagian"] = isset($post["subagian"]) ? $post["subagian"] : "";
+                    $post["id_subagian"] = isset($post["id_subagian"]) ? $post["id_subagian"] : "";
                 }
                 $this->validation->run($post,'createUserSubagValidate');
             }
@@ -271,14 +275,14 @@ class Users extends ResourceController
 
                 if (in_array($post["id_previlege"],["2","3","4"])) {
                     $this->db->table("user_detail_bag")->insert([
-                        "user_id"  => $id,
-                        "bag_name" => $post["bagian"]
+                        "user_id"   => $id,
+                        "id_bagian" => $post["id_bagian"]
                     ]);
                 }
                 if (in_array($post["id_previlege"],["3","4"])) {
                     $this->db->table("user_detail_subag")->insert([
-                        "user_id"    => $id,
-                        "subag_name" => $post["subagian"]
+                        "user_id"     => $id,
+                        "id_subagian" => $post["id_subagian"]
                     ]);
                 }
                 
@@ -326,8 +330,8 @@ class Users extends ResourceController
             Utils::_methodParser("put");
             global $put;
             global $g_previlege;
-            global $g_bagian;
-            global $g_subagian;
+            global $g_idbagian;
+            global $g_idsubagian;
             
             // Set allowed previlege
             if ($g_previlege=="admin") {
@@ -345,14 +349,14 @@ class Users extends ResourceController
 
             // Set allowed subagian
             $dbsubag = $this->db->table("subagian")->select("*");
-            if ($g_bagian != null) {
-                $dbsubag = $dbsubag->where("bagian",$g_bagian);
+            if ($g_idbagian != null) {
+                $dbsubag = $dbsubag->where("id_bagian",$g_idbagian);
             }
             $dbsubag = $dbsubag->get()->getResultArray();
             
             $allowedSubag = "";
             foreach ($dbsubag as $value) {
-                $allowedSubag .= $value["name"].",";
+                $allowedSubag .= $value["id"].",";
             }
             $allowedSubag = trim($allowedSubag,",");
             
@@ -367,21 +371,21 @@ class Users extends ResourceController
             }
             if (isset($put["id_previlege"]) && in_array($put["id_previlege"],["2","3","4"])) 
             {
-                if ($g_bagian != null) {
-                    $put["bagian"] = $g_bagian;
+                if ($g_idbagian != null) {
+                    $put["id_bagian"] = $g_idbagian;
                 }
                 else {
-                    $put["bagian"] = isset($put["bagian"]) ? $put["bagian"] : "";
+                    $put["id_bagian"] = isset($put["id_bagian"]) ? $put["id_bagian"] : "";
                 }
                 $this->validation->run($put,'updateUserBagValidate');
             }
             if (isset($put["id_previlege"]) && in_array($put["id_previlege"],["3","4"])) 
             {
-                if ($g_subagian != null) {
-                    $put["subagian"] = $g_subagian;
+                if ($g_idsubagian != null) {
+                    $put["id_subagian"] = $g_idsubagian;
                 }
                 else {
-                    $put["subagian"] = isset($put["subagian"]) ? $put["subagian"] : "";
+                    $put["id_subagian"] = isset($put["id_subagian"]) ? $put["id_subagian"] : "";
                 }
                 $this->validation->run($put,'updateUserSubagValidate');
             }
@@ -445,7 +449,7 @@ class Users extends ResourceController
                     $this->db->table("user_detail_bag")
                         ->where("user_id",$put["id"])
                         ->update([
-                            "bag_name" => $put["bagian"]
+                            "id_bagian" => $put["id_bagian"]
                         ]);
                     
                     if ($put["id_previlege"] == "2") {
@@ -464,14 +468,14 @@ class Users extends ResourceController
                         $this->db->table("user_detail_subag")
                             ->where("user_id",$put["id"])
                             ->update([
-                                "subag_name" => $put["subagian"]
+                                "id_subagian" => $put["id_subagian"]
                             ]);
                     }
                     else {
                         $this->db->table("user_detail_subag")
                             ->insert([
                                 "user_id" => $put["id"],
-                                "subag_name" => $put["subagian"]
+                                "id_subagian" => $put["id_subagian"]
                             ]);
                     }
                 }
