@@ -3,6 +3,15 @@
 <!-- Css -->
 <?= $this->section('dashboardCss'); ?>
     <style>
+        .ql-align-right {
+            text-align: right;
+        }
+        .ql-align-center {
+            text-align: center;
+        }
+        .ql-align-left {
+            text-align: left;
+        }
     </style>
 <?= $this->endSection(); ?>
 
@@ -13,7 +22,12 @@
 
         $("#logo_main_dashboard").attr("src",data.logo);
         $("#title_app").html(data.title);
-        $("#pengumuman").html(data.pengumuman);
+        
+        if (data.pengumuman.replace(/(<([^>]+)>)/ig,"") != "") {
+            $("#pengumuman_dash_wraper").removeClass("hidden");
+            $("#pengumuman").html(data.pengumuman);
+        }
+
         $("#visi").html(data.visi);
         $("#misi").html(data.misi);
     </script>
@@ -32,15 +46,16 @@
         </h1>
 
         <div
-        class="mt-8 lg:mt-10 p-3 w-full bg-emerald-300 text-green-700 rounded-xl">
+        id="pengumuman_dash_wraper"
+        class="hidden mt-8 lg:mt-10 p-3 w-full bg-emerald-300 text-green-700 rounded-xl">
             <p class="text-sm md:text-lg lg:text-xl font-bold uppercase text-center">
                 pengumuman</p>
             <div id="pengumuman" class="mt-4 pt-4 border-t border-emerald-500"></div>
         </div>
 
         <div
-         class="mt-8 lg:mt-10 p-3 w-full bg-indigo-900 text-white text-center rounded-xl">
-            <p class="text-sm md:text-lg lg:text-xl font-bold uppercase">
+         class="mt-8 lg:mt-10 p-3 w-full bg-indigo-900 text-white rounded-xl">
+            <p class="text-sm md:text-lg lg:text-xl font-bold uppercase text-center">
                 visi</p>
             <div id="visi" class="mt-4 pt-4 border-t border-white"></div>
         </div>

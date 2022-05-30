@@ -64,62 +64,94 @@
         $('#edit_info').on('submit', async function(e) {
             e.preventDefault();
             
+            if (validateEditInfo()) {
+                // clear error message first
+                $('.label_fly').addClass('border-zinc-400 focus-within:border-zinc-600');
+                $('.label_fly').removeClass('border-red-500 focus-within:border-red-500');
+                
+                let form = new FormData(e.target);
+    
+                if (filePreview !== '') { // filePreview in parent.js
+                    form.set('new_logo', filePreview, filePreview.name);
+                }
+                ["visi","misi","pengumuman"].forEach(e => {
+                    form.append(e,$(`#editor-${e} .ql-editor`).html());
+                })
+                
+                $("#btn_simpan_info #text").toggleClass("hidden inline");
+                $("#btn_simpan_info #spinner").toggleClass("inline hidden");
+    
+                let httpResponse = await httpRequestPut(`${BASE_URL}/information/update/`,form);
+                    
+                $("#btn_simpan_info #text").toggleClass("hidden inline");
+                $("#btn_simpan_info #spinner").toggleClass("inline hidden");
+    
+                if (httpResponse.status === 201) {
+                    filePreview = "";
+                    showAlert({
+                        message: `<strong>Success...</strong> infomation berhasil diupdate!`,
+                        autohide: true,
+                        type:'success'
+                    })
+    
+                    let newDataInfo = {
+                        id:form.get("id"),
+                        logo:BASE_URL+"/images/logo-kemendagri.webp",
+                        title:form.get("title"),
+                        visi:form.get("visi"),
+                        misi:form.get("misi"),
+                        pengumuman:form.get("pengumuman"),
+                    }
+    
+                    localStorage.setItem("data_info",JSON.stringify(newDataInfo));
+                }
+                else if (httpResponse.status === 400) {
+                    let msgList = ``;
+                
+                    for (const key in httpResponse.message) {
+                        msgList += `<li>${httpResponse.message[key]}</li>`;
+                        $(`#edit_info #${key}_wraper`).removeClass('border-zinc-400 focus-within:border-zinc-600');
+                        $(`#edit_info #${key}_wraper`).addClass('border-red-500 focus-within:border-red-500');
+                    }
+                    
+                    showAlert({
+                        message: `<ul class="list-disc list-inside">${msgList}</ul>`,
+                        autohide: true,
+                        type:'warning'
+                    })
+                }
+            }
+        })
+
+        function validateEditInfo() {
+            let status = true;
+
             // clear error message first
             $('.label_fly').addClass('border-zinc-400 focus-within:border-zinc-600');
             $('.label_fly').removeClass('border-red-500 focus-within:border-red-500');
-            
-            let form = new FormData(e.target);
 
-            if (filePreview !== '') { // filePreview in parent.js
-                form.set('new_logo', filePreview, filePreview.name);
+            if ($("#title_info").val() == "") {
+                $("#title_info").parent().removeClass('border-zinc-400 focus-within:border-zinc-600');
+                $("#title_info").parent().addClass('border-red-500 focus-within:border-red-500');
+                status = false;
             }
-            ["visi","misi","pengumuman"].forEach(e => {
-                form.append(e,$(`#editor-${e} .ql-editor`).html());
-            })
-            
-            $("#btn_simpan_info #text").toggleClass("hidden inline");
-            $("#btn_simpan_info #spinner").toggleClass("inline hidden");
 
-            let httpResponse = await httpRequestPut(`${BASE_URL}/information/update/`,form);
-                
-            $("#btn_simpan_info #text").toggleClass("hidden inline");
-            $("#btn_simpan_info #spinner").toggleClass("inline hidden");
+            let visi = $(`#editor-visi .ql-editor`).html().replace(/(<([^>]+)>)/ig,"");
+            let misi = $(`#editor-misi .ql-editor`).html().replace(/(<([^>]+)>)/ig,"");
 
-            if (httpResponse.status === 201) {
-                filePreview = "";
-                showAlert({
-                    message: `<strong>Success...</strong> infomation berhasil diupdate!`,
-                    autohide: true,
-                    type:'success'
-                })
-
-                let newDataInfo = {
-                    id:form.get("id"),
-                    logo:BASE_URL+"/images/logo-kemendagri.webp",
-                    title:form.get("title"),
-                    visi:form.get("visi"),
-                    misi:form.get("misi"),
-                    pengumuman:form.get("pengumuman"),
-                }
-
-                localStorage.setItem("data_info",JSON.stringify(newDataInfo));
+            if (visi == "") {
+                $("#visi_wraper").removeClass('border-zinc-400 focus-within:border-zinc-600');
+                $("#visi_wraper").addClass('border-red-500 focus-within:border-red-500');
+                status = false;
             }
-            else if (httpResponse.status === 400) {
-                let msgList = ``;
-            
-                for (const key in httpResponse.message) {
-                    msgList += `<li>${httpResponse.message[key]}</li>`;
-                    $(`#edit_info #${key}_wraper`).removeClass('border-zinc-400 focus-within:border-zinc-600');
-                    $(`#edit_info #${key}_wraper`).addClass('border-red-500 focus-within:border-red-500');
-                }
-                
-                showAlert({
-                    message: `<ul class="list-disc list-inside">${msgList}</ul>`,
-                    autohide: true,
-                    type:'warning'
-                })
+            if (misi == "") {
+                $("#misi_wraper").removeClass('border-zinc-400 focus-within:border-zinc-600');
+                $("#misi_wraper").addClass('border-red-500 focus-within:border-red-500');
+                status = false;
             }
-        })
+
+            return status;
+        }
     </script>
 <?= $this->endSection(); ?>
 
@@ -181,7 +213,7 @@
                     <label 
                         for="<?= $value ?>_info" 
                         class="py-2 absolute left-2 -top-10 z-0 text-zinc-600 cursor-text text-xl font-semibold opacity-90">
-                        <?= $value ?>
+                        <?= ($value == "pengumuman") ? $value." <small class='text-xs italic font-light'>(kosongkan jika tidak ingin ditampilkan)</small>" : $value ?>
                     </label>
                     <div id="toolbar-<?= $value ?>">
                         <span class="ql-formats">

@@ -1103,6 +1103,9 @@ Ensure the default browser behavior of the `hidden` attribute.
 .text-center {
   text-align: center;
 }
+.font-sans {
+  font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+}
 .text-2xl {
   font-size: 1.5rem;
   line-height: 2rem;
@@ -1131,6 +1134,9 @@ Ensure the default browser behavior of the `hidden` attribute.
 }
 .font-extrabold {
   font-weight: 800;
+}
+.font-light {
+  font-weight: 300;
 }
 .uppercase {
   text-transform: uppercase;
