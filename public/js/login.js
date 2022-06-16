@@ -3,8 +3,17 @@ $('#form_login').on('submit', function(e) {
     e.preventDefault();
 
     if (validateLogin()) {
-        showLoadingSpinner();
         let formLogin = new FormData(e.target);
+
+        // for (let index = 0; index < 20; index++) {
+        //     axios
+        //     .post(`${BASE_URL}/login/create`,formLogin, {})
+        //     .then(() => {})
+        //     .catch((error) => {})
+        // }
+        // return 0;
+
+        showLoadingSpinner();
 
         axios
         .post(`${BASE_URL}/login/create`,formLogin, {

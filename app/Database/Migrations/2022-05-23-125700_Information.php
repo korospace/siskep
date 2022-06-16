@@ -14,11 +14,6 @@ class Information extends Migration
                 'constraint'     => 11,      
                 'auto_increment' => true,
             ],
-            'title' => [
-                'type'       => 'varchar',
-                'constraint' => 255,      
-                'null'       => false,
-            ],
             'logo' => [
                 'type' => 'longtext',
                 'null' => false,

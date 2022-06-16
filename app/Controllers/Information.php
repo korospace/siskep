@@ -79,7 +79,6 @@ class Information extends ResourceController
 
                 $data = [
                     "id"    => $put['id'],
-                    "title" => trim($put['title']),
                     "visi"  => trim($put['visi']),
                     "misi"  => trim($put['misi']),
                     "pengumuman" => trim($put['pengumuman']),

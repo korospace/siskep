@@ -1,17 +1,17 @@
 <?= $this->extend('Layout/template') ?>
 
 <!-- Css -->
-<?= $this->section('contentCss'); ?>
+<?= $this->section('layoutCss'); ?>
 
 <?= $this->endSection(); ?>
 
 <!-- JS -->
-<?= $this->section('contentJs'); ?>
+<?= $this->section('layoutJs'); ?>
     <script src="<?= base_url('js/login.js'); ?>"></script>
 <?= $this->endSection(); ?>
 
 <!-- Html -->
-<?= $this->section('contentHtml'); ?>
+<?= $this->section('layoutHtml'); ?>
 
     <div
       id="container" 

@@ -114,7 +114,7 @@ class Login extends ResourceController
                             ])
                         ];
 
-                        $this->db->table("user_token")->insert($data);
+                        // $this->db->table("user_token")->insert($data);
 
                         $respond = [
                             'code'    => 200,

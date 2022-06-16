@@ -7,9 +7,8 @@ use CodeIgniter\HTTP\RequestInterface;
 use CodeIgniter\HTTP\ResponseInterface;
 use App\Utils\Utils;
 use App\Utils\TokenUtil;
-use LDAP\Result;
 
-class DashboardNonPegawai implements FilterInterface
+class ApiGuardNonAsn implements FilterInterface
 {
     /**
      * Do whatever processing this filter needs to do.
@@ -28,27 +27,23 @@ class DashboardNonPegawai implements FilterInterface
      */
     public function before(RequestInterface $request, $arguments = null)
     {
-        $token  = (isset($_COOKIE['token'])) ? $_COOKIE['token'] : null;
-        $result = TokenUtil::checkToken($token,false);
-        
-        if($result['error'] == true) {
-            setcookie('token', null, -1, '/');
-            unset($_COOKIE['token']);
-            return redirect()->to(base_url().'/login');
-        } 
-        else {
-            if (!in_array($result['data']['previlege'],['admin','kabag','kasubag'])) {
-                return view("errors/html/error_404.php");
-            } 
-            else {
-                $GLOBALS["g_token"]        = $token;
-                $GLOBALS["g_password"]     = $result['data']['password'];
-                $GLOBALS["g_previlege"]    = $result['data']['previlege'];
-                $GLOBALS["g_id_previlege"] = $result['data']['id_previlege'];
-                $GLOBALS["g_bagian"]   = isset($result['data']['bagian'])   ? $result['data']['bagian']   : null;
-                $GLOBALS["g_subagian"] = isset($result['data']['subagian']) ? $result['data']['subagian'] : null;
-                setcookie('token',$token,Utils::cookieOps($result['data']['expired']));
-            }
+        $request    = \Config\Services::request();
+        $authHeader = $request->getHeader('token');
+        $token      = ($authHeader != null) ? $authHeader->getValue() : null;
+        $result     = TokenUtil::checkToken($token);
+        $GLOBALS["g_previlege"]    = $result['data']['previlege'];
+        $GLOBALS["g_id_previlege"] = $result['data']['id_previlege'];
+        $GLOBALS["g_bagian"]   = isset($result['data']['bagian'])   ? $result['data']['bagian']   : null;
+        $GLOBALS["g_idbagian"]   = isset($result['data']['id_bagian'])   ? $result['data']['id_bagian']   : null;
+        $GLOBALS["g_subagian"] = isset($result['data']['subagian']) ? $result['data']['subagian'] : null;
+        $GLOBALS["g_idsubagian"]   = isset($result['data']['id_subagian'])   ? $result['data']['id_subagian']   : null;
+
+        if (!in_array($result['data']['previlege'],["admin","kabag","kasubag"])) {
+            Utils::httpResponse([
+                'code'    => 401,
+                'error'   => true,
+                'message' => "access denied"
+            ]);
         }
     }
 

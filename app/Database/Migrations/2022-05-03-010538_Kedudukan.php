@@ -4,28 +4,30 @@ namespace App\Database\Migrations;
 
 use CodeIgniter\Database\Migration;
 
-class UserToken extends Migration
+class Kedudukan extends Migration
 {
     public function up()
     {
         $this->forge->addField([
-            'user_id' => [
+            'id' => [
                 'type'       => 'varchar',
                 'constraint' => 255,      
                 'null'       => false,
             ],
-            'token' => [
-                'type'       => 'text',
+            'name' => [
+                'type'       => 'varchar',
+                'constraint' => 255,
+                'unique'     => true,  
                 'null'       => false,
-            ],
+            ]
         ]);
 
-        $this->forge->addForeignKey('user_id','users','id','CASCADE','CASCADE');
-        // $this->forge->createTable('user_token');
+        $this->forge->addPrimaryKey('id');
+        $this->forge->createTable('kedudukan');
     }
 
     public function down()
     {
-        // $this->forge->dropTable('user_token');
+        $this->forge->dropTable('kedudukan');
     }
 }

@@ -12,10 +12,10 @@ use CodeIgniter\Filters\SecureHeaders;
 use App\Filters\ApiGuard;
 use App\Filters\ApiGuardAdmin;
 use App\Filters\ApiGuardAdminKabag;
-use App\Filters\ApiGuardNonPegawai;
+use App\Filters\ApiGuardNonAsn;
 use App\Filters\Dashboard;
 use App\Filters\DashboardLogged;
-use App\Filters\DashboardNonPegawai;
+use App\Filters\DashboardNonAsn;
 
 class Filters extends BaseConfig
 {
@@ -31,13 +31,14 @@ class Filters extends BaseConfig
         'honeypot'      => Honeypot::class,
         'invalidchars'  => InvalidChars::class,
         'secureheaders' => SecureHeaders::class,
+        'throttle'           => \App\Filters\Throttle::class,
         'ApiGuard'           => ApiGuard::class,
         'ApiGuardAdmin'      => ApiGuardAdmin::class,
         'ApiGuardAdminKabag' => ApiGuardAdminKabag::class,
-        'ApiGuardNonPegawai' => ApiGuardNonPegawai::class,
+        'ApiGuardNonAsn'     => ApiGuardNonAsn::class,
         'Dashboard'          => Dashboard::class,
         'DashboardLogged'    => DashboardLogged::class,
-        'DashboardNonPegawai'=> DashboardNonPegawai::class,
+        'DashboardNonAsn'=> DashboardNonAsn::class,
     ];
 
     /**
@@ -68,7 +69,12 @@ class Filters extends BaseConfig
      *
      * @var array
      */
-    public $methods = [];
+    public $methods = [
+        'get'    => ['throttle'],
+        'post'   => ['throttle'],
+        'put'    => ['throttle'],
+        'delete' => ['throttle'],
+    ];
 
     /**
      * List of filter aliases that should run on any

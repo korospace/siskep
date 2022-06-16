@@ -58,44 +58,51 @@ class TokenUtil {
                 ];
             }
             else if (time() < $decoded['expired']) {
-                $dbresult = self::dbconnect()->table("user_token")
-                    ->getWhere(["token" => $token])
-                    ->getFirstRow();
+                // $dbresult = self::dbconnect()->table("user_token")
+                //     ->getWhere(["token" => $token])
+                //     ->getFirstRow();
                 
                 $decoded["expired"] = $decoded["expired"]-time();
                 
-                if (!is_null($dbresult)) {
-                    return [
-                        'error' => false,
-                        'code'  => 200,
-                        'data'  => $decoded,
-                    ];
-                } 
-                else {
-                    Utils::httpResponse([
-                        'error' => true,
-                        'code'  => 401,
-                        'messages' => 'invalid token',
-                    ]);
-                }
+                // if (!is_null($dbresult)) {
+                //     return [
+                //         'error' => false,
+                //         'code'  => 200,
+                //         'data'  => $decoded,
+                //     ];
+                // } 
+                // else {
+                //     Utils::httpResponse([
+                //         'error'   => true,
+                //         'code'    => 401,
+                //         'message' => 'invalid token',
+                //     ]);
+                // }
+
+                return [
+                    'error' => false,
+                    'code'  => 200,
+                    'data'  => $decoded,
+                ];
             } 
             else {
-                $dbresult = self::dbconnect()->table("user_token")
-                    ->where("token", $token)
-                    ->delete();
+                // $dbresult = self::dbconnect()->table("user_token")
+                //     ->where("token", $token)
+                //     ->delete();
 
                 Utils::httpResponse([
-                    'error'    => true,
-                    'code'     => 401,
-                    'messages' => ($dbresult) ? 'token expired' : 'invalid token' 
+                    'error'   => true,
+                    'code'    => 401,
+                    // 'message' => ($dbresult) ? 'token expired' : 'invalid token',
+                    'message' => 'token expired', 
                 ]);
             }
         } 
         catch (\Throwable $ex) {
             $response = [
                 'error'   => true,
-                'code'    => 401,
-                'message' => "access denied"
+                'code'    => 500,
+                'message' => 'invalid token'
             ];
 
             if ($dbcheck == false) {

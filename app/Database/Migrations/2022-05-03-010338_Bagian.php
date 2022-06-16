@@ -10,9 +10,9 @@ class Bagian extends Migration
     {
         $this->forge->addField([
             'id' => [
-                'type'       => 'int',
-                'constraint' => 11,      
-                'auto_increment' => true,
+                'type'       => 'varchar',
+                'constraint' => 255,      
+                'null'       => false,
             ],
             'name' => [
                 'type'       => 'varchar',

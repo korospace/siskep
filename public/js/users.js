@@ -53,10 +53,13 @@ function createTableRow(data) {
           ${++i}
       </td>
       <td class="p-4 text-gray-800">
-          ${e.nama_lengkap}
+          ${e.username}
       </td>
       <td class="p-4 text-gray-800">
-          ${e.nik}
+          ${(e.nama_lengkap != null) ? e.nama_lengkap : '-'}
+      </td>
+      <td class="p-4 text-gray-800">
+        ${(e.nik != null) ? e.nik : '-'}
       </td>
       <td class="p-4 text-gray-800">
           ${e.previlege}

@@ -99,7 +99,23 @@ class Bagian extends ResourceController
             else {
                 $this->db->transBegin();
 
+                $lastId = $this->db->table("bagian")
+                    ->select('id')->limit(1)
+                    ->orderBy('id','DESC')->get()
+                    ->getResultArray();
+                
+                if (!empty($lastId)) {
+                    $lastId = $lastId[0]["id"];
+                    $lastId = (int)substr($lastId,2)+1;
+                    $lastId = sprintf('%02d',$lastId);
+                    $lastId = 'B'.$lastId;
+                }
+                else {
+                    $lastId = 'B01';
+                }
+
                 $data = [
+                    "id"   => $lastId,
                     "name" => htmlspecialchars(strtolower($post["name"])),
                     "description" => $post["description"],
                 ];

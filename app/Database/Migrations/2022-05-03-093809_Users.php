@@ -27,6 +27,10 @@ class Users extends Migration
                 'constraint' => 11,
                 'null'       => false,
             ],
+            'created_at' => [
+                'type'       => 'bigint',                    
+                'null'       => false,
+            ],
         ]);
 
         $this->forge->addPrimaryKey('id');

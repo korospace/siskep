@@ -9,56 +9,6 @@ class AppSeed extends Seeder
     public function run()
     {
         /**
-         * Table Bagian
-         */
-        $dataBagian = [
-            [
-                "name"  => "bagian 1"
-            ],
-            [
-                "name"  => "bagian 2"
-            ],
-        ];
-
-        foreach ($dataBagian as $d) {
-            $this->db->table('bagian')->insert($d);
-        }
-
-        /**
-         * Table Subagian
-         */
-        $dataSubagian = [
-            [
-                "id_bagian" => 1,
-                "name"   => "subagian 1"
-            ],
-            [
-                "id_bagian" => 1,
-                "name"   => "subagian 2"
-            ],
-            [
-                "id_bagian" => 1,
-                "name"   => "subagian 3"
-            ],
-            [
-                "id_bagian" => 2,
-                "name"   => "subagian 2.1"
-            ],
-            [
-                "id_bagian" => 2,
-                "name"   => "subagian 2.2"
-            ],
-            [
-                "id_bagian" => 2,
-                "name"   => "subagian 2.3"
-            ],
-        ];
-
-        foreach ($dataSubagian as $d) {
-            $this->db->table('subagian')->insert($d);
-        }
-
-        /**
          * Table user_type
          */
         $dataUserType = [
@@ -72,12 +22,88 @@ class AppSeed extends Seeder
                 "type" => "kasubag"
             ],
             [
-                "type" => "pegawai"
+                "type" => "nonasn"
             ],
         ];
 
         foreach ($dataUserType as $d) {
             $this->db->table('user_type')->insert($d);
+        }
+
+        /**
+         * Table Bagian
+         */
+        $dataBagian = [
+            [
+                "id"    => "B01",
+                "name"  => "bagian 1"
+            ],
+            [
+                "id"    => "B02",
+                "name"  => "bagian 2"
+            ],
+        ];
+
+        foreach ($dataBagian as $d) {
+            $this->db->table('bagian')->insert($d);
+        }
+
+        /**
+         * Table Subagian
+         */
+        $dataSubagian = [
+            [
+                "id"        => "SB01",
+                "id_bagian" => "B01",
+                "name"      => "subagian 1"
+            ],
+            [
+                "id"        => "SB02",
+                "id_bagian" => "B01",
+                "name"      => "subagian 2"
+            ],
+            [
+                "id"        => "SB03",
+                "id_bagian" => "B01",
+                "name"      => "subagian 3"
+            ],
+            [
+                "id"        => "SB04",
+                "id_bagian" => "B02",
+                "name"      => "subagian 2.1"
+            ],
+            [
+                "id"        => "SB05",
+                "id_bagian" => "B02",
+                "name"      => "subagian 2.2"
+            ],
+            [
+                "id"        => "SB06",
+                "id_bagian" => "B02",
+                "name"      => "subagian 2.3"
+            ],
+        ];
+
+        foreach ($dataSubagian as $d) {
+            $this->db->table('subagian')->insert($d);
+        }
+
+        /**
+         * Table Kedudukan
+         */
+        $dataKedudukan = [
+            [
+                "id"    => "K01",
+                "name"  => "tenaga administrasi"
+            ],
+            [
+                "id"    => "K02",
+                "name"  => "tenaga akuntansi"
+            ],
+        ];
+
+        foreach ($dataKedudukan as $d) {
+            $this->db->table('kedudukan')->insert($d);
         }
 
         /**
@@ -88,67 +114,8 @@ class AppSeed extends Seeder
                 "id"        => uniqid(),
                 "username"  => "superadmin",
                 "password"  => password_hash(trim("superadmin"), PASSWORD_DEFAULT),
-                "id_previlege" => 1
-            ],
-            [
-                "id"        => "k1",
-                "username"  => "inikabag1",
-                "password"  => password_hash(trim("inikabag1"), PASSWORD_DEFAULT),
-                "id_previlege" => 2
-            ],
-            [
-                "id"        => "k2",
-                "username"  => "inikabag2",
-                "password"  => password_hash(trim("inikabag2"), PASSWORD_DEFAULT),
-                "id_previlege" => 2
-            ],
-            [
-                "id"        => "ks1",
-                "username"  => "kasubag1",
-                "password"  => password_hash(trim("kasubag1"), PASSWORD_DEFAULT),
-                "id_previlege" => 3
-            ],
-            [
-                "id"        => "ks2",
-                "username"  => "kasubag2",
-                "password"  => password_hash(trim("kasubag2"), PASSWORD_DEFAULT),
-                "id_previlege" => 3
-            ],
-            [
-                "id"        => "ks3",
-                "username"  => "kasubag3",
-                "password"  => password_hash(trim("kasubag3"), PASSWORD_DEFAULT),
-                "id_previlege" => 3
-            ],
-            [
-                "id"        => "ks4",
-                "username"  => "kasubag4",
-                "password"  => password_hash(trim("kasubag4"), PASSWORD_DEFAULT),
-                "id_previlege" => 3
-            ],
-            [
-                "id"        => "st1",
-                "username"  => "inistaf1",
-                "password"  => password_hash(trim("inistaf1"), PASSWORD_DEFAULT),
-                "id_previlege" => 4
-            ],
-            [
-                "id"        => "st2",
-                "username"  => "inistaf2",
-                "password"  => password_hash(trim("inistaf2"), PASSWORD_DEFAULT),
-                "id_previlege" => 4
-            ],
-            [
-                "id"        => "st3",
-                "username"  => "inistaf3",
-                "password"  => password_hash(trim("inistaf3"), PASSWORD_DEFAULT),
-                "id_previlege" => 4
-            ],
-            [
-                "id"        => "st4",
-                "username"  => "inistaf4",
-                "password"  => password_hash(trim("inistaf4"), PASSWORD_DEFAULT),
-                "id_previlege" => 4
+                "id_previlege" => 1,
+                "created_At"   => time(),
             ],
         ];
 
@@ -157,247 +124,14 @@ class AppSeed extends Seeder
         }
 
         /**
-         * Table user_detail
-         */
-        $i    = 0;
-        $dataUserDetail = [
-            [
-                "user_id" => "k1",
-                "nik"     => "1111",
-                "email"   => "k1@gmail.com",
-                "nama_lengkap" => "kabag 1",
-                "agama"        => "islam",
-                "tgl_lahir"    => "03-10-2000",
-                "pendidikan"   => "s1",
-                "golongan"     => "asn",
-                "alamat"       => "indonesia",
-                "kelamin"      => "laki-laki",
-                "notelp"       => "0851553524".++$i,
-            ],
-            [
-                "user_id" => "k2",
-                "nik"     => "4444",
-                "email"   => "k2@gmail.com",
-                "nama_lengkap" => "kabag 2",
-                "agama"        => "islam",
-                "tgl_lahir"    => "03-10-2000",
-                "pendidikan"   => "s1",
-                "golongan"     => "asn",
-                "alamat"       => "indonesia",
-                "kelamin"      => "laki-laki",
-                "notelp"       => "0851553524".++$i,
-            ],
-            [
-                "user_id" => "ks1",
-                "nik"     => "5555",
-                "email"   => "ks1@gmail.com",
-                "nama_lengkap" => "kasubag 1 bag 1",
-                "agama"        => "islam",
-                "tgl_lahir"    => "03-10-2000",
-                "pendidikan"   => "s1",
-                "golongan"     => "asn",
-                "alamat"       => "indonesia",
-                "kelamin"      => "laki-laki",
-                "notelp"       => "0851553524".++$i,
-            ],
-            [
-                "user_id" => "ks2",
-                "nik"     => "6666",
-                "email"   => "ks2@gmail.com",
-                "nama_lengkap" => "kasubag 2 bag 1",
-                "agama"        => "islam",
-                "tgl_lahir"    => "03-10-2000",
-                "pendidikan"   => "s1",
-                "golongan"     => "asn",
-                "alamat"       => "indonesia",
-                "kelamin"      => "laki-laki",
-                "notelp"       => "0851553524".++$i,
-            ],
-            [
-                "user_id" => "ks3",
-                "nik"     => "7777",
-                "email"   => "ks3@gmail.com",
-                "nama_lengkap" => "kasubag 1 bag 2",
-                "agama"        => "islam",
-                "tgl_lahir"    => "03-10-2000",
-                "pendidikan"   => "s1",
-                "golongan"     => "asn",
-                "alamat"       => "indonesia",
-                "kelamin"      => "laki-laki",
-                "notelp"       => "0851553524".++$i,
-            ],
-            [
-                "user_id" => "ks4",
-                "nik"     => "8888",
-                "email"   => "ks4@gmail.com",
-                "nama_lengkap" => "kasubag 2 bag 2",
-                "agama"        => "islam",
-                "tgl_lahir"    => "03-10-2000",
-                "pendidikan"   => "s1",
-                "golongan"     => "asn",
-                "alamat"       => "indonesia",
-                "kelamin"      => "laki-laki",
-                "notelp"       => "0851553524".++$i,
-            ],
-            [
-                "user_id" => "st1",
-                "nik"     => "9999",
-                "email"   => "st1@gmail.com",
-                "nama_lengkap" => "staf 1 bag 1 subag 1",
-                "agama"        => "islam",
-                "tgl_lahir"    => "03-10-2000",
-                "pendidikan"   => "s1",
-                "golongan"     => "asn",
-                "alamat"       => "indonesia",
-                "kelamin"      => "laki-laki",
-                "notelp"       => "0851553524".++$i,
-            ],
-            [
-                "user_id" => "st2",
-                "nik"     => "1212",
-                "email"   => "st2@gmail.com",
-                "nama_lengkap" => "staf 2 bag 1 subag 2",
-                "agama"        => "islam",
-                "tgl_lahir"    => "03-10-2000",
-                "pendidikan"   => "s1",
-                "golongan"     => "asn",
-                "alamat"       => "indonesia",
-                "kelamin"      => "laki-laki",
-                "notelp"       => "0851553524".++$i,
-            ],
-            [
-                "user_id" => "st3",
-                "nik"     => "1313",
-                "email"   => "st3@gmail.com",
-                "nama_lengkap" => "staf 3 bag 2 subag 1",
-                "agama"        => "islam",
-                "tgl_lahir"    => "03-10-2000",
-                "pendidikan"   => "s1",
-                "golongan"     => "asn",
-                "alamat"       => "indonesia",
-                "kelamin"      => "laki-laki",
-                "notelp"       => "0851553524".++$i,
-            ],
-            [
-                "user_id" => "st4",
-                "nik"     => "1414",
-                "email"   => "st4@gmail.com",
-                "nama_lengkap" => "staf 4 bag 2 subag 2",
-                "agama"        => "islam",
-                "tgl_lahir"    => "03-10-2000",
-                "pendidikan"   => "s1",
-                "golongan"     => "asn",
-                "alamat"       => "indonesia",
-                "kelamin"      => "laki-laki",
-                "notelp"       => "0851553524".++$i,
-            ],
-        ];
-
-        foreach ($dataUserDetail as $d) {
-            $this->db->table('user_detail')->insert($d);
-        }
-
-        /**
-         * Table user_detail_bag
-         */
-        $dataUserDetailBag = [
-            [
-                "id_bagian" => 1,
-                "user_id"  => "k1",
-            ],
-            [
-                "id_bagian" => 2,
-                "user_id"  => "k2",
-            ],
-            [
-                "id_bagian" => 1,
-                "user_id" => "ks1",
-            ],
-            [
-                "id_bagian" => 1,
-                "user_id" => "ks2",
-            ],
-            [
-                "id_bagian" => 2,
-                "user_id" => "ks3",
-            ],
-            [
-                "id_bagian" => 2,
-                "user_id" => "ks4",
-            ],
-            [
-                "id_bagian" => 1,
-                "user_id" => "st1",
-            ],
-            [
-                "id_bagian" => 1,
-                "user_id" => "st2",
-            ],
-            [
-                "id_bagian" => 2,
-                "user_id" => "st3",
-            ],
-            [
-                "id_bagian" => 2,
-                "user_id" => "st4",
-            ],
-        ];
-
-        foreach ($dataUserDetailBag as $d) {
-            $this->db->table('user_detail_bag')->insert($d);
-        }
-
-        /**
-         * Table user_detail_subag
-         */
-        $dataUserDetailSubag = [
-            [
-                "id_subagian" => 1,
-                "user_id" => "ks1",
-            ],
-            [
-                "id_subagian" => 2,
-                "user_id" => "ks2",
-            ],
-            [
-                "id_subagian" => 3,
-                "user_id" => "ks3",
-            ],
-            [
-                "id_subagian" => 4,
-                "user_id" => "ks4",
-            ],
-            [
-                "id_subagian" => 1,
-                "user_id" => "st1",
-            ],
-            [
-                "id_subagian" => 2,
-                "user_id" => "st2",
-            ],
-            [
-                "id_subagian" => 3,
-                "user_id" => "st3",
-            ],
-            [
-                "id_subagian" => 4,
-                "user_id" => "st4",
-            ],
-        ];
-
-        foreach ($dataUserDetailSubag as $d) {
-            $this->db->table('user_detail_subag')->insert($d);
-        }
-
-        /**
          * Table information
          */
         $dataInformation = [
-            "logo" => "logo-kemendagri.webp",
-            "title" => "-",
-            "visi"  => "-",
-            "misi"  => "-",
-            "pengumuman" => "-"
+            "logo"       => "logo-kemendagri.webp",
+            "pengumuman" => "<p><em style=\"color: rgb(82, 82, 91);\">(kosongkan jika tidak ingin ditampilkan)</em></p>",
+            "title"      => "sistem kepegawaian non asn kemendagri",
+            "visi"       => "<blockquote class=\"ql-align-center\"><strong style=\"color: rgb(255, 255, 0);\"><em><s><u>Mewujudkan Pemerintahan Desa yang Mampu Memberikan Pelayanan Prima Kepada Masyarakat</u></s></em></strong></blockquote>",
+            "misi"       => "<ol><li><span style=\"color: rgb(0, 0, 0);\">Memantapkan penyelenggaraan Pemerintahan Desa guna meningkatkan kualitas pelayanan pemerintah kepada masyarakat yang ditunjukkan dengan pemenuhan SPM Desa;</span></li><li><span style=\"color: rgb(0, 0, 0);\">Memantapkan peran perencanaan partisipatif dengan perlibatan aktif kelembagaan masyarakat desa dalam upaya pengentasan kemiskinan pada wilayah desa dan kawasan perdesaan;</span></li><li><span style=\"color: rgb(0, 0, 0);\">Memantapkan tata kelola aset dan keuangan desa berdasarkan prinsip transparansi, akuntabilitas, dan kemanfaatan;</span></li><li><span style=\"color: rgb(0, 0, 0);\">Meningkatkan kualitas kehidupan sosial budaya dan kerjasama masyarakat desa;</span></li><li><span style=\"color: rgb(0, 0, 0);\">Meningkatkan kualitas evaluasi penyelenggaraan pemerintahan desa dan penyusunan peringkat tingkat perkembangan desa;</span></li><li><span style=\"color: rgb(0, 0, 0);\">Meningkatkan kapasitas aparat dan lembaga masyarakat dalam pelaksanaan pembangunan desa lingkup regional.</span></li></ol>",
         ];
 
         $this->db->table('information')->insert($dataInformation);

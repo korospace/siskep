@@ -52,19 +52,53 @@ class Dashboard extends BaseController
     {
         global $g_token;
         global $g_previlege;
+        global $g_bagian;
+        global $g_idbagian;
+        global $g_subagian;
+        global $g_idsubagian;
 
         $data = [
             'title' => 'pegawai',
             'token' => $g_token,
-            'previlege' => $g_previlege,
+            'previlege'  => $g_previlege,
+            'bagian'     => $g_bagian,
+            'idbagian'   => $g_idbagian,
+            'subagian'   => $g_subagian,
+            'idsubagian' => $g_idsubagian,
         ];
 
         return view("DashboardPage/Users/index",$data);
     }
 
     /**
-     * PAGE: Update profile
-     * - show update profile page in dashboard
+     * PAGE: Surat Keputusan
+     * - show list users page in dashboard
+     */
+    public function suratKeputusan()
+    {
+        global $g_token;
+        global $g_previlege;
+        global $g_bagian;
+        global $g_idbagian;
+        global $g_subagian;
+        global $g_idsubagian;
+
+        $data = [
+            'title' => 'surat keputusan',
+            'token' => $g_token,
+            'previlege'  => $g_previlege,
+            'bagian'     => $g_bagian,
+            'idbagian'   => $g_idbagian,
+            'subagian'   => $g_subagian,
+            'idsubagian' => $g_idsubagian,
+        ];
+
+        return view("DashboardPage/SuratKeputusan/index",$data);
+    }
+
+    /**
+     * PAGE: profile
+     * - show profile page in dashboard
      */
     public function updateProfile()
     {
@@ -81,7 +115,7 @@ class Dashboard extends BaseController
             return redirect()->to(base_url());
         }
         else {
-            return view("DashboardPage/UpdateProfile/index",$data);
+            return view("DashboardPage/Profile/index",$data);
         }
     }
 }

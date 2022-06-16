@@ -71,9 +71,10 @@ class Users extends ResourceController
         global $g_password;
 
         $dbresult = (array)$this->db->table("users")
-        ->select("users.id as id,users.username,users.password,users.id_previlege,user_type.type as previlege,user_detail.nik,user_detail.email,user_detail.nama_lengkap,user_detail.agama,user_detail.tgl_lahir,user_detail.pendidikan,user_detail.golongan,user_detail.status,user_detail.masa_kerja,user_detail.alamat,user_detail.kelamin,user_detail.notelp,bagian.id as id_bagian,bagian.name as bagian,subagian.id as id_subagian,subagian.name as subagian")
+        ->select("users.id as id,users.username,users.password,users.id_previlege,user_type.type as previlege,user_detail.nik,user_detail.npwp,user_detail.email,user_detail.nama_lengkap,user_detail.notelp,user_detail.alamat,user_detail.tgl_lahir,user_detail.kelamin,user_detail.agama,user_detail.pendidikan,user_detail.id_kedudukan,kedudukan.name as kedudukan,user_detail.income,user_detail.masa_kerja,user_detail.status,bagian.id as id_bagian,bagian.name as bagian,subagian.id as id_subagian,subagian.name as subagian")
         ->join("user_type"        ,"users.id_previlege = user_type.id")
         ->join("user_detail"      ,"users.id  = user_detail.user_id", 'left')
+        ->join("kedudukan"        ,"kedudukan.id = user_detail.id_kedudukan", 'left')
         ->join("user_detail_bag"  ,"users.id  = user_detail_bag.user_id", 'left')
         ->join("bagian"           ,"bagian.id = user_detail_bag.id_bagian", 'left')
         ->join("user_detail_subag","users.id  = user_detail_subag.user_id", 'left')
@@ -104,7 +105,6 @@ class Users extends ResourceController
     {
         $get    = $this->request->getGet();
         $urutan = (isset($get['urutan']) && strtolower($get['urutan']) == "terlama") ? "ASC" : "DESC";
-        // var_dump($get);die;
 
         global $g_previlege;
         global $g_bagian;
@@ -113,14 +113,15 @@ class Users extends ResourceController
         $rows = $this->db->table("users");
 
         if (isset($get['id'])) {
-            $rows = $rows->select("users.id,users.username,users.id_previlege,user_detail.nik,user_detail.email,user_detail.nama_lengkap,user_detail.agama,user_detail.tgl_lahir,user_detail.pendidikan,user_detail.golongan,user_detail.status,user_detail.masa_kerja,user_detail.alamat,user_detail.kelamin,user_detail.notelp,,bagian.id as id_bagian,bagian.name as bagian,subagian.id as id_subagian,subagian.name as subagian");
+            $rows = $rows->select("users.id as id,users.username,users.password,users.id_previlege,user_type.type as previlege,user_detail.nik,user_detail.npwp,user_detail.email,user_detail.nama_lengkap,user_detail.notelp,user_detail.alamat,user_detail.tgl_lahir,user_detail.kelamin,user_detail.agama,user_detail.pendidikan,user_detail.id_kedudukan,kedudukan.name as kedudukan,user_detail.income,user_detail.masa_kerja,user_detail.status,bagian.id as id_bagian,bagian.name as bagian,subagian.id as id_subagian,subagian.name as subagian");
         } 
         else {
-            $rows = $rows->select("users.id,users.username,user_type.type as previlege,user_detail.nik,user_detail.nama_lengkap,user_detail.golongan,bagian.name as bagian,subagian.name as subagian");
+            $rows = $rows->select("users.id,users.username,user_type.type as previlege,user_detail.nik,user_detail.nama_lengkap,bagian.name as bagian,bagian.id as id_bagian,subagian.name as subagian,subagian.id as id_subagian,user_detail.id_kedudukan,user_detail.income,user_detail.masa_kerja");
         }
 
-        $rows = $rows->join("user_detail"      ,"users.id = user_detail.user_id")
+        $rows = $rows->join("user_detail"      ,"users.id = user_detail.user_id", 'left')
         ->join("user_type"        ,"users.id_previlege = user_type.id")
+        ->join("kedudukan"        ,"kedudukan.id = user_detail.id_kedudukan", 'left')
         ->join("user_detail_bag"  ,"users.id = user_detail_bag.user_id", 'left')
         ->join("bagian"           ,"bagian.id = user_detail_bag.id_bagian", 'left')
         ->join("user_detail_subag","users.id = user_detail_subag.user_id", 'left')
@@ -148,7 +149,10 @@ class Users extends ResourceController
             $rows = (array)$rows->get()->getFirstRow();
         }
         else {
-            $rows = $rows->orderBy("user_detail.id",$urutan)->get()->getResultArray();
+            if (isset($get['name'])) {
+                $rows = $rows->like("user_detail.nama_lengkap",$get['name']);
+            }
+            $rows = $rows->orderBy("users.created_at",$urutan)->get()->getResultArray();
         }
 
         $respond  = [
@@ -180,6 +184,7 @@ class Users extends ResourceController
             global $g_previlege;
             global $g_idbagian;
             global $g_idsubagian;
+            $post = $this->request->getPost();
             
             // Set allowed previlege
             if ($g_previlege=="admin") {
@@ -197,6 +202,9 @@ class Users extends ResourceController
             if ($g_idbagian != null) {
                 $dbsubag = $dbsubag->where("id_bagian",$g_idbagian);
             }
+            else if (isset($post['id_bagian'])) {
+                $dbsubag = $dbsubag->where("id_bagian",$post['id_bagian']);
+            }
             $dbsubag = $dbsubag->get()->getResultArray();
             
             $allowedSubag = "";
@@ -205,7 +213,6 @@ class Users extends ResourceController
             }
             $allowedSubag = trim($allowedSubag,",");
 
-            $post = $this->request->getPost();
             $post["allowedPrevilege"] = $allowedPrevilege;
             $post["allowedSubagian"]  = $allowedSubag;
             
@@ -219,7 +226,7 @@ class Users extends ResourceController
                 else {
                     $post["id_bagian"] = isset($post["id_bagian"]) ? $post["id_bagian"] : "";
                 }
-                $this->validation->run($post,'createUserBagValidate');
+                $this->validation->run($post,'userValidateBag');
             }
             if (isset($post["id_previlege"]) && in_array($post["id_previlege"],["3","4"])) 
             {
@@ -229,7 +236,24 @@ class Users extends ResourceController
                 else {
                     $post["id_subagian"] = isset($post["id_subagian"]) ? $post["id_subagian"] : "";
                 }
-                $this->validation->run($post,'createUserSubagValidate');
+                $this->validation->run($post,'userValidateSubag');
+            }
+            if (isset($post["id_previlege"]) && in_array($post["id_previlege"],["4"])) 
+            {
+                $this->validation->run($post,'createUserValidateDetail');
+                
+                if (isset($post["tgl_lahir"])) 
+                {
+                    $this->validation->run($post,'userValidateTglLahir');
+                }
+                if (isset($post["kelamin"])) 
+                {
+                    $this->validation->run($post,'userValidateKelamin');
+                }
+                if (isset($post["agama"])) 
+                {
+                    $this->validation->run($post,'userValidateAgama');
+                }
             }
 
             $errors  = $this->validation->getErrors();
@@ -246,43 +270,52 @@ class Users extends ResourceController
 
                 $id = uniqid();
 
+                // Insert table users
                 $data_users = [
                     "id" => $id,
                     "username" => htmlspecialchars($post["username"]),
                     // "password" => password_hash(preg_replace("/-/","",$post["tgl_lahir"]),PASSWORD_DEFAULT),
                     "password" => password_hash($post["username"],PASSWORD_DEFAULT),
                     "id_previlege" => (int) $post["id_previlege"],
+                    "created_at"   => time(),
                 ];
-
-                $data_user_detail = [
-                    "user_id"      => $id,
-                    "nik"          => htmlspecialchars($post["nik"]),
-                    "nama_lengkap" => htmlspecialchars(strtolower($post["nama_lengkap"])),
-                    "email"        => $post["email"],
-                    "agama"        => htmlspecialchars(strtolower($post["agama"])),
-                    "pendidikan"   => htmlspecialchars(strtolower($post["pendidikan"])),
-                    "golongan"     => htmlspecialchars(strtolower($post["golongan"])),
-                    "status"       => "active",
-                    "masa_kerja"   => $post["masa_kerja"],
-                    "tgl_lahir"    => $post["tgl_lahir"],
-                    "alamat"       => htmlspecialchars(strtolower($post["alamat"])),
-                    "kelamin"      => $post["kelamin"],
-                    "notelp"       => $post["notelp"],
-                ];
-
                 $this->db->table("users")->insert($data_users);
-                $this->db->table("user_detail")->insert($data_user_detail);
 
+                // Insert table user_detail_bag
                 if (in_array($post["id_previlege"],["2","3","4"])) {
                     $this->db->table("user_detail_bag")->insert([
                         "user_id"   => $id,
                         "id_bagian" => $post["id_bagian"]
                     ]);
                 }
+
+                // Insert table user_detail_subag
                 if (in_array($post["id_previlege"],["3","4"])) {
                     $this->db->table("user_detail_subag")->insert([
                         "user_id"     => $id,
                         "id_subagian" => $post["id_subagian"]
+                    ]);
+                }
+
+                // Insert table user_detail
+                if (in_array($post["id_previlege"],["4"])) 
+                {
+                    $this->db->table("user_detail")->insert([
+                        "user_id"      => $id,
+                        "nik"          => $post["nik"],
+                        "npwp"         => htmlspecialchars(trim($post["npwp"])),
+                        "email"        => htmlspecialchars(trim($post["email"])),
+                        "notelp"       => $post["notelp"],
+                        "id_kedudukan" => $post["id_kedudukan"],
+                        "masa_kerja"   => $post["masa_kerja"],
+                        "income"       => $post["income"],
+                        "nama_lengkap" => !isset($post["nama_lengkap"])?"-": htmlspecialchars(strtolower(trim($post["nama_lengkap"]))),
+                        "alamat"       => !isset($post["alamat"])      ?"-": htmlspecialchars(strtolower(trim($post["alamat"]))),
+                        "pendidikan"   => !isset($post["pendidikan"])  ?"-": htmlspecialchars(strtolower(trim($post["pendidikan"]))),
+                        "tgl_lahir"    => !isset($post["tgl_lahir"])?"-" : $post["tgl_lahir"],
+                        "kelamin"      => !isset($post["kelamin"])  ?"-" : $post["kelamin"],
+                        "agama"        => !isset($post["agama"])    ?"-" : $post["agama"],
+                        "status"       => "active",
                     ]);
                 }
                 
@@ -352,6 +385,9 @@ class Users extends ResourceController
             if ($g_idbagian != null) {
                 $dbsubag = $dbsubag->where("id_bagian",$g_idbagian);
             }
+            else if (isset($put['id_bagian'])) {
+                $dbsubag = $dbsubag->where("id_bagian",$put['id_bagian']);
+            }
             $dbsubag = $dbsubag->get()->getResultArray();
             
             $allowedSubag = "";
@@ -377,7 +413,7 @@ class Users extends ResourceController
                 else {
                     $put["id_bagian"] = isset($put["id_bagian"]) ? $put["id_bagian"] : "";
                 }
-                $this->validation->run($put,'updateUserBagValidate');
+                $this->validation->run($put,'userValidateBag');
             }
             if (isset($put["id_previlege"]) && in_array($put["id_previlege"],["3","4"])) 
             {
@@ -387,11 +423,33 @@ class Users extends ResourceController
                 else {
                     $put["id_subagian"] = isset($put["id_subagian"]) ? $put["id_subagian"] : "";
                 }
-                $this->validation->run($put,'updateUserSubagValidate');
+                $this->validation->run($put,'userValidateSubag');
+            }
+            if (isset($put["id_previlege"]) && in_array($put["id_previlege"],["4"])) 
+            {
+                $this->validation->run($put,'updateUserValidateDetail');
+                
+                if (isset($put["tgl_lahir"])) 
+                {
+                    $this->validation->run($put,'userValidateTglLahir');
+                }
+                if (isset($put["kelamin"])) 
+                {
+                    $this->validation->run($put,'userValidateKelamin');
+                }
+                if (isset($put["agama"])) 
+                {
+                    $this->validation->run($put,'userValidateAgama');
+                }
+                if (isset($put["status"])) 
+                {
+                    $this->validation->run($put,'userValidateStatus');
+                }
             }
 
             $errors = $this->validation->getErrors();
             
+            // if there is id's error
             if (isset($errors["id"])) {
                 foreach ($errors as $key => $value) {
                     if ($key != "id") {
@@ -412,6 +470,7 @@ class Users extends ResourceController
             else {
                 $this->db->transBegin();
 
+                // Update table users
                 $data_users = [
                     "username"     => htmlspecialchars($put["username"]),
                     "id_previlege" => (int) $put["id_previlege"],
@@ -421,30 +480,18 @@ class Users extends ResourceController
                     $data_users["password"] = password_hash($put["new_password"],PASSWORD_DEFAULT); 
                 }
 
-                $data_user_detail = [
-                    "nik"          => htmlspecialchars($put["nik"]),
-                    "nama_lengkap" => htmlspecialchars(strtolower($put["nama_lengkap"])),
-                    "email"        => $put["email"],
-                    "agama"        => htmlspecialchars(strtolower($put["agama"])),
-                    "pendidikan"   => htmlspecialchars(strtolower($put["pendidikan"])),
-                    "golongan"     => htmlspecialchars(strtolower($put["golongan"])),
-                    "status"       => $put["status"],
-                    "masa_kerja"   => $put["masa_kerja"],
-                    "tgl_lahir"    => $put["tgl_lahir"],
-                    "alamat"       => htmlspecialchars(strtolower($put["alamat"])),
-                    "kelamin"      => $put["kelamin"],
-                    "notelp"       => $put["notelp"],
-                ];
-
                 $updateStatus = $this->db->table("users")
                     ->where("id",$put["id"])
                     ->whereIn("id_previlege",$allowedPrevilegeArr)
                     ->update($data_users);
 
-                $this->db->table("user_detail")
-                    ->where("user_id",$put["id"])
-                    ->update($data_user_detail);
+                if ($put["id_previlege"] == "3") {
+                    $this->db->table("user_detail")
+                        ->where("user_id",$put["id"])
+                        ->delete();
+                }
                 
+                // Update table user_detail_bag
                 if (in_array($put["id_previlege"],["2","3","4"])) {
                     $this->db->table("user_detail_bag")
                         ->where("user_id",$put["id"])
@@ -458,6 +505,8 @@ class Users extends ResourceController
                             ->delete();
                     }
                 }
+
+                // Update table user_detail_subag
                 if (in_array($put["id_previlege"],["3","4"])) {
                     $isExist = $this->db->table("user_detail_subag")
                         ->where("user_id",$put["id"])
@@ -479,11 +528,47 @@ class Users extends ResourceController
                             ]);
                     }
                 }
+
+                if (in_array($put["id_previlege"],["4"])) 
+                {
+                    $data = [
+                        "nik"          => $put["nik"],
+                        "npwp"         => htmlspecialchars(trim($put["npwp"])),
+                        "email"        => htmlspecialchars(trim($put["email"])),
+                        "notelp"       => $put["notelp"],
+                        "id_kedudukan" => $put["id_kedudukan"],
+                        "masa_kerja"   => $put["masa_kerja"],
+                        "income"       => $put["income"],
+                        "nama_lengkap" => !isset($put["nama_lengkap"])?"-": htmlspecialchars(strtolower(trim($put["nama_lengkap"]))),
+                        "alamat"       => !isset($put["alamat"])      ?"-": htmlspecialchars(strtolower(trim($put["alamat"]))),
+                        "pendidikan"   => !isset($put["pendidikan"])  ?"-": htmlspecialchars(strtolower(trim($put["pendidikan"]))),
+                        "tgl_lahir"    => !isset($put["tgl_lahir"])?"-" : $put["tgl_lahir"],
+                        "kelamin"      => !isset($put["kelamin"])  ?"-" : $put["kelamin"],
+                        "agama"        => !isset($put["agama"])    ?"-" : $put["agama"],
+                        "status"       => !isset($put["status"]) ?"active": $put["status"],
+                    ];
+
+                    $isExist = $this->db->table("user_detail")
+                        ->where("user_id",$put["id"])
+                        ->get()
+                        ->getFirstRow();
+                    
+                    if ($isExist) {
+                        $this->db->table("user_detail")
+                            ->where("user_id",$put["id"])
+                            ->update($data);
+                    } else {
+                        $data["user_id"] = $put["id"];
+                        $this->db->table("user_detail")
+                            ->insert($data);
+                    }
+                    
+                }
                 
                 $respond = [
                     'code'    => ($updateStatus) ? 201   : 401,
                     'error'   => ($updateStatus) ? false : true,
-                    'message' => ($updateStatus) ? "pegawai dengan nama:".$put["nama_lengkap"]." berhasil diupdate" : "access denied"
+                    'message' => ($updateStatus) ? "pegawai dengan id:".$put["id"]." berhasil diupdate" : "access denied"
                 ];
 
                 if ($updateStatus) {
@@ -526,15 +611,27 @@ class Users extends ResourceController
 
             $put["id"] = $g_user_id;
 
-            if ($g_previlege=="admin") {
-                $this->validation->run($put,'updateProfileAdminValidate');
-            } 
-            else {
-                $this->validation->run($put,'updateProfileValidate');
-            }
-
             if (isset($put["new_password"])) {
                 $this->validation->run($put,'newPasswordValidate');
+            }
+            if ($g_previlege!="nonasn") {
+                $this->validation->run($put,'updateProfileAsnValidate');
+            } 
+            else {
+                $this->validation->run($put,'updateProfileNonAsnValidate');
+
+                if (isset($put["tgl_lahir"])) 
+                {
+                    $this->validation->run($put,'userValidateTglLahir');
+                }
+                if (isset($put["kelamin"])) 
+                {
+                    $this->validation->run($put,'userValidateKelamin');
+                }
+                if (isset($put["agama"])) 
+                {
+                    $this->validation->run($put,'userValidateAgama');
+                }
             }
 
             $errors = $this->validation->getErrors();
@@ -560,25 +657,25 @@ class Users extends ResourceController
                 $this->db->table("users")
                     ->where("id",$put["id"])
                     ->update($data_users);
+
                 $affectedRows1 = $this->db->affectedRows();
                 $affectedRows2 = 0;
                 
-                if ($g_previlege!="admin") {
-                    $data_user_detail = [
-                        "nik"          => htmlspecialchars($put["nik"]),
-                        "nama_lengkap" => htmlspecialchars(strtolower($put["nama_lengkap"])),
-                        "email"        => $put["email"],
-                        "agama"        => htmlspecialchars(strtolower($put["agama"])),
-                        "pendidikan"   => htmlspecialchars(strtolower($put["pendidikan"])),
-                        "tgl_lahir"    => $put["tgl_lahir"],
-                        "alamat"       => htmlspecialchars(strtolower($put["alamat"])),
-                        "kelamin"      => $put["kelamin"],
-                        "notelp"       => $put["notelp"],
-                    ];
-
+                if ($g_previlege=="nonasn") {
                     $this->db->table("user_detail")
                         ->where("user_id",$put["id"])
-                        ->update($data_user_detail);
+                        ->update([
+                            "nik"          => $put["nik"],
+                            "npwp"         => htmlspecialchars(trim($put["npwp"])),
+                            "email"        => htmlspecialchars(trim($put["email"])),
+                            "notelp"       => $put["notelp"],
+                            "nama_lengkap" => !isset($put["nama_lengkap"])?"-": htmlspecialchars(strtolower(trim($put["nama_lengkap"]))),
+                            "alamat"       => !isset($put["alamat"])      ?"-": htmlspecialchars(strtolower(trim($put["alamat"]))),
+                            "pendidikan"   => !isset($put["pendidikan"])  ?"-": htmlspecialchars(strtolower(trim($put["pendidikan"]))),
+                            "tgl_lahir"    => !isset($put["tgl_lahir"])?"-" : $put["tgl_lahir"],
+                            "kelamin"      => !isset($put["kelamin"])  ?"-" : $put["kelamin"],
+                            "agama"        => !isset($put["agama"])    ?"-" : $put["agama"],
+                        ]);
                     
                     $affectedRows2 = $this->db->affectedRows();
                 }

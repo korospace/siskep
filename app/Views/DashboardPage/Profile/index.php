@@ -7,7 +7,7 @@
 
 <!-- JS -->
 <?= $this->section('dashboardJs'); ?>
-    <script src="<?= base_url('js/update_profile.js'); ?>"></script>
+    <script src="<?= base_url('js/profile.js'); ?>"></script>
 <?= $this->endSection(); ?>
 
 <!-- Html -->
@@ -44,12 +44,123 @@
         </div>
     </div>
 
+    <!-- Data Wraper -->
     <div
     id="data_wraper"
-    class="px-8 py-8 grid grid-cols-3-fit grid-rows-5 gap-4">
-        
+    class="px-8 py-8">
+        <div class="grid grid-cols-3-fit grid-rows-5 gap-4">
+            <!-- status -->
+            <span class="capitalize font-bold text-gray-600 text-lg">
+                status
+            </span>
+            <span>:</span>
+            <span id="data_status" class="text-gray-600 text-lg"></span>
+
+            <!-- Penempatan -->
+            <span class="capitalize font-bold text-gray-600 text-lg">
+                penempatan
+            </span>
+            <span>:</span>
+            <span id="data_penempatan" class="text-gray-600 text-lg"></span>
+            
+            <!-- Kedudukan -->
+            <span class="capitalize font-bold text-gray-600 text-lg">
+                Kedudukan
+            </span>
+            <span>:</span>
+            <span id="data_kedudukan" class="text-gray-600 text-lg"></span>
+            
+            <!-- Income -->
+            <span class="capitalize font-bold text-gray-600 text-lg">
+                Income
+            </span>
+            <span>:</span>
+            <span id="data_income" class="text-gray-600 text-lg"></span>
+            
+            <!-- Masa kerja -->
+            <span class="capitalize font-bold text-gray-600 text-lg">
+                Masa kerja
+            </span>
+            <span>:</span>
+            <span id="data_masa_kerja" class="text-gray-600 text-lg"></span>
+        </div>
+
+        <div class="my-5 border-b border-zinc-500"></div>
+
+        <div class="grid grid-cols-3-fit grid-rows-10 gap-4">
+            <!-- nik -->
+            <span class="uppercase font-bold text-gray-600 text-lg">
+                nik
+            </span>
+            <span>:</span>
+            <span id="data_nik" class="text-gray-600 text-lg"></span>
+            
+            <!-- npwp -->
+            <span class="uppercase font-bold text-gray-600 text-lg">
+                npwp
+            </span>
+            <span>:</span>
+            <span id="data_npwp" class="text-gray-600 text-lg"></span>
+            
+            <!-- email -->
+            <span class="capitalize font-bold text-gray-600 text-lg">
+                email
+            </span>
+            <span>:</span>
+            <span id="data_email" class="text-gray-600 text-lg"></span>
+            
+            <!-- notelp -->
+            <span class="capitalize font-bold text-gray-600 text-lg">
+                notelp
+            </span>
+            <span>:</span>
+            <span id="data_notelp" class="text-gray-600 text-lg"></span>
+            
+            <!-- nama lengkap -->
+            <span class="capitalize font-bold text-gray-600 text-lg">
+                nama lengkap
+            </span>
+            <span>:</span>
+            <span id="data_nama_lengkap" class="text-gray-600 text-lg"></span>
+            
+            <!-- alamat -->
+            <span class="capitalize font-bold text-gray-600 text-lg">
+                alamat
+            </span>
+            <span>:</span>
+            <span id="data_alamat" class="text-gray-600 text-lg"></span>
+            
+            <!-- tgl lahir -->
+            <span class="capitalize font-bold text-gray-600 text-lg">
+                tgl lahir
+            </span>
+            <span>:</span>
+            <span id="data_tgl_lahir" class="text-gray-600 text-lg"></span>
+            
+            <!-- kelamin -->
+            <span class="capitalize font-bold text-gray-600 text-lg">
+                kelamin
+            </span>
+            <span>:</span>
+            <span id="data_kelamin" class="text-gray-600 text-lg"></span>
+            
+            <!-- agama -->
+            <span class="capitalize font-bold text-gray-600 text-lg">
+                agama
+            </span>
+            <span>:</span>
+            <span id="data_agama" class="text-gray-600 text-lg"></span>
+            
+            <!-- pendidikan -->
+            <span class="capitalize font-bold text-gray-600 text-lg">
+                pendidikan
+            </span>
+            <span>:</span>
+            <span id="data_pendidikan" class="text-gray-600 text-lg"></span>
+        </div>
     </div>
     
+    <!-- Input Wraper -->
     <div
     id="inputs_wraper"
     class="hidden px-5 pt-12 grid-cols-1 md:grid-cols-2 lg:grid-cols-4 grid-rows-11 md:grid-rows-6 lg:grid-rows-3 gap-x-4 gap-y-10 md:gap-y-12">
@@ -62,7 +173,7 @@
             class="validate block px-4 py-2 w-full appearance-none focus:outline-none transition-all bg-white text-zinc-600 rounded-md" />
             <label 
             for="username_uprof" 
-            class="py-3 absolute top-0 left-5 text-zinc-400 duration-300 origin-0 cursor-text">
+            class="py-2 absolute top-0 left-5 text-zinc-400 duration-300 origin-0 cursor-text">
                 username
             </label>
         </div>
@@ -76,36 +187,8 @@
             class="validate block px-4 py-2 w-full appearance-none focus:outline-none transition-all bg-white text-zinc-600 rounded-md" />
             <label 
             for="password_uprof" 
-            class="py-3 absolute top-0 left-5 text-zinc-400 duration-300 origin-0 cursor-text">
+            class="py-2 absolute top-0 left-5 text-zinc-400 duration-300 origin-0 cursor-text">
                 password
-            </label>
-        </div>
-
-        <!-- email -->
-        <div
-        id="email_wraper_uprof"
-        class="label_fly w-full h-max relative border-2 border-zinc-400 focus-within:border-zinc-600 rounded-md">
-            <input
-            id="email_uprof" type="email" name="email" placeholder="email" autocomplete="off" 
-            class="validate block px-4 py-2 w-full appearance-none focus:outline-none transition-all bg-white text-zinc-600 rounded-md" />
-            <label 
-            for="email_uprof" 
-            class="py-3 absolute top-0 left-5 text-zinc-400 duration-300 origin-0 cursor-text">
-                email
-            </label>
-        </div>
-
-        <!-- nama_lengkap -->
-        <div
-        id="nama_lengkap_wraper_uprof"
-        class="label_fly w-full h-max relative border-2 border-zinc-400 focus-within:border-zinc-600 rounded-md">
-            <input
-            id="nama_lengkap_uprof" type="text" name="nama_lengkap" placeholder="nama_lengkap" autocomplete="off" 
-            class="validate block px-4 py-2 w-full appearance-none focus:outline-none transition-all bg-white text-zinc-600 rounded-md" />
-            <label 
-            for="nama_lengkap_uprof" 
-            class="py-3 absolute top-0 left-5 text-zinc-400 duration-300 origin-0 cursor-text">
-                nama lengkap
             </label>
         </div>
 
@@ -118,22 +201,36 @@
             class="validate block px-4 py-2 w-full appearance-none focus:outline-none transition-all bg-white text-zinc-600 rounded-md" />
             <label 
             for="nik_uprof" 
-            class="py-3 absolute top-0 left-5 text-zinc-400 duration-300 origin-0 cursor-text">
+            class="py-2 absolute top-0 left-5 text-zinc-400 duration-300 origin-0 cursor-text">
                 nik
             </label>
         </div>
 
-        <!-- pendidikan -->
+        <!-- npwp -->
         <div
-        id="pendidikan_wraper_uprof"
+        id="npwp_wraper_uprof"
         class="label_fly w-full h-max relative border-2 border-zinc-400 focus-within:border-zinc-600 rounded-md">
             <input
-            id="pendidikan_uprof" type="text" name="pendidikan" placeholder="pendidikan" autocomplete="off" 
+            id="npwp_uprof" type="text" name="npwp" placeholder="npwp" autocomplete="off" 
             class="validate block px-4 py-2 w-full appearance-none focus:outline-none transition-all bg-white text-zinc-600 rounded-md" />
             <label 
-            for="pendidikan_uprof" 
-            class="py-3 absolute top-0 left-5 text-zinc-400 duration-300 origin-0 cursor-text">
-                pendidikan
+            for="npwp_uprof" 
+            class="py-2 absolute top-0 left-5 text-zinc-400 duration-300 origin-0 cursor-text">
+                npwp
+            </label>
+        </div>
+
+        <!-- email -->
+        <div
+        id="email_wraper_uprof"
+        class="label_fly w-full h-max relative border-2 border-zinc-400 focus-within:border-zinc-600 rounded-md">
+            <input
+            id="email_uprof" type="email" name="email" placeholder="email" autocomplete="off" 
+            class="validate block px-4 py-2 w-full appearance-none focus:outline-none transition-all bg-white text-zinc-600 rounded-md" />
+            <label 
+            for="email_uprof" 
+            class="py-2 absolute top-0 left-5 text-zinc-400 duration-300 origin-0 cursor-text">
+                email
             </label>
         </div>
 
@@ -146,8 +243,22 @@
             class="validate block px-4 py-2 w-full appearance-none focus:outline-none transition-all bg-white text-zinc-600 rounded-md" />
             <label 
             for="notelp_uprof" 
-            class="py-3 absolute top-0 left-5 text-zinc-400 duration-300 origin-0 cursor-text">
+            class="py-2 absolute top-0 left-5 text-zinc-400 duration-300 origin-0 cursor-text">
                 nomor telepon
+            </label>
+        </div>
+
+        <!-- nama_lengkap -->
+        <div
+        id="nama_lengkap_wraper_uprof"
+        class="label_fly w-full h-max relative border-2 border-zinc-400 focus-within:border-zinc-600 rounded-md">
+            <input
+            id="nama_lengkap_uprof" type="text" name="nama_lengkap" placeholder="nama_lengkap" autocomplete="off" 
+            class="validate block px-4 py-2 w-full appearance-none focus:outline-none transition-all bg-white text-zinc-600 rounded-md" />
+            <label 
+            for="nama_lengkap_uprof" 
+            class="py-2 absolute top-0 left-5 text-zinc-400 duration-300 origin-0 cursor-text">
+                nama lengkap
             </label>
         </div>
 
@@ -160,7 +271,7 @@
             class="validate block px-4 py-2 w-full appearance-none focus:outline-none transition-all bg-white text-zinc-600 rounded-md" />
             <label 
             for="alamat_uprof" 
-            class="py-3 absolute top-0 left-5 text-zinc-400 duration-300 origin-0 cursor-text">
+            class="py-2 absolute top-0 left-5 text-zinc-400 duration-300 origin-0 cursor-text">
                 alamat
             </label>
         </div>
@@ -188,6 +299,34 @@
             </label>
         </div>
 
+        <!-- pendidikan -->
+        <div
+        id="pendidikan_wraper_uprof"
+        class="label_fly w-full h-max relative border-2 border-zinc-400 focus-within:border-zinc-600 rounded-md">
+            <input
+            id="pendidikan_uprof" type="text" name="pendidikan" placeholder="pendidikan" autocomplete="off" 
+            class="validate block px-4 py-2 w-full appearance-none focus:outline-none transition-all bg-white text-zinc-600 rounded-md" />
+            <label 
+            for="pendidikan_uprof" 
+            class="py-2 absolute top-0 left-5 text-zinc-400 duration-300 origin-0 cursor-text">
+                pendidikan
+            </label>
+        </div>
+
+        <!-- tgl_lahir -->
+        <div
+        id="tgl_lahir_wraper_uprof"
+        class="label_fly w-full h-max relative border-2 border-zinc-400 focus-within:border-zinc-600 rounded-md">
+            <input
+            id="tgl_lahir_uprof" type="date" name="tgl_lahir" placeholder="tgl_lahir" autocomplete="off" 
+            class="validate block px-4 py-2 w-full appearance-none focus:outline-none transition-all bg-white text-zinc-600 rounded-md"/>
+            <label 
+            for="tgl_lahir_uprof" 
+            class="py-2 absolute top-0 left-5 text-zinc-400 duration-300 origin-0 cursor-text">
+                tanggal lahir
+            </label>
+        </div>
+
         <!-- kelamin -->
         <div
         id="kelamin_wraper_uprof"
@@ -204,20 +343,6 @@
             for="kelamin_uprof" 
             class="py-2 absolute left-2 -top-8 z-0 text-zinc-600 cursor-text text-xs">
                 kelamin
-            </label>
-        </div>
-
-        <!-- tgl_lahir -->
-        <div
-        id="tgl_lahir_wraper_uprof"
-        class="label_fly w-full h-max relative border-2 border-zinc-400 focus-within:border-zinc-600 rounded-md">
-            <input
-            id="tgl_lahir_uprof" type="date" name="tgl_lahir" placeholder="tgl_lahir" autocomplete="off" 
-            class="validate block px-4 py-2 w-full appearance-none focus:outline-none transition-all bg-white text-zinc-600 rounded-md"/>
-            <label 
-            for="tgl_lahir_uprof" 
-            class="py-3 absolute top-0 left-5 text-zinc-400 duration-300 origin-0 cursor-text">
-                tanggal lahir
             </label>
         </div>
     </div>

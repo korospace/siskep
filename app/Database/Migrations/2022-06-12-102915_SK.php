@@ -4,40 +4,45 @@ namespace App\Database\Migrations;
 
 use CodeIgniter\Database\Migration;
 
-class Subagian extends Migration
+class SK extends Migration
 {
     public function up()
     {
         $this->forge->addField([
             'id' => [
+                'type'           => 'int',
+                'constraint'     => 11,      
+                'auto_increment' => true,
+            ],
+            'no_sk' => [
                 'type'       => 'varchar',
                 'constraint' => 255,      
-                'null'       => false,
-            ],
-            'id_bagian' => [
-                'type'       => 'varchar',
-                'constraint' => 255,      
-                'null'       => false,
-            ],
-            'name' => [
-                'type'       => 'varchar',
-                'constraint' => 255,
                 'unique'     => true,
                 'null'       => false,
             ],
-            'description' => [
-                'type'       => 'longtext',
+            'title' => [
+                'type'       => 'varchar',
+                'constraint' => 255,
                 'null'       => false,
-            ]
+            ],
+            'tgl_sk' => [
+                'type'       => 'varchar',
+                'constraint' => 10,
+                'null'       => false,
+            ],
+            'file_sk' => [
+                'type'       => 'varchar',
+                'constraint' => 255,
+                'null'       => false,
+            ],
         ]);
 
         $this->forge->addPrimaryKey('id');
-        $this->forge->addForeignKey('id_bagian','bagian','id','CASCADE','CASCADE');
-        $this->forge->createTable('subagian');
+        $this->forge->createTable('SK');
     }
 
     public function down()
     {
-        $this->forge->dropTable('subagian');
+        $this->forge->dropTable('SK');
     }
 }

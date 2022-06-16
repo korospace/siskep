@@ -29,14 +29,14 @@ $routes->setAutoRoute(true);
  * --------------------------------------------------------------------
  */
 
-// Dashboard
+// Main Dashboard Page
 $routes->get(
     '/', 
     'Dashboard::index', 
     ['filter' => 'Dashboard']
 );
 
-// Tugas & Fungsi
+// Tugas & Fungsi Page
 $routes->get(
     '/tugas_fungsi', 
     'Dashboard::tugasFungsi', 
@@ -47,10 +47,17 @@ $routes->get(
 $routes->get(
     '/pegawai', 
     'Dashboard::listUsers', 
-    ['filter' => 'DashboardNonPegawai']
+    ['filter' => 'DashboardNonAsn']
 );
 
-// Edit profile
+// Surat keputusan Page
+$routes->get(
+    '/sk', 
+    'Dashboard::suratKeputusan', 
+    ['filter' => 'Dashboard']
+);
+
+// Edit profile Page
 $routes->get(
     '/update_profile', 
     'Dashboard::updateProfile', 
@@ -127,12 +134,36 @@ $routes->group("subagian", function ($routes) {
     );
 });
 
+// crud kedudukan
+$routes->group("kedudukan", function ($routes) {
+    $routes->get(
+        'show', 
+        'Kedudukan::show', 
+        ['filter' => 'ApiGuard']
+    );
+    $routes->post(
+        'create', 
+        'Kedudukan::create', 
+        ['filter' => 'ApiGuardAdmin']
+    );
+    $routes->put(
+        'update', 
+        'Kedudukan::update', 
+        ['filter' => 'ApiGuardAdmin']
+    );
+    $routes->delete(
+        'delete/(:any)', 
+        'Kedudukan::delete/$1', 
+        ['filter' => 'ApiGuardAdmin']
+    );
+});
+
 // crud user
 $routes->group("user", function ($routes) {
     $routes->get(
         'previlege', 
         'Users::getPrevilege', 
-        ['filter' => 'ApiGuardNonPegawai']
+        ['filter' => 'ApiGuardNonAsn']
     );
     $routes->get(
         'profile', 
@@ -142,17 +173,17 @@ $routes->group("user", function ($routes) {
     $routes->get(
         'show', 
         'Users::show', 
-        ['filter' => 'ApiGuardNonPegawai']
+        ['filter' => 'ApiGuardNonAsn']
     );
     $routes->post(
         'create', 
         'Users::create', 
-        ['filter' => 'ApiGuardNonPegawai']
+        ['filter' => 'ApiGuardNonAsn']
     );
     $routes->put(
         'update/(:any)', 
         'Users::update/$1', 
-        ['filter' => 'ApiGuardNonPegawai']
+        ['filter' => 'ApiGuardNonAsn']
     );
     $routes->put(
         'update_profile', 
@@ -162,7 +193,7 @@ $routes->group("user", function ($routes) {
     $routes->delete(
         'delete/(:any)', 
         'Users::delete/$1', 
-        ['filter' => 'ApiGuardNonPegawai']
+        ['filter' => 'ApiGuardNonAsn']
     );
 });
 
@@ -176,6 +207,20 @@ $routes->group("information", function ($routes) {
         'update', 
         'Information::update', 
         ['filter' => 'ApiGuardAdmin']
+    );
+});
+
+// crud Surat Keputusan
+$routes->group("sk", function ($routes) {
+    $routes->get(
+        'show', 
+        'SuratKeputusan::show',
+        ['filter' => 'ApiGuard']
+    );
+    $routes->post(
+        'create', 
+        'SuratKeputusan::create', 
+        ['filter' => 'ApiGuardNonAsn']
     );
 });
 

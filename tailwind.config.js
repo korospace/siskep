@@ -92,6 +92,7 @@ module.exports = {
       12: '3rem',
       14: '3.5rem',
       16: '4rem',
+      19: '4.5rem',
       20: '5rem',
       24: '6rem',
       28: '7rem',
@@ -523,6 +524,8 @@ module.exports = {
       4: 'repeat(4, minmax(0, 1fr))',
       5: 'repeat(5, minmax(0, 1fr))',
       6: 'repeat(6, minmax(0, 1fr))',
+      9: 'repeat(9, minmax(0, 1fr))',
+      10: 'repeat(10, minmax(0, 1fr))',
       11: 'repeat(11, minmax(0, 1fr))',
     },
     height: ({ theme }) => ({
@@ -632,6 +635,8 @@ module.exports = {
     maxWidth: ({ theme, breakpoints }) => ({
       none: 'none',
       0: '0rem',
+      3: '3rem',
+      6: '3rem',
       10: '10rem',
       xs: '20rem',
       sm: '24rem',
@@ -673,6 +678,7 @@ module.exports = {
     },
     minWidth: {
       0: '0px',
+      20: '5rem',
       full: '100%',
       min: 'min-content',
       max: 'max-content',

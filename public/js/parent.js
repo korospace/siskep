@@ -15,7 +15,7 @@ $('#toggle_nav').on('click', function(e) {
 /**
  * API REQUEST GET
  */
- const httpRequestGet = (url) => {
+const httpRequestGet = (url) => {
 
     return axios
         .get(url,{
@@ -33,7 +33,7 @@ $('#toggle_nav').on('click', function(e) {
         .catch((error) => {
             // unauthorized
             if (error.response.status == 401) {
-                if (error.response.data.messages == 'token expired') {
+                if (error.response.data.message == 'token expired') {
                     Swal.fire({
                         icon : 'error',
                         title : '<strong>LOGIN EXPIRED</strong>',
@@ -55,6 +55,8 @@ $('#toggle_nav').on('click', function(e) {
                     autohide: true,
                     type:'danger' 
                 })
+
+                cancelTokenSource.cancel();
             }
             
             return {
@@ -70,10 +72,10 @@ const httpRequestPost = (url,form) => {
     let newForm = new FormData();
 
     for (var pair of form.entries()) {
-        let noPair = ['username','password','new_password','email'];
+        let noPair = ['username','password','new_password','email','file_sk'];
 
         if (noPair.includes(pair[0]) == false) {
-            if (pair[0].includes('transaksi')) {
+            if (pair[0].includes('sk_detail')) {
                 newForm.set(pair[0], pair[1].trim());    
             } 
             else {
@@ -104,7 +106,7 @@ const httpRequestPost = (url,form) => {
         .catch((error) => {
             // unauthorized
             if (error.response.status == 401) {
-                if (error.response.data.messages == 'token expired') {
+                if (error.response.data.message == 'token expired') {
                     Swal.fire({
                         icon : 'error',
                         title : '<strong>LOGIN EXPIRED</strong>',
@@ -172,7 +174,7 @@ const httpRequestPut = (url,form) => {
         .catch((error) => {
             // unauthorized
             if (error.response.status == 401) {
-                if (error.response.data.messages == 'token expired') {
+                if (error.response.data.message == 'token expired') {
                     Swal.fire({
                         icon : 'error',
                         title : '<strong>LOGIN EXPIRED</strong>',
@@ -221,7 +223,7 @@ const httpRequestDelete = (url) => {
         .catch((error) => {
             // unauthorized
             if (error.response.status == 401) {
-                if (error.response.data.messages == 'token expired') {
+                if (error.response.data.message == 'token expired') {
                     Swal.fire({
                         icon : 'error',
                         title : '<strong>LOGIN EXPIRED</strong>',
@@ -291,42 +293,8 @@ async function checkToken() {
     }, interval);
 }
 
-/**
- * Get Information
- */
-async function getDataInfo() {
-    let dataStorage = JSON.parse(localStorage.getItem('data_info'));
-
-    if (dataStorage == null) {
-        let httpResponse = await httpRequestGet(`${BASE_URL}/information/show`);
-    
-        if (httpResponse.status === 200) {
-            let data = httpResponse.data.data;
-            localStorage.setItem("data_info",JSON.stringify(data));
-        }
-    }
-}
-getDataInfo();
-
-/**
- * Get Profile
- */
-async function getDataProfile() {
-    let dataStorage = JSON.parse(localStorage.getItem('data_profile'));
-
-    if (dataStorage == null) {
-        let httpResponse = await httpRequestGet(`${BASE_URL}/user/profile`);
-    
-        if (httpResponse.status === 200) {
-            let data = httpResponse.data.data;
-            localStorage.setItem("data_profile",JSON.stringify(data));
-        }
-    }
-}
-
 if (title2 !== "login") {
     checkToken();
-    getDataProfile();
 }
 
 /**
@@ -344,81 +312,21 @@ $('#btn_logout').on('click', function(e) {
         cancelButtonText: 'tidak',
         showLoaderOnConfirm: true,
         preConfirm: () => {
-            return axios
-            .delete(`${BASE_URL}/login/delete`, {
-                headers: {
-                    token: TOKEN
-                }
-            })
-            .then(() => {
-                Swal.close();
-
-                localStorage.removeItem('data_login');
-                localStorage.removeItem('data_bagian');
-                localStorage.removeItem('data_profile');
-                document.cookie = `token=null; path=/;SameSite=None; Secure`;
-                document.cookie = `lasturl=null; path=/;SameSite=None; Secure`;
-                window.location.replace(`${BASE_URL}/login`);
-            })
-            .catch(error => {
-                // unauthorized
-                if (error.response.status == 401) {
-                    Swal.close();
-
-                    localStorage.removeItem('data_login');
-                    localStorage.removeItem('data_info');
-                    localStorage.removeItem('data_bagian');
-                    localStorage.removeItem('data_profile');
-                    document.cookie = `token=null; path=/;SameSite=None; Secure`;
-                    document.cookie = `lasturl=null; path=/;SameSite=None; Secure`;
-                    window.location.replace(`${BASE_URL}/login`);
-                }
-                // error server
-                else if (error.response.status == 500) {
-                    Swal.showValidationMessage(
-                        `server error: coba sekali lagi!`
-                    )
-                }
-            })
+            doLogout(true);
+            return 0;
         },
         allowOutsideClick: () => !Swal.isLoading()
     })
 })
 
 function doLogout(removeLastUrl = false) {
-    showLoadingSpinner();
     cancelTokenSource.cancel();
-
-    axios
-        .delete(`${BASE_URL}/login/delete`, {
-            headers: {
-                token: TOKEN
-            }
-        })
-        .then(() => {
-            hideLoadingSpinner();
-
-            localStorage.removeItem('data_login');
-            localStorage.removeItem('data_bagian');
-            localStorage.removeItem('data_profile');
-            if (removeLastUrl) {
-                document.cookie = `lasturl=null; path=/;SameSite=None; Secure`;
-            }
-            document.cookie = `token=null; path=/;SameSite=None; Secure`;
-            window.location.replace(`${BASE_URL}/login`);
-        })
-        .catch(error => {
-            hideLoadingSpinner();
-
-            localStorage.removeItem('data_login');
-            localStorage.removeItem('data_bagian');
-            localStorage.removeItem('data_profile');
-            if (removeLastUrl) {
-                document.cookie = `lasturl=null; path=/;SameSite=None; Secure`;
-            }
-            document.cookie = `token=null; path=/;SameSite=None; Secure`;
-            window.location.replace(`${BASE_URL}/login`);
-        })
+    localStorage.removeItem('data_login');
+    document.cookie = `token=null; path=/;SameSite=None; Secure`;
+    if (removeLastUrl) {
+        document.cookie = `lasturl=null; path=/;SameSite=None; Secure`;
+    }
+    window.location.replace(`${BASE_URL}/login`);
 }
 
 /**

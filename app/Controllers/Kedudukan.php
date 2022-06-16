@@ -5,7 +5,7 @@ namespace App\Controllers;
 use App\Utils\Utils;
 use CodeIgniter\RESTful\ResourceController;
 
-class Subagian extends ResourceController
+class Kedudukan extends ResourceController
 {
     private $db;
     private $validation;
@@ -17,21 +17,19 @@ class Subagian extends ResourceController
     }
 
     /**
-     * Show All subagian
+     * Show All kedudukan
      * ============
-     * - api for display all data of subagian
+     * - api for display all data of kedudukan
      * - previlege     : admin
-     * - url           : /subagian/show
+     * - url           : /kedudukan/show
      * - Method        : GET
      * - request header: token
      */
     public function show($id = null)
     {
-        $get  = $this->request->getGet();
-        $rows = $this->db->table("subagian")->select("subagian.id,subagian.name,subagian.id_bagian,bagian.name as bagian")
-        ->join("bagian","bagian.id = subagian.id_bagian")
-        ->get()
-        ->getResultArray();
+        $rows = $this->db->table("kedudukan")
+            ->get()
+            ->getResultArray();
 
         $respond  = [
             "code"  => count($rows) == 0 ? 404  : 200,
@@ -41,40 +39,18 @@ class Subagian extends ResourceController
 
         if (count($rows) == 0) {
             unset($respond["data"]);
-            $respond["message"] = "subagian belum ditambah";
-        }
-
-        return $this->respond($respond,$respond['code']);
-    }
-
-    public function detail($id = null)
-    {
-        $rows = $this->db->table("subagian")->select("subagian.id,subagian.name,subagian.id_bagian,bagian.name as bagian,subagian.description")
-            ->join("bagian","bagian.id = subagian.id_bagian")
-            ->where("subagian.id",$id)  
-            ->get()
-            ->getFirstRow();
-
-        $respond  = [
-            "code"  => empty($rows) ? 404  : 200,
-            "error" => empty($rows) ? true : false,
-            "data"  => empty($rows) ? [] : $rows
-        ];
-
-        if (empty($rows)) {
-            unset($respond["data"]);
-            $respond["message"] = "subagian dengan id ($id) tidak ditemukan";
+            $respond["message"] = "kedudukan belum ditambah";
         }
 
         return $this->respond($respond,$respond['code']);
     }
 
     /**
-     * Create subagian
+     * Create kedudukan
      * ============
-     * - api for create new subagian
+     * - api for create new kedudukan
      * - previlege     : admin
-     * - url           : /subagian/create
+     * - url           : /kedudukan/create
      * - Method        : POST
      * - request header: token
      */
@@ -82,7 +58,7 @@ class Subagian extends ResourceController
     {
         try {
             $post    = $this->request->getPost();
-            $this->validation->run($post,'createSubagianValidate');
+            $this->validation->run($post,'createKedudukanValidate');
             $errors  = $this->validation->getErrors();
 
             if ($errors) {
@@ -95,7 +71,7 @@ class Subagian extends ResourceController
             else {
                 $this->db->transBegin();
 
-                $lastId = $this->db->table("subagian")
+                $lastId = $this->db->table("kedudukan")
                     ->select('id')->limit(1)
                     ->orderBy('id','DESC')->get()
                     ->getResultArray();
@@ -104,20 +80,18 @@ class Subagian extends ResourceController
                     $lastId = $lastId[0]["id"];
                     $lastId = (int)substr($lastId,2)+1;
                     $lastId = sprintf('%02d',$lastId);
-                    $lastId = 'SB'.$lastId;
+                    $lastId = 'K'.$lastId;
                 }
                 else {
-                    $lastId = 'SB01';
+                    $lastId = 'K01';
                 }
 
                 $data = [
-                    "id"          => $lastId,
-                    "id_bagian"   => $post["id_bagian"],
-                    "name"        => htmlspecialchars(strtolower($post["name"])),
-                    "description" => $post["description"],
+                    "id"   => $lastId,
+                    "name" => htmlspecialchars(strtolower($post["name"])),
                 ];
 
-                $this->db->table("subagian")->insert($data);
+                $this->db->table("kedudukan")->insert($data);
 
                 $transStatus = $this->db->transStatus();
                 $respond = [
@@ -126,7 +100,7 @@ class Subagian extends ResourceController
                 ];
                 
                 if ($transStatus) {
-                    $respond['message'] = "subagian baru berhasil dibuat";
+                    $respond['message'] = "kedudukan baru berhasil dibuat";
                     $this->db->transCommit();
                 } 
                 else {
@@ -149,11 +123,11 @@ class Subagian extends ResourceController
     }
 
     /**
-     * Update subagian
+     * Update kedudukan
      * ============
-     * - api for update subagian
+     * - api for update kedudukan
      * - previlege     : admin
-     * - url           : /subagian/update
+     * - url           : /kedudukan/update
      * - Method        : PUT
      * - request header: token
      */
@@ -163,7 +137,7 @@ class Subagian extends ResourceController
             Utils::_methodParser("put");
             global $put;
 
-            $this->validation->run($put,'updateSubagValidate');
+            $this->validation->run($put,'updateKedudukanValidate');
             $errors = $this->validation->getErrors();
             
             if (isset($errors["id"])) {
@@ -187,19 +161,17 @@ class Subagian extends ResourceController
                 $this->db->transBegin();
 
                 $data = [
-                    "name"        => htmlspecialchars($put["name"]),
-                    "id_bagian"   => $put["id_bagian"],
-                    "description" => $put["description"],
+                    "name" => htmlspecialchars($put["name"]),
                 ];
 
-                $this->db->table("subagian")
+                $this->db->table("kedudukan")
                     ->where("id",$put["id"])
                     ->update($data);
 
                 $respond = [
                     'code'    => 201,
                     'error'   => false,
-                    'message' => "subagian dengan id:".$put["id"]." berhasil diupdate"
+                    'message' => "kedudukan dengan id:".$put["id"]." berhasil diupdate"
                 ];
 
                 $this->db->transCommit();
@@ -219,11 +191,11 @@ class Subagian extends ResourceController
     }
 
     /**
-     * Delete subagian
+     * Delete kedudukan
      * ============
-     * - api for delete subagian
+     * - api for delete kedudukan
      * - previlege     : admin
-     * - url           : /subagian/delete/{:id}
+     * - url           : /kedudukan/delete/{:id}
      * - Method        : DELETE
      * - request header: token
      */
@@ -231,7 +203,7 @@ class Subagian extends ResourceController
     {
         try {
             $data["id"] = $id;
-            $this->validation->run($data,'deleteSubagianValidate');
+            $this->validation->run($data,'deleteKedudukanValidate');
             $errors     = $this->validation->getErrors();
 
             if ($errors) {
@@ -243,7 +215,7 @@ class Subagian extends ResourceController
             } 
             else {
                 $this->db->transBegin();
-                $this->db->table("subagian")->delete(["id" => $id]);
+                $this->db->table("kedudukan")->delete(["id" => $id]);
 
                 $transStatus = $this->db->transStatus();
                 $respond = [
@@ -252,7 +224,7 @@ class Subagian extends ResourceController
                 ];
                 
                 if ($transStatus) {
-                    $respond['message'] = "subagian dengan id (".$id.") berhasil didelete";
+                    $respond['message'] = "kedudukan dengan id (".$id.") berhasil didelete";
                     $this->db->transCommit();
                 } 
                 else {

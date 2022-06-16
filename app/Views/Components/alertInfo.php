@@ -1,7 +1,7 @@
 <?= $this->extend('Layout/template') ?>
 
 <!-- Css -->
-<?= $this->section('contentCss'); ?>
+<?= $this->section('layoutCss'); ?>
     
 <?= $this->endSection(); ?>
 
@@ -51,7 +51,7 @@
     </script>
 <?= $this->endSection(); ?>
 
-<?= $this->section('contentHtml'); ?>
+<?= $this->section('layoutHtml'); ?>
   <div
     id="alert" 
     class="none justify-between items-start fixed z-70 top-0 left-0 right-0 p-4 transition transform -translate-y-4 opacity-0 rounded-md">

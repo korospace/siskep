@@ -9,11 +9,6 @@ class UserDetail extends Migration
     public function up()
     {
         $this->forge->addField([
-            'id' => [
-                'type'           => 'int',
-                'constraint'     => 11,      
-                'auto_increment' => true,
-            ],
             'user_id' => [
                 'type'       => 'varchar',
                 'constraint' => 255,      
@@ -26,54 +21,15 @@ class UserDetail extends Migration
                 'unique'     => true,
                 'null'       => false,
             ],
+            'npwp' => [
+                'type'       => 'varchar',
+                'constraint' => 40,      
+                'unique'     => true,
+                'null'       => false,
+            ],
             'email' => [
                 'type'       => 'varchar',
                 'constraint' => 255,      
-                'null'       => false,
-            ],
-            'nama_lengkap' => [
-                'type'       => 'varchar',
-                'constraint' => 255,      
-                'null'       => false,
-            ],
-            'agama' => [
-                'type'       => "ENUM",                    
-                'constraint' => ['islam', 'protestan', 'katolik', 'budha', 'hindu', 'khonghucu'],
-                'null'       => false,
-            ],
-            'tgl_lahir' => [
-                'type'       => 'varchar',
-                'constraint' => 10,
-                'null'       => false,
-            ],
-            'pendidikan' => [
-                'type'       => 'varchar',
-                'constraint' => 10,
-                'null'       => false,
-            ],
-            'golongan' => [
-                'type'       => "ENUM",                    
-                'constraint' => ['asn', 'non-asn'],
-                'null'       => false,
-            ],
-            'status' => [
-                'type'       => "ENUM",                    
-                'constraint' => ['active', 'nonactive'],
-                'null'       => false,
-            ],
-            'masa_kerja' => [
-                'type'       => "integer",                    
-                'constraint' => 11,
-                'null'       => false,
-            ],
-            'alamat' => [
-                'type'       => 'varchar',
-                'constraint' => 255,
-                'null'       => false,
-            ],
-            'kelamin' => [
-                'type'       => "ENUM",                    
-                'constraint' => ['laki-laki', 'perempuan'],
                 'null'       => false,
             ],
             'notelp' => [
@@ -81,11 +37,61 @@ class UserDetail extends Migration
                 'constraint' => 20,
                 'unique'     => true,
                 'null'       => false,
-            ]
+            ],
+            'id_kedudukan' => [
+                'type'       => 'varchar',
+                'constraint' => 255,      
+                'null'       => false,
+            ],
+            'masa_kerja' => [
+                'type'       => "integer",                    
+                'constraint' => 11,
+                'null'       => false,
+            ],
+            'income' => [
+                'type'       => "integer",                    
+                'constraint' => 11,
+                'null'       => false,
+            ],
+            'nama_lengkap' => [
+                'type'       => 'varchar',
+                'constraint' => 255,      
+                'null'       => false,
+            ],
+            'alamat' => [
+                'type'       => 'varchar',
+                'constraint' => 255,
+                'null'       => false,
+            ],
+            'tgl_lahir' => [
+                'type'       => 'varchar',
+                'constraint' => 10,
+                'null'       => false,
+            ],
+            'kelamin' => [
+                'type'       => "ENUM",                    
+                'constraint' => ['laki-laki', 'perempuan'],
+                'null'       => false,
+            ],
+            'agama' => [
+                'type'       => "ENUM",                    
+                'constraint' => ['islam', 'protestan', 'katolik', 'budha', 'hindu', 'khonghucu'],
+                'null'       => false,
+            ],
+            'pendidikan' => [
+                'type'       => 'varchar',
+                'constraint' => 10,
+                'null'       => false,
+            ],
+            'status' => [
+                'type'       => "ENUM",                    
+                'constraint' => ['active', 'nonactive'],
+                'null'       => false,
+            ],
         ]);
 
-        $this->forge->addPrimaryKey('id');
         $this->forge->addForeignKey('user_id','users','id','CASCADE','CASCADE');
+        $this->forge->addForeignKey('id_kedudukan','kedudukan','id','CASCADE','CASCADE');
         $this->forge->createTable('user_detail');
     }
 
