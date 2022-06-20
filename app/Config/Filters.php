@@ -12,9 +12,11 @@ use CodeIgniter\Filters\SecureHeaders;
 use App\Filters\ApiGuard;
 use App\Filters\ApiGuardAdmin;
 use App\Filters\ApiGuardAdminKabag;
+use App\Filters\ApiGuardAsn;
 use App\Filters\ApiGuardNonAsn;
 use App\Filters\Dashboard;
 use App\Filters\DashboardLogged;
+use App\Filters\DashboardAsn;
 use App\Filters\DashboardNonAsn;
 
 class Filters extends BaseConfig
@@ -35,10 +37,12 @@ class Filters extends BaseConfig
         'ApiGuard'           => ApiGuard::class,
         'ApiGuardAdmin'      => ApiGuardAdmin::class,
         'ApiGuardAdminKabag' => ApiGuardAdminKabag::class,
+        'ApiGuardAsn'        => ApiGuardAsn::class,
         'ApiGuardNonAsn'     => ApiGuardNonAsn::class,
         'Dashboard'          => Dashboard::class,
         'DashboardLogged'    => DashboardLogged::class,
-        'DashboardNonAsn'=> DashboardNonAsn::class,
+        'DashboardAsn'       => DashboardAsn::class,
+        'DashboardNonAsn'    => DashboardNonAsn::class,
     ];
 
     /**

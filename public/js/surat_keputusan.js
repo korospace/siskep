@@ -123,15 +123,15 @@ const pegawaiOnChange = (el,event) =>{
         userSelected = userSelected[0];
 
         inputUserId.value     = userSelected.id;
-        selectBagian.value    = userSelected.id_bagian;
-        selectKedudukan.value = userSelected.id_kedudukan;
-        inputMasaKerja.value  = userSelected.masa_kerja;
-        inputIncome.value     = userSelected.income;
+        selectBagian.value    = (userSelected.id_bagian == null)    ? "" : userSelected.id_bagian;
+        selectKedudukan.value = (userSelected.id_kedudukan == null) ? "" : userSelected.id_kedudukan;
+        inputMasaKerja.value  = (userSelected.masa_kerja == null)   ? 0  : userSelected.masa_kerja;
+        inputIncome.value     = (userSelected.income == null)       ? 0  : userSelected.income;
         
         if (PREVILEGE != "kasubag") {
             bagianOnChange(selectBagian);
         }
-        selectSubagian.value  = userSelected.id_subagian;
+        selectSubagian.value  = (userSelected.id_subagian == null)    ? "" : userSelected.id_subagian;
         countTotalIncome();
     }
 };
@@ -280,10 +280,11 @@ async function getDataSk() {
                 </h1>
             </div>
             <div class="flex flex-col justify-center items-center ml-4">
-                <a href="${e.file_sk}" class="${PREVILEGE == "nonasn" ? "hidden" : ""} px-1.5 pt-1.5 pb-1 bg-sky-400 hover:bg-sky-500 active:bg-sky-600 text-white rounded-sm">
-                    <i class="fas fa-file-csv text-xl"></i>
-                </a>
-                <a href="${e.file_sk}" target="_blank" class="mt-3 text-zinc-600 hover:text-zinc-800">
+                <div class="${PREVILEGE == "nonasn" ? "hidden" : ""} px-2 pt-2 pb-1 bg-red-400 hover:bg-red-500 active:bg-red-600 text-white rounded-md cursor-pointer"
+                onclick="deleteSk('${e.no_sk}')">
+                    <i class="fas fa-trash text-md"></i>
+                </div>
+                <a href="${e.file_sk}" target="_blank" class="mt-5 text-zinc-600 hover:text-zinc-800">
                     <i class="fas fa-download text-xl"></i>
                 </a>
             </div>
@@ -294,3 +295,28 @@ async function getDataSk() {
     }
 }
 getDataSk();
+
+/**
+ * Delete SK
+ */
+ function deleteSk(noSk) {
+    Swal.fire({
+        title: 'DELETE SK',
+        text: "Anda yakin menghapus SK ini?",
+        icon: 'question',
+        showCancelButton: true,
+        confirmButtonText: 'iya',
+        cancelButtonText: 'tidak',
+        showLoaderOnConfirm: true,
+        preConfirm: () => {
+          return httpRequestDelete(`${BASE_URL}/sk/delete/${noSk}`)
+          .then((e) => {
+            if (e.status == 201) {
+                getDataPegawai(false);
+                getDataSk();
+            }
+          })
+        },
+        allowOutsideClick: () => !Swal.isLoading()
+    })
+  }

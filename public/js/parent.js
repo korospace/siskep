@@ -31,8 +31,10 @@ const httpRequestGet = (url) => {
             };
         })
         .catch((error) => {
+            let statusCode = error.response.status;
+
             // unauthorized
-            if (error.response.status == 401) {
+            if (statusCode == 401) {
                 if (error.response.data.message == 'token expired') {
                     Swal.fire({
                         icon : 'error',
@@ -49,7 +51,7 @@ const httpRequestGet = (url) => {
                 }
             }
             // server error
-            else if (error.response.status == 500){
+            else if (statusCode == 500){
                 showAlert({
                     message: `<strong>Ups...</strong> terjadi kesalahan pada server, silahkan refresh halaman.`,
                     autohide: true,
@@ -60,7 +62,7 @@ const httpRequestGet = (url) => {
             }
             
             return {
-                'status':error.response.status,
+                'status':statusCode,
             };
         })
 };
@@ -72,9 +74,9 @@ const httpRequestPost = (url,form) => {
     let newForm = new FormData();
 
     for (var pair of form.entries()) {
-        let noPair = ['username','password','new_password','email','file_sk'];
+        let noPair = /username|password|new_password|email|file_sk|^file_tugas/;
 
-        if (noPair.includes(pair[0]) == false) {
+        if (noPair.test(pair[0]) == false) {
             if (pair[0].includes('sk_detail')) {
                 newForm.set(pair[0], pair[1].trim());    
             } 
@@ -144,9 +146,9 @@ const httpRequestPut = (url,form) => {
     let newForm = new FormData();
 
     for (var pair of form.entries()) {
-        let noPair = ['username','password','new_password','email',"new_logo"];
+        let noPair = /username|password|new_password|email|new_logo|^file_tugas/;
 
-        if (noPair.includes(pair[0]) == false) {
+        if (noPair.test(pair[0]) == false) {
             // newForm.set(pair[0], pair[1].trim().toLowerCase());
             newForm.set(pair[0], pair[1].trim());
         }
@@ -428,4 +430,17 @@ const changePreview = (el,target) => {
              return new File([u8arr], filename, {type:mime});
          }
      }
+}
+
+/**
+ * Time creation
+ */
+function timeCreation(unix) {
+    let date  = new Date(parseInt(unix) * 1000);
+    let day   = date.toLocaleString("en-US",{day: "numeric"});
+    let month = date.toLocaleString("id-ID",{month: "long"});
+    let year  = date.toLocaleString("en-US",{year: "numeric"});
+    let time  = date.toLocaleString("en-US",{hour: '2-digit', minute: '2-digit'} );
+
+    return {day,month,year,time}
 }

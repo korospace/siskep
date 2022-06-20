@@ -1,23 +1,22 @@
 /**
  * Get Data Profile
  */
-async function fillInputForm(updateVarPass = true) {
+async function fillInputForm() {
+    showLoadingSpinner();
     let httpResponse = await httpRequestGet(`${BASE_URL}/user/profile`);
+    hideLoadingSpinner();
 
     if (httpResponse.status === 200) {
         let data = httpResponse.data.data;
-
-        if (updateVarPass) {
-            PASSWORD = data.password;
-        }
         
+        PASSWORD = data.password;
         $("#username_profile").html(data.username);
         $("#id_profile").html("id: "+data.id);
         $(`#data_wraper #data_status`).html(data.status);
-        $(`#data_wraper #data_penempatan`).html(data.bagian+" | "+data.subagian);
-        $(`#data_wraper #data_kedudukan`).html(data.kedudukan);
-        $(`#data_wraper #data_income`).html("Rp "+data.income.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ","));
-        $(`#data_wraper #data_masa_kerja`).html(data.masa_kerja+" tahun");
+        $(`#data_wraper #data_penempatan`).html((data.bagian != null) ? (data.subagian) ? data.bagian+" | "+data.subagian : data.bagian : '-');
+        $(`#data_wraper #data_kedudukan`).html((data.kedudukan == null) ? "-" : data.kedudukan);
+        $(`#data_wraper #data_income`).html((data.income == null) ? "Rp 0" : "Rp "+data.income.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ","));
+        $(`#data_wraper #data_masa_kerja`).html((data.masa_kerja == null) ? "0 tahun" : data.masa_kerja+" tahun");
         $(`#data_wraper #data_nik`).html(data.nik);
         $(`#data_wraper #data_npwp`).html(data.npwp);
         $(`#data_wraper #data_email`).html(data.email);
@@ -33,9 +32,6 @@ async function fillInputForm(updateVarPass = true) {
             if (key=="tgl_lahir") {
                 let tglLahir = data[key].split('-');
                 $(`#update_profile #${key}_uprof`).val(`${tglLahir[2]}-${tglLahir[1]}-${tglLahir[0]}`);
-            }
-            else if (key=="password") {
-                $(`#update_profile #${key}_uprof`).val(PASSWORD);
             }
             else{
                 $(`#update_profile #${key}_uprof`).val(data[key]);
@@ -76,29 +72,22 @@ $("#btn_hide_form").on("click", function () {
     let newTgl = form.get('tgl_lahir').split('-');
     form.set('tgl_lahir',`${newTgl[2]}-${newTgl[1]}-${newTgl[0]}`)
 
-    showLoadingSpinner();
+    $(".validate").each(function() {
+        if ($(this).val() == "") {
+            form.delete($(this).attr("name"));
+        }
+    })
+
     $("#btn_simpan_uprof #text").toggleClass("hidden inline");
     $("#btn_simpan_uprof #spinner").toggleClass("inline hidden");
     
     let httpResponse = await httpRequestPut(`${BASE_URL}/user/update_profile`,form);
 
-    hideLoadingSpinner();
     $("#btn_simpan_uprof #text").toggleClass("hidden inline");
     $("#btn_simpan_uprof #spinner").toggleClass("inline hidden");
 
     if (httpResponse.status === 201) {
-        let newDataProfile = {};
-
-        for (var pair of form.entries()) {
-            if (pair[0] == "new_password") {
-                newDataProfile["password"] = pair[1];
-            } else {
-                newDataProfile[pair[0]] = pair[1];
-            }
-        }
-
-        localStorage.setItem("data_profile",JSON.stringify(newDataProfile));
-        fillInputForm(false);
+        fillInputForm();
         
         showAlert({
             message: `<strong>Success...</strong> edit profile berhasil!`,

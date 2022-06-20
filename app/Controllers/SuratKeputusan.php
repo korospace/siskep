@@ -37,11 +37,9 @@ class SuratKeputusan extends ResourceController
         $rows = $this->db->table("SK")
             ->select("SK.id,SK.no_sk,SK.title,SK.tgl_sk,SK.file_sk")
             ->join("SK_detail" ,"SK.no_sk = SK_detail.no_sk", 'left')
-            ->join("users"            ,"SK_detail.user_id = users.id",                 'left')
-            ->join("user_detail_bag"  ,"SK_detail.user_id = user_detail_bag.user_id",  'left')
-            ->join("user_detail_subag","SK_detail.user_id = user_detail_subag.user_id",'left')
-            ->join("bagian"           ,"user_detail_bag.id_bagian     = bagian.id",    'left')
-            ->join("subagian"         ,"user_detail_subag.id_subagian = subagian.id",  'left')
+            ->join("users"     ,"SK_detail.user_id = users.id", 'left')
+            ->join("bagian"    ,"SK_detail.id_bagian = bagian.id", 'left')
+            ->join("subagian"  ,"SK_detail.id_subagian = subagian.id", 'left')
             ->where("users.id_previlege",4);
 
         if (in_array($g_previlege,["kabag"])) {
@@ -161,12 +159,125 @@ class SuratKeputusan extends ResourceController
     }
 
     /**
-     * Delete the designated resource object from the model
-     *
-     * @return mixed
+     * Delete SK
+     * ============
+     * - api for delete SK
+     * - previlege     : admin,kabag,kasubag
+     * - url           : /sk/delete/{:no_sk}
+     * - Method        : DELETE
+     * - request header: token
      */
-    public function delete($id = null)
+    public function delete($no_sk = null)
     {
-        //
+        try {
+            global $g_previlege;
+            global $g_bagian;
+            global $g_subagian;
+
+            $this->db->transBegin();
+
+            $SKdb = $this->db->table("SK")
+                ->select("SK.id,SK.no_sk,SK.title,SK.tgl_sk,SK.file_sk,SK_detail.user_id")
+                ->join("SK_detail" ,"SK.no_sk = SK_detail.no_sk", 'left')
+                ->join("users"     ,"SK_detail.user_id = users.id", 'left')
+                ->join("bagian"    ,"SK_detail.id_bagian = bagian.id", 'left')
+                ->join("subagian"  ,"SK_detail.id_subagian = subagian.id", 'left')
+                ->where("SK.no_sk",$no_sk);
+
+            if (in_array($g_previlege,["kabag"])) {
+                $SKdb = $SKdb->where("bagian.name",$g_bagian);
+            }
+            else if (in_array($g_previlege,["kasubag"])) {
+                $SKdb = $SKdb->where("subagian.name",$g_subagian);
+            }
+
+            $SKdb = $SKdb->get()->getResultObject();
+            
+            if (count($SKdb) == 0) {
+                $respond = [
+                    'code'    => 400,
+                    'error'   => true,
+                    'message' => "sk dengan no: $no_sk tidak ditemukan",
+                ]; 
+            } 
+            else{
+                $file_sk = "";
+
+                foreach ($SKdb as $key => $value) {
+                    $user_id = $value->user_id;
+                    $file_sk = $value->file_sk;
+
+                    $SKprevious = $this->db->table("SK_detail")
+                        ->select("SK_detail.no_sk,SK_detail.user_id,SK_detail.id_bagian,SK_detail.id_subagian,SK_detail.id_kedudukan,SK_detail.masa_kerja,SK_detail.income")
+                        ->where("SK_detail.user_id",$user_id)
+                        ->where("SK_detail.no_sk !=",$no_sk)
+                        ->orderBy("SK_detail.id","desc")
+                        ->get()->getFirstRow();
+                    
+                    if (!is_null($SKprevious)) {
+                        $this->db->table("user_detail")
+                            ->where("no_sk",  $no_sk)
+                            ->where("user_id",$user_id)
+                            ->update([
+                                "no_sk"       => $SKprevious->no_sk,
+                                "masa_kerja"  => $SKprevious->masa_kerja,
+                                "income"      => $SKprevious->income,
+                                "id_bagian"   => $SKprevious->id_bagian,
+                                "id_subagian" => $SKprevious->id_subagian,
+                                "id_kedudukan"=> $SKprevious->id_kedudukan,
+                            ]);    
+                    }
+                    else {
+                        $this->db->table("user_detail")
+                            ->where("no_sk",  $no_sk)
+                            ->where("user_id",$user_id)
+                            ->update([
+                                "no_sk"       => null,
+                                "masa_kerja"  => null,
+                                "income"      => null,
+                                "id_bagian"   => null,
+                                "id_subagian" => null,
+                                "id_kedudukan"=> null,
+                            ]); 
+                    }
+                }
+
+                $this->db->table("SK")
+                    ->where("no_sk",$no_sk)
+                    ->delete();
+
+                if ($this->db->transStatus()) {
+                    if (unlink('./file_sk/'.$file_sk)) {
+                        $this->db->transCommit();
+                        $respond = [
+                            'code'  => 201,
+                            'error' => false,
+                            'message' => "sk berhasil dihapus"
+                        ];
+                    }
+                    else {
+                        $this->db->transRollback();
+                        $respond = [
+                            'code'  => 500,
+                            'error' => true,
+                            'message' => "gagal menghapus berkas SK"
+                        ];
+                    }
+
+                } 
+            }
+
+        } 
+        catch (\Throwable $th) {
+            $this->db->transRollback();
+            $respond = [
+                "error"   => true,
+                "code"    => 500,
+                "message" => $th->getMessage(),
+                "debug"   => $th->getTraceAsString()
+            ];
+        }
+
+        return $this->respond($respond,$respond['code']);
     }
 }

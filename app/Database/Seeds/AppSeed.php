@@ -117,6 +117,13 @@ class AppSeed extends Seeder
                 "id_previlege" => 1,
                 "created_At"   => time(),
             ],
+            [
+                "id"        => uniqid(),
+                "username"  => "inistaf1",
+                "password"  => password_hash(trim("inistaf1"), PASSWORD_DEFAULT),
+                "id_previlege" => 4,
+                "created_At"   => time(),
+            ],
         ];
 
         foreach ($dataUsers as $d) {
@@ -129,7 +136,6 @@ class AppSeed extends Seeder
         $dataInformation = [
             "logo"       => "logo-kemendagri.webp",
             "pengumuman" => "<p><em style=\"color: rgb(82, 82, 91);\">(kosongkan jika tidak ingin ditampilkan)</em></p>",
-            "title"      => "sistem kepegawaian non asn kemendagri",
             "visi"       => "<blockquote class=\"ql-align-center\"><strong style=\"color: rgb(255, 255, 0);\"><em><s><u>Mewujudkan Pemerintahan Desa yang Mampu Memberikan Pelayanan Prima Kepada Masyarakat</u></s></em></strong></blockquote>",
             "misi"       => "<ol><li><span style=\"color: rgb(0, 0, 0);\">Memantapkan penyelenggaraan Pemerintahan Desa guna meningkatkan kualitas pelayanan pemerintah kepada masyarakat yang ditunjukkan dengan pemenuhan SPM Desa;</span></li><li><span style=\"color: rgb(0, 0, 0);\">Memantapkan peran perencanaan partisipatif dengan perlibatan aktif kelembagaan masyarakat desa dalam upaya pengentasan kemiskinan pada wilayah desa dan kawasan perdesaan;</span></li><li><span style=\"color: rgb(0, 0, 0);\">Memantapkan tata kelola aset dan keuangan desa berdasarkan prinsip transparansi, akuntabilitas, dan kemanfaatan;</span></li><li><span style=\"color: rgb(0, 0, 0);\">Meningkatkan kualitas kehidupan sosial budaya dan kerjasama masyarakat desa;</span></li><li><span style=\"color: rgb(0, 0, 0);\">Meningkatkan kualitas evaluasi penyelenggaraan pemerintahan desa dan penyusunan peringkat tingkat perkembangan desa;</span></li><li><span style=\"color: rgb(0, 0, 0);\">Meningkatkan kapasitas aparat dan lembaga masyarakat dalam pelaksanaan pembangunan desa lingkup regional.</span></li></ol>",
         ];

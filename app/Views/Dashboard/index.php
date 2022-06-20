@@ -172,6 +172,8 @@
                 let data = httpResponse.data.data;
 
                 PASSWORD = data.password;
+                
+                $("#edit_prof_admin #penempatan_epa").val((data.bagian != null) ? (data.subagian) ? data.bagian+" | "+data.subagian : data.bagian : '-');
                 $("#edit_prof_admin #username_epa").val(data.username);
                 $("#edit_prof_admin #new_password_epa").val(PASSWORD);
             }
@@ -432,6 +434,21 @@
             </div>
 
             <div class="flex flex-col items-center px-8 pb-5">
+                <?php if ($previlege != "admin") { ?>
+                <div
+                    id="penempatan_wraper"
+                    class="label_fly w-full v-340:w-64 relative mt-8 bg-zinc-200 border-2 border-zinc-400 focus-within:border-zinc-600 rounded-xl">
+                    <input
+                        id="penempatan_epa" type="text" placeholder="penempatan" autocomplete="off" 
+                        class="block px-5 py-3 w-full appearance-none focus:outline-none transition-all text-zinc-600 rounded-xl cursor-not-allowed" disabled />
+                    <label 
+                        for="penempatan_epa" 
+                        class="py-3 absolute top-0 left-5 text-zinc-400 duration-300 origin-0 cursor-not-allowed">
+                        penempatan
+                    </label>
+                </div>
+                <?php } ?>
+
                 <div
                     id="username_wraper"
                     class="label_fly w-full v-340:w-64 relative mt-8 border-2 border-zinc-400 focus-within:border-zinc-600 rounded-xl">

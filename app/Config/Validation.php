@@ -76,6 +76,131 @@ class Validation
 		],
     ];
 
+    public $userValidateKedudukan = [
+        'id_kedudukan' => [
+            'rules'  => 'is_not_unique[kedudukan.id]',
+            'errors' => [
+                'is_not_unique' => 'id kedudukan ({value}) tidak terdaftar',
+            ],
+		],
+    ];
+
+    public $userValidateMasaKerja = [
+        'masa_kerja' => [
+            'rules'  => 'required|max_length[11]|is_natural',
+            'errors' => [
+                'required'   => 'masa kerja tidak boleh kosong',
+                'max_length' => 'masa kerja maximal 11 character',
+                'is_natural' => 'masa kerja harus bernilai angka nondecimal',
+            ],
+		],
+    ];
+
+    public $userValidateIncome = [
+        'income' => [
+            'rules'  => 'required|max_length[11]|is_natural',
+            'errors' => [
+                'required'   => 'income tidak boleh kosong',
+                'max_length' => 'income maximal 11 character',
+                'is_natural' => 'income harus bernilai angka nondecimal',
+            ],
+		],
+    ];
+
+    public $userValidateNik = [
+		'nik' => [
+            'rules'  => 'required|max_length[20]|is_unique[user_detail.nik]|is_natural',
+            'errors' => [
+                'required'    => 'nik tidak boleh kosong',
+                'max_length'  => 'nik maximal 20 character',
+                'is_unique'   => 'nik sudah terdaftar',
+                'is_natural'  => 'nik hanya boleh angka nondecimal',
+            ],
+		],
+    ];
+
+    public $userValidateNikUpdate = [
+		'nik' => [
+            'rules'  => 'required|max_length[20]|is_unique[user_detail.nik,user_detail.user_id,{id}]|is_natural',
+            'errors' => [
+                'required'    => 'nik harus diisi',
+                'max_length'  => 'maximal 20 character',
+                'is_unique'   => 'nik sudah terdaftar',
+                'is_natural'  => 'hanya boleh angka',
+            ],
+		],
+    ];
+
+    public $userValidateNpwp = [
+		'npwp' => [
+            'rules'  => 'required|max_length[40]|is_unique[user_detail.npwp]',
+            'errors' => [
+                'required'    => 'npwp tidak boleh kosong',
+                'max_length'  => 'npwp maximal 20 character',
+                'is_unique'   => 'npwp sudah terdaftar',
+            ],
+		],
+    ];
+
+    public $userValidateNpwpUpdate = [
+		'npwp' => [
+            'rules'  => 'required|max_length[40]|is_unique[user_detail.npwp,user_detail.user_id,{id}]',
+            'errors' => [
+                'required'    => 'npwp harus diisi',
+                'max_length'  => 'npwp maximal 20 character',
+                'is_unique'   => 'npwp sudah terdaftar',
+            ],
+		],
+    ];
+
+    public $userValidateEmail = [
+		'email' => [
+            'rules'  => 'required|max_length[255]|is_unique[user_detail.email]|valid_email',
+            'errors' => [
+                'required'    => 'email tidak boleh kosong',
+                'is_unique'   => 'email sudah terdaftar',
+                'valid_email' => 'email is not in format',
+                'max_length'  => 'email maximal 255 character',
+            ],
+		],
+    ];
+
+    public $userValidateEmailUpdate = [
+		'email' => [
+            'rules'  => 'required|max_length[255]|is_unique[user_detail.email,user_detail.user_id,{id}]|valid_email',
+            'errors' => [
+                'required'    => 'email harus diisi',
+                'is_unique'   => 'email sudah terdaftar',
+                'valid_email' => 'email is not in format',
+                'max_length'  => 'maximal 255 character',
+            ],
+		],
+    ];
+
+    public $userValidateNotelp = [
+        'notelp' => [
+            'rules'  => 'required|max_length[20]|is_unique[user_detail.notelp]|is_natural',
+            'errors' => [
+                'required'    => 'no.telp tidak boleh kosong',
+                'max_length'  => 'no.telp maximal 20 character',
+                'is_unique'   => 'no.telp sudah dipakai',
+                'is_natural'  => 'no.telp hanya boleh angka nondecimal',
+            ],
+		],
+    ];
+
+    public $userValidateNotelpUpdate = [
+        'notelp' => [
+            'rules'  => 'required|max_length[20]|is_unique[user_detail.notelp,user_detail.user_id,{id}]|is_natural',
+            'errors' => [
+                'required'    => 'nomor telepon harus diisi',
+                'max_length'  => 'maximal 20 character',
+                'is_unique'   => 'no.telp sudah dipakai',
+                'is_natural'  => 'hanya boleh angka',
+            ],
+		],
+    ];
+
     public $userValidateTglLahir = [
 		'tgl_lahir' => [
             'rules'  => 'regex_match[/^(0[1-9]|[12][0-9]|3[01])[\-\ ](0[1-9]|1[012])[\-\ ](19|20)\d\d$/]',
@@ -189,68 +314,11 @@ class Validation
     ];
 
     public $createUserValidateDetail = [
-		'nik' => [
-            'rules'  => 'required|max_length[20]|is_unique[user_detail.nik]|is_natural',
-            'errors' => [
-                'required'    => 'nik harus diisi',
-                'max_length'  => 'nik maximal 20 character',
-                'is_unique'   => 'nik sudah terdaftar',
-                'is_natural'  => 'nik hanya boleh angka nondecimal',
-            ],
-		],
-		'npwp' => [
-            'rules'  => 'required|max_length[40]|is_unique[user_detail.npwp]',
-            'errors' => [
-                'required'    => 'npwp harus diisi',
-                'max_length'  => 'npwp maximal 20 character',
-                'is_unique'   => 'npwp sudah terdaftar',
-            ],
-		],
-		'email' => [
-            'rules'  => 'required|max_length[255]|is_unique[user_detail.email]|valid_email',
-            'errors' => [
-                'required'    => 'email harus diisi',
-                'is_unique'   => 'email sudah terdaftar',
-                'valid_email' => 'email is not in format',
-                'max_length'  => 'email maximal 255 character',
-            ],
-		],
-		'notelp' => [
-            'rules'  => 'required|max_length[20]|is_unique[user_detail.notelp]|is_natural',
-            'errors' => [
-                'required'    => 'no.telp harus diisi',
-                'max_length'  => 'no.telp maximal 20 character',
-                'is_unique'   => 'no.telp sudah dipakai',
-                'is_natural'  => 'no.telp hanya boleh angka nondecimal',
-            ],
-		],
-        'id_kedudukan' => [
-            'rules'  => 'required|is_not_unique[kedudukan.id]',
-            'errors' => [
-                'required'      => 'kedudukan harus disi',
-                'is_not_unique' => 'id kedudukan ({value}) tidak terdaftar',
-            ],
-		],
-        'masa_kerja' => [
-            'rules'  => 'required|max_length[11]|is_natural',
-            'errors' => [
-                'required'   => 'masa kerja harus disi',
-                'max_length' => 'masa kerja maximal 11 character',
-                'is_natural' => 'masa kerja harus bernilai angka nondecimal',
-            ],
-		],
-        'income' => [
-            'rules'  => 'required|max_length[11]|is_natural',
-            'errors' => [
-                'required'   => 'income harus disi',
-                'max_length' => 'income maximal 11 character',
-                'is_natural' => 'income harus bernilai angka nondecimal',
-            ],
-		],
 		'nama_lengkap' => [
-            'rules'  => 'max_length[255]',
+            'rules'  => 'required|max_length[255]',
             'errors' => [
-                'max_length'  => 'nama maximal 255 character',
+                'required'    => 'nama lengkap harus diisi',
+                'max_length'  => 'nama lengkap maximal 255 character',
             ],
 		],
 		'alamat' => [
@@ -277,10 +345,10 @@ class Validation
             ]
         ],
         'title' => [
-            'rules'  => 'required|max_length[255]',
+            'rules'  => 'required|max_length[230]',
             'errors' => [
-                'required'   => 'nomor sk harus diisi',
-                'max_length' => 'nomor sk maximal 255 character',
+                'required'   => 'title sk harus diisi',
+                'max_length' => 'title sk maximal 230 character',
             ]
         ],
 		'tgl_sk' => [
@@ -335,6 +403,75 @@ class Validation
                 'required'   => 'income harus disi',
                 'max_length' => 'income maximal 11 character',
                 'is_natural' => 'income harus bernilai angka nondecimal',
+            ],
+		],
+    ];
+
+    public $createTugasValidateAsn = [
+        'user_id' => [
+            'rules'  => 'required|in_list[{allowedUserId}]',
+            'errors' => [
+                'required' => 'user_id harus diisi',
+                'in_list'  => 'user_id ({value}) tidak terdaftar',
+            ],
+		],
+        'title' => [
+            'rules'  => 'required|max_length[230]',
+            'errors' => [
+                'required'   => 'title tugas harus diisi',
+                'max_length' => 'title tugas maximal 230 character',
+            ]
+        ],
+		'komentar' => [
+            'rules'  => 'required',
+            'errors' => [
+                'required' => 'komentar harus diisi',
+            ],
+		],
+    ];
+
+    public $createTugasValidateAsnWithFile = [
+        'user_id' => [
+            'rules'  => 'required|in_list[{allowedUserId}]',
+            'errors' => [
+                'required' => 'user_id harus diisi',
+                'in_list'  => 'user_id ({value}) tidak terdaftar',
+            ],
+		],
+        'title' => [
+            'rules'  => 'required|max_length[230]',
+            'errors' => [
+                'required'   => 'title tugas harus diisi',
+                'max_length' => 'title tugas maximal 230 character',
+            ]
+        ],
+		'komentar' => [
+            'rules'  => 'required',
+            'errors' => [
+                'required' => 'komentar harus diisi',
+            ],
+		],
+		'file_tugas' => [
+            'rules'  => 'ext_in[file_tugas,pdf,csv,xls,xlsx,ppt,doc,docx,png,jpg,jpeg]',
+            'errors' => [
+                'ext_in' => 'format file tidak dizinkan',
+            ],
+		],
+    ];
+
+    public $createTugasValidate = [
+        'title' => [
+            'rules'  => 'required|max_length[230]',
+            'errors' => [
+                'required'   => 'title tugas harus diisi',
+                'max_length' => 'title tugas maximal 230 character',
+            ]
+        ],
+		'file_tugas' => [
+            'rules'  => 'uploaded[file_tugas]|ext_in[file_tugas,pdf,csv,xls,xlsx,ppt,doc,docx,png,jpg,jpeg]',
+            'errors' => [
+                'uploaded' => 'file tugas harus diupload',
+                'ext_in'   => 'format file tidak dizinkan',
             ],
 		],
     ];
@@ -453,68 +590,11 @@ class Validation
     ];
 
     public $updateUserValidateDetail = [
-		'nik' => [
-            'rules'  => 'required|max_length[20]|is_unique[user_detail.nik,user_detail.user_id,{id}]|is_natural',
-            'errors' => [
-                'required'    => 'nik harus diisi',
-                'max_length'  => 'maximal 20 character',
-                'is_unique'   => 'nik sudah terdaftar',
-                'is_natural'  => 'hanya boleh angka',
-            ],
-		],
-		'npwp' => [
-            'rules'  => 'required|max_length[40]|is_unique[user_detail.npwp,user_detail.user_id,{id}]',
-            'errors' => [
-                'required'    => 'npwp harus diisi',
-                'max_length'  => 'npwp maximal 20 character',
-                'is_unique'   => 'npwp sudah terdaftar',
-            ],
-		],
-		'email' => [
-            'rules'  => 'required|max_length[255]|is_unique[user_detail.email,user_detail.user_id,{id}]|valid_email',
-            'errors' => [
-                'required'    => 'email harus diisi',
-                'is_unique'   => 'email sudah terdaftar',
-                'valid_email' => 'email is not in format',
-                'max_length'  => 'maximal 255 character',
-            ],
-		],
-		'notelp' => [
-            'rules'  => 'required|max_length[20]|is_unique[user_detail.notelp,user_detail.user_id,{id}]|is_natural',
-            'errors' => [
-                'required'    => 'nomor telepon harus diisi',
-                'max_length'  => 'maximal 20 character',
-                'is_unique'   => 'no.telp sudah dipakai',
-                'is_natural'  => 'hanya boleh angka',
-            ],
-		],
-        'id_kedudukan' => [
-            'rules'  => 'required|is_not_unique[kedudukan.id]',
-            'errors' => [
-                'required'      => 'kedudukan harus disi',
-                'is_not_unique' => 'id kedudukan ({value}) tidak terdaftar',
-            ],
-		],
-        'masa_kerja' => [
-            'rules'  => 'required|max_length[11]|is_natural',
-            'errors' => [
-                'required'   => 'masa kerja harus disi',
-                'max_length' => 'masa kerja maximal 11 character',
-                'is_natural' => 'masa kerja harus bernilai angka nondecimal',
-            ],
-		],
-        'income' => [
-            'rules'  => 'required|max_length[11]|is_natural',
-            'errors' => [
-                'required'   => 'income harus disi',
-                'max_length' => 'income maximal 11 character',
-                'is_natural' => 'income harus bernilai angka nondecimal',
-            ],
-		],
 		'nama_lengkap' => [
-            'rules'  => 'max_length[255]',
+            'rules'  => 'required|max_length[255]',
             'errors' => [
-                'max_length'  => 'maximal 255 character',
+                'required'    => 'nama lengkap harus diisi',
+                'max_length'  => 'nama lengkap maximal 255 character',
             ],
 		],
 		'alamat' => [
@@ -553,45 +633,11 @@ class Validation
                 'is_unique'   => 'username sudah terdaftar',
             ],
 		],
-		'nik' => [
-            'rules'  => 'required|max_length[20]|is_unique[user_detail.nik,user_detail.user_id,{id}]|is_natural',
-            'errors' => [
-                'required'    => 'nik harus diisi',
-                'max_length'  => 'maximal 20 character',
-                'is_unique'   => 'nik sudah terdaftar',
-                'is_natural'  => 'hanya boleh angka',
-            ],
-		],
-		'npwp' => [
-            'rules'  => 'required|max_length[40]|is_unique[user_detail.npwp,user_detail.user_id,{id}]',
-            'errors' => [
-                'required'    => 'npwp harus diisi',
-                'max_length'  => 'npwp maximal 20 character',
-                'is_unique'   => 'npwp sudah terdaftar',
-            ],
-		],
-		'email' => [
-            'rules'  => 'required|max_length[255]|is_unique[user_detail.email,user_detail.user_id,{id}]|valid_email',
-            'errors' => [
-                'required'    => 'email harus diisi',
-                'is_unique'   => 'email sudah terdaftar',
-                'valid_email' => 'email is not in format',
-                'max_length'  => 'maximal 255 character',
-            ],
-		],
-		'notelp' => [
-            'rules'  => 'required|max_length[20]|is_unique[user_detail.notelp,user_detail.user_id,{id}]|is_natural',
-            'errors' => [
-                'required'    => 'nomor telepon harus diisi',
-                'max_length'  => 'maximal 20 character',
-                'is_unique'   => 'no.telp sudah dipakai',
-                'is_natural'  => 'hanya boleh angka',
-            ],
-		],
 		'nama_lengkap' => [
-            'rules'  => 'max_length[255]',
+            'rules'  => 'required|max_length[255]',
             'errors' => [
-                'max_length'  => 'maximal 255 character',
+                'required'    => 'nama lengkap harus diisi',
+                'max_length'  => 'nama lengkap maximal 255 character',
             ],
 		],
 		'alamat' => [
@@ -606,6 +652,38 @@ class Validation
                 'max_length'  => 'maximal 255 character',
             ],
 		]
+    ];
+
+    public $updateTugasValidateNonAsn = [
+        'title' => [
+            'rules'  => 'required|max_length[230]',
+            'errors' => [
+                'required'   => 'title tugas harus diisi',
+                'max_length' => 'title tugas maximal 230 character',
+            ]
+        ],
+    ];
+
+    public $updateTugasValidateAsn = [
+        'title' => [
+            'rules'  => 'required|max_length[230]',
+            'errors' => [
+                'required'   => 'title tugas harus diisi',
+                'max_length' => 'title tugas maximal 230 character',
+            ]
+        ],
+		'status' => [
+            'rules'  => "in_list[tugas baru,pengecekan,diterima,revisi]",
+            'errors' => [
+                'in_list'     => "kelamin harus bernilai 'tugas baru/pengecekan/diterima/revisi'",
+            ],
+		],
+		'komentar' => [
+            'rules'  => 'required',
+            'errors' => [
+                'required' => 'komentar harus diisi',
+            ],
+		],
     ];
 
 	public $updateInformationValidate = [

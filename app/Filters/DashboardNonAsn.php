@@ -37,8 +37,8 @@ class DashboardNonAsn implements FilterInterface
             return redirect()->to(base_url().'/login');
         } 
         else {
-            if (!in_array($result['data']['previlege'],['admin','kabag','kasubag'])) {
-                return view("errors/html/error_404.php");
+            if (in_array($result['data']['previlege'],['admin','kabag','kasubag'])) {
+                return redirect()->to(base_url().'/');
             } 
             else {
                 $GLOBALS["g_token"]        = $token;

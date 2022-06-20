@@ -24,11 +24,11 @@ class UserDetailBagian extends Migration
 
         $this->forge->addForeignKey('user_id','users','id','CASCADE','CASCADE');
         $this->forge->addForeignKey('id_bagian','bagian','id','CASCADE','CASCADE');
-        $this->forge->createTable('user_detail_bag');
+        // $this->forge->createTable('user_detail_bag');
     }
 
     public function down()
     {
-        $this->forge->dropTable('user_detail_bag');
+        // $this->forge->dropTable('user_detail_bag');
     }
 }

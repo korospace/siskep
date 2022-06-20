@@ -31,6 +31,7 @@ class ApiGuardNonAsn implements FilterInterface
         $authHeader = $request->getHeader('token');
         $token      = ($authHeader != null) ? $authHeader->getValue() : null;
         $result     = TokenUtil::checkToken($token);
+        $GLOBALS["g_user_id"]      = $result['data']['user_id'];
         $GLOBALS["g_previlege"]    = $result['data']['previlege'];
         $GLOBALS["g_id_previlege"] = $result['data']['id_previlege'];
         $GLOBALS["g_bagian"]   = isset($result['data']['bagian'])   ? $result['data']['bagian']   : null;
@@ -38,7 +39,7 @@ class ApiGuardNonAsn implements FilterInterface
         $GLOBALS["g_subagian"] = isset($result['data']['subagian']) ? $result['data']['subagian'] : null;
         $GLOBALS["g_idsubagian"]   = isset($result['data']['id_subagian'])   ? $result['data']['id_subagian']   : null;
 
-        if (!in_array($result['data']['previlege'],["admin","kabag","kasubag"])) {
+        if (in_array($result['data']['previlege'],["admin","kabag","kasubag"])) {
             Utils::httpResponse([
                 'code'    => 401,
                 'error'   => true,

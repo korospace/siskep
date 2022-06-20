@@ -57,7 +57,7 @@ class TokenUtil {
                     'data'  => $decoded,
                 ];
             }
-            else if (time() < $decoded['expired']) {
+            else if (time() < $decoded['expired']) { // <
                 // $dbresult = self::dbconnect()->table("user_token")
                 //     ->getWhere(["token" => $token])
                 //     ->getFirstRow();

@@ -4,7 +4,7 @@
 <?= $this->section('layoutJs'); ?>
 	<script>
 		//smoothscroll
-		$('#href_tugas_fungsi a').on('click', function (e) {
+		$('#href_penempatan a').on('click', function (e) {
 			e.preventDefault();
 			
 			$('#container #wraper main').animate({
@@ -51,16 +51,16 @@
             <span class="text-indigo-900">Dashboard</span>
         </a>
         <a
-            href="<?= base_url("/tugas_fungsi"); ?>"
-            class="<?= ($title=='tugas & fungsi') ? 'bg-gray-300 sm:bg-white shadow-md' : ''?> mt-5 p-3 flex items-center rounded-xl">
+            href="<?= base_url("/penempatan"); ?>"
+            class="<?= ($title=='penempatan') ? 'bg-gray-300 sm:bg-white shadow-md' : ''?> mt-5 p-3 flex items-center rounded-xl">
             <div
                 class="bg-indigo-900 w-8 h-8 flex justify-center items-center mr-3 rounded-md">
-                <i class="fas fa-clipboard-check text-white text-md"></i>
+                <i class="fas fa-sitemap text-white text-md"></i>
             </div>
-            <span class="text-indigo-900">Tugas & Fungsi</span>
+            <span class="text-indigo-900">Penempatan</span>
         </a>
-        <?php if ($title=='tugas & fungsi' && $previlege == 'admin') { ?>
-        <div id="href_tugas_fungsi" class="w-full pl-7 flex flex-col">
+        <?php if ($title=='penempatan' && $previlege == 'admin') { ?>
+        <div id="href_penempatan" class="w-full pl-7 flex flex-col">
             <a href="#header_table_bagian" class="pt-4 pb-2 text-zinc-500 hover:text-zinc-700 text-xs">
                 <i class="fas fa-angle-right mr-2"></i>
                 <span>bagian</span>
@@ -107,6 +107,15 @@
             </a>
         </div>
         <?php } ?>
+        <a
+            href="<?= base_url("/tugas"); ?>"
+            class="<?= ($title=='tugas') ? 'bg-gray-300 sm:bg-white shadow-md' : ''?> mt-5 p-3 flex items-center rounded-xl">
+            <div
+                class="bg-indigo-900 w-8 h-8 flex justify-center items-center mr-3 rounded-md">
+                <i class="fas fa-clipboard-check text-white text-md"></i>
+            </div>
+            <span class="text-indigo-900">tugas</span>
+        </a>
         <?php if ($previlege == 'admin') { ?>
         <div
             class="mt-5 p-3 flex items-center rounded-xl cursor-pointer"

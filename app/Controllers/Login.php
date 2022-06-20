@@ -74,12 +74,10 @@ class Login extends ResourceController
             else {
                 $dbresult = (array)$this->db->table("users")
                 ->select("users.id as id,users.password,users.id_previlege,user_type.type as previlege,user_detail.status,bagian.id as id_bagian,bagian.name as bagian,subagian.id as id_subagian,subagian.name as subagian")
-                ->join("user_type"        ,"users.id_previlege = user_type.id")
-                ->join("user_detail"      ,"users.id = user_detail.user_id", 'left')
-                ->join("user_detail_bag"  ,"users.id = user_detail_bag.user_id", 'left')
-                ->join("bagian"           ,"bagian.id = user_detail_bag.id_bagian", 'left')
-                ->join("user_detail_subag","users.id = user_detail_subag.user_id", 'left')
-                ->join("subagian"         ,"subagian.id = user_detail_subag.id_subagian", 'left')
+                ->join("user_type"   ,"users.id_previlege = user_type.id")
+                ->join("user_detail" ,"users.id = user_detail.user_id", 'left')
+                ->join("bagian"      ,"user_detail.id_bagian = bagian.id", 'left')
+                ->join("subagian"    ,"user_detail.id_subagian = subagian.id", 'left')
                 ->getWhere(["users.username"=>$post["username"]])
                 ->getFirstRow();
 

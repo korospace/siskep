@@ -3,11 +3,11 @@
  */
 let arrUser = [];
 async function getUsers(queries = "") {
-    $("#body_skeleton").toggleClass("hidden");
-    $("#body_main").toggleClass("hidden"); 
+    $(".body_skeleton").toggleClass("hidden");
+    $(".body_main").toggleClass("hidden"); 
     let httpResponse = await httpRequestGet(`${BASE_URL}/user/show?${queries}`);
-    $("#body_skeleton").toggleClass("hidden");
-    $("#body_main").toggleClass("hidden"); 
+    $(".body_skeleton").toggleClass("hidden");
+    $(".body_main").toggleClass("hidden"); 
     
     if (httpResponse.status === 200) {
         arrUser = httpResponse.data.data;
@@ -45,44 +45,72 @@ $('#search-user').on('keyup', function() {
  * Create Table row
  */
 function createTableRow(data) {
-  let list = "";
+  let listAsn = "";
+  let listNonAsn = "";
 
   data.forEach((e,i) => {
-      list += `<tr class="${(i%2==1) ? "bg-gray-200 hover:bg-gray-300" : "bg-gray-400 hover:bg-gray-500"} cursor-pointer">
-      <td class="p-4 text-gray-800">
-          ${++i}
-      </td>
-      <td class="p-4 text-gray-800">
-          ${e.username}
-      </td>
-      <td class="p-4 text-gray-800">
-          ${(e.nama_lengkap != null) ? e.nama_lengkap : '-'}
-      </td>
-      <td class="p-4 text-gray-800">
-        ${(e.nik != null) ? e.nik : '-'}
-      </td>
-      <td class="p-4 text-gray-800">
-          ${e.previlege}
-      </td>
-      <td class="p-4 text-gray-800">
-          ${e.bagian} ${(e.subagian) ? " | "+e.subagian : ""} 
-      </td>
-      <td class="p-4 text-gray-800">
-        <div
-          class="mb-1 px-4 py-1 rounded-md bg-amber-200 hover:bg-amber-400 text-yellow-700 text-xs cursor-pointer"
-          onclick="showCrudUsers('edit akun','${e.id}')">
-            edit
-        </div>
-        <div class="mb-1 px-4 py-1 rounded-md bg-red-200 hover:bg-red-400 text-red-700 text-xs cursor-pointer"
-        onclick="deleteUser('${e.id}',this)">
-          delete
-        </div>
-      </td>
-    </tr>`;
+      if (e.previlege == "nonasn") {
+        listNonAsn += `<tr class="${(i%2==1) ? "bg-gray-200 hover:bg-gray-300" : "bg-gray-400 hover:bg-gray-500"} cursor-pointer">
+        <td class="p-4 text-gray-800">
+            ${++i}
+        </td>
+        <td class="p-4 text-gray-800">
+            ${e.username}
+        </td>
+        <td class="p-4 text-gray-800">
+            ${(e.nama_lengkap != null) ? e.nama_lengkap : '-'}
+        </td>
+        <td class="p-4 text-gray-800">
+            ${(e.nik != null) ? e.nik : '-'}
+        </td>
+        <td class="p-4 text-gray-800">
+            ${(e.bagian != null) ? (e.subagian) ? e.bagian+" | "+e.subagian : e.bagian : '-'}  
+        </td>
+        <td class="p-4 text-gray-800">
+          <div
+            class="mb-1 px-4 py-1 rounded-md bg-amber-200 hover:bg-amber-400 text-yellow-700 text-xs cursor-pointer"
+            onclick="showCrudUsers('edit akun','${e.id}')">
+              edit
+          </div>
+          <div class="mb-1 px-4 py-1 rounded-md bg-red-200 hover:bg-red-400 text-red-700 text-xs cursor-pointer"
+          onclick="deleteUser('${e.id}',this)">
+            delete
+          </div>
+        </td>
+        </tr>`;
+      }
+      else {
+        listAsn += `<tr class="${(i%2==1) ? "bg-gray-200 hover:bg-gray-300" : "bg-gray-400 hover:bg-gray-500"} cursor-pointer">
+        <td class="p-4 text-gray-800">
+            ${++i}
+        </td>
+        <td class="p-4 text-gray-800">
+            ${e.username}
+        </td>
+        <td class="p-4 text-gray-800">
+            ${e.previlege}
+        </td>
+        <td class="p-4 text-gray-800">
+            ${(e.bagian != null) ? (e.subagian) ? e.bagian+" | "+e.subagian : e.bagian : '-'}  
+        </td>
+        <td class="p-4 text-gray-800">
+          <div
+            class="mb-1 px-4 py-1 rounded-md bg-amber-200 hover:bg-amber-400 text-yellow-700 text-xs cursor-pointer"
+            onclick="showCrudUsers('edit akun','${e.id}')">
+              edit
+          </div>
+          <div class="mb-1 px-4 py-1 rounded-md bg-red-200 hover:bg-red-400 text-red-700 text-xs cursor-pointer"
+          onclick="deleteUser('${e.id}',this)">
+            delete
+          </div>
+        </td>
+        </tr>`;
+      }
   });
 
   $('#total').html(data.length+" akun");
-  $("#body_main").html(list); 
+  $("#table_wraper_asn .body_main").html(listAsn); 
+  $("#table_wraper_nonasn .body_main").html(listNonAsn); 
 }
 
 /**
@@ -108,4 +136,17 @@ function deleteUser(userId,el) {
       },
       allowOutsideClick: () => !Swal.isLoading()
   })
+}
+
+/**
+ * Cetak Xlsx
+ */
+async function cetakXlsx(queries = "") {
+  showLoadingSpinner();
+  let httpResponse = await httpRequestGet(`${BASE_URL}/user/xlsx`);
+  hideLoadingSpinner();
+
+  if (httpResponse.status === 200) {
+    document.location.href = httpResponse.data.data.link;
+  } 
 }

@@ -24,11 +24,11 @@ class UserDetailSubagian extends Migration
 
         $this->forge->addForeignKey('user_id','users','id','CASCADE','CASCADE');
         $this->forge->addForeignKey('id_subagian','subagian','id','CASCADE','CASCADE');
-        $this->forge->createTable('user_detail_subag');
+        // $this->forge->createTable('user_detail_subag');
     }
 
     public function down()
     {
-        $this->forge->dropTable('user_detail_subag');
+        // $this->forge->dropTable('user_detail_subag');
     }
 }

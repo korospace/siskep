@@ -20,7 +20,7 @@ class SuratKeputusanModel extends Model
             $title       = $data['title'];
             $file        = $data['file_sk'];
             $typeFile    = explode('/',$file->getClientMimeType());
-            $newFileName = "sk_".$data['tgl_sk']."_".$no_sk.'.'.end($typeFile);
+            $newFileName = str_replace(' ', '_', $title)."_".$no_sk.'.'.end($typeFile);
             $file_sk     = $newFileName;
 
             $this->db->table("SK")->insert([
@@ -42,17 +42,12 @@ class SuratKeputusanModel extends Model
                 ]);
 
                 $this->db->table("user_detail")->where("user_id",$d["user_id"])->update([
+                    "no_sk"        => $no_sk,
+                    "id_bagian"    => $d["id_bagian"],
+                    "id_subagian"  => $d["id_subagian"],
                     "id_kedudukan" => $d["id_kedudukan"],
                     "masa_kerja"   => $d["masa_kerja"],
                     "income"       => $d["income"],
-                ]);
-
-                $this->db->table("user_detail_bag")->where("user_id",$d["user_id"])->update([
-                    "id_bagian" => $d["id_bagian"],
-                ]);
-
-                $this->db->table("user_detail_subag")->where("user_id",$d["user_id"])->update([
-                    "id_subagian" => $d["id_subagian"],
                 ]);
             }
 
@@ -82,6 +77,7 @@ class SuratKeputusanModel extends Model
 
         } 
         catch (\Throwable $th) {
+            $this->db->transRollback();
             return [
                 "error"   => true,
                 "code"    => 500,

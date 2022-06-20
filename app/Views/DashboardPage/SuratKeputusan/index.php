@@ -14,6 +14,8 @@
       let optionPegawai = "<option value=''>-- pilih pegawai --</option>";
       
       async function getDataPegawai(showLoading = true) {
+          optionPegawai = "<option value=''>-- pilih pegawai --</option>";
+          
           if (showLoading) {
             showLoadingSpinner();
           }

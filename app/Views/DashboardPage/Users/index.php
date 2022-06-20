@@ -38,14 +38,16 @@
                 data = httpResponse.data.data;
             }
 
-            let option = "<option value=''>-- pilih bagian --</option>";
-            
+            let optionCrud = "<option value=''>-- pilih bagian --</option>";
+            let optionFilter = "<option value=''>-- pilih bagian --</option>";
+        
             data.forEach(e => {
-                option += `<option value="${e.id}">${e.name}</option>`;
+                optionCrud += `<option value="${e.id}">${e.name}</option>`;
+                optionFilter += `<option value="${e.name}">${e.name}</option>`;
             });
 
-            $("#id_bagian_crudu").html(option);
-            $("#bagian_filus").html(option);
+            $("#id_bagian_crudu").html(optionCrud);
+            $("#bagian_filus").html(optionFilter);
         }
         getDataBagian();
     <?php } ?>
@@ -82,37 +84,41 @@
     }
     getDataKedudukan();
 
-    function previlegeOnChange(){
+    function previlegeOnChange(data = null){
         let e    = document.getElementById("id_previlege_crudu");
         // let value=e.options[e.selectedIndex].value;
-        let text =e.options[e.selectedIndex].text;
+        let text = (data != null) ? data : e.options[e.selectedIndex].text;
 
+        $("#id_bagian_wraper_crudu").addClass('hidden');
+        $("#id_subagian_wraper_crudu").addClass('hidden');
         $("#data_optional_line").addClass('hidden');
         $(".data_nonasn").addClass('hidden');
+        
+        if (PREVILEGE == "admin") {
+            $("#id_bagian_crudu").val("");
+            bagianOnChange1("");
+        }
 
         if (text == "kabag") {
-            $("#id_subagian_wraper_crudu").addClass('hidden');
+            $("#id_bagian_wraper_crudu").removeClass('hidden');
+        }
+        else if (text == "kasubag") {
+            $("#id_bagian_wraper_crudu").removeClass('hidden');
+            $("#id_subagian_wraper_crudu").removeClass('hidden');
         }
         else {
-            $("#id_subagian_wraper_crudu").removeClass('hidden');
-            $("#id_bagian_crudu").val("")
-            $("#id_subagian_crudu").val("")
+            $("#data_optional_line").removeClass('hidden');
+            $(".data_nonasn").removeClass('hidden');
 
-            if (text == "nonasn") {
-                $("#data_optional_line").removeClass('hidden');
-                $(".data_nonasn").removeClass('hidden');
-
-                if ($('#title_popup').html() == "buat akun") {
-                    $("#status_wraper_crudu").addClass("hidden");
-                }
-            } 
+            if ($('#title_popup').html() == "buat akun") {
+                $("#status_wraper_crudu").addClass("hidden");
+            }
         }
-
     }
 
     function bagianOnChange1(bagId = null){
         let e     = document.getElementById("id_bagian_crudu");
-        let value = bagId ? bagId : e.options[e.selectedIndex].value;
+        let value = bagId != null ? bagId : e.options[e.selectedIndex].value;
                 
         let option = "<option value=''>-- pilih subagian --</option>";
 
@@ -198,20 +204,8 @@
         $('.label_fly').removeClass('py-3 bg-zinc-400 animate-pulse');
         $('.label_fly >* ').removeClass('hidden');
 
-        if (data.subagian == null) {
-            $("#id_subagian_wraper_crudu").addClass('hidden');
-        }
-        else {
-            <?php if ($previlege != 'kasubag') {?>
-                bagianOnChange1(data.id_bagian);
-            <?php } ?>
-            $("#id_subagian_wraper_crudu").removeClass('hidden');
-        }
-
-        if (data.previlege != "nonasn") {
-            $("#data_optional_line").addClass('hidden');
-            $(".data_nonasn").addClass('hidden');
-        }
+        previlegeOnChange(data.previlege);
+        bagianOnChange1(data.id_bagian);
 
         for (const key in data) {
             if (key=="tgl_lahir") {
@@ -334,8 +328,14 @@
     }
 
     function cleanForm() {
+        $("#id_bagian_wraper_crudu").removeClass('hidden');
         $("#id_subagian_wraper_crudu").removeClass('hidden');
-        $("#id_subagian_crudu").html(`<option value="">-- pilih subagian --</option>`);
+        $("#data_optional_line").addClass('hidden');
+        $(".data_nonasn").addClass('hidden');
+        if (PREVILEGE == "admin") {
+            $("#id_bagian_crudu").val("");
+            bagianOnChange1("");
+        }
 
         // clear error message first
         $('.label_fly').addClass('border-zinc-400 focus-within:border-zinc-600');
@@ -405,24 +405,28 @@
     $('#filter_users').on('submit', async function(e) {
         e.preventDefault();
         
-        if (validateFilterUsers()) {
-            let queries = "";
-            let status  = "";
-            let form    = new FormData(e.target);
-            let pairTotal = 0;
+        let queries  = "";
+        let urutan   = "terbaru";
+        let bagian   = "semua bagian";
+        let subagian = "";
+        let form     = new FormData(e.target);
 
-            for (var pair of form.entries()) {
-                ++pairTotal;
-                status  += `${pair[1]} - `;
-                queries += `${pair[0]}=${pair[1]}&`;
-            }
-
-            status  = pairTotal == 1 ? status+" semua bagian" : "";
-            queries = queries.replace(/.$/,"");
-
-            $("#status_filter").html(status); // Views/DashboardPage/Users/index.php
-            getUsers(queries);                // in file users.js
+        if (form.get("urutan") != "") {
+            urutan   = form.get("urutan");
+            queries += "urutan="+form.get("urutan")+"&";
         }
+        if (form.get("bagian") != "") {
+            bagian   = form.get("bagian");
+            queries += "bagian="+form.get("bagian")+"&";
+        }
+        if (form.get("subagian") != "") {
+            subagian = " | "+form.get("subagian");
+            queries += "subagian="+form.get("subagian")+"&";
+        }
+
+        hideFilterUser();
+        $("#status_filter").html(urutan+" - "+bagian+subagian); // Views/DashboardPage/Users/index.php
+        getUsers(queries);                // in file users.js
     })
 
     function validateFilterUsers() {
@@ -454,7 +458,7 @@
     <!-- table users -->
     <div
       id="list_users_wraper"
-      class="flex-1 flex flex-col mt-8 backdrop-blur-md rounded-xl shadow-lg overflow-auto">
+      class="flex-1 mt-8 backdrop-blur-md rounded-xl shadow-lg">
         <div
           id="header_1"
           class="block md:flex justify-between px-8 pt-8">
@@ -465,10 +469,16 @@
                 </div>
                 <input id="search-user" type="text" class="px-4 py-2 outline-none" placeholder="nik/nama">
             </div>
-            <div 
-              class="w-full md:w-max flex justify-center items-center mt-5 md:mt-0 bg-indigo-900 active:bg-indigo-700 text-white rounded-lg px-4 py-2 cursor-pointer"
-              onclick="showCrudUsers('buat akun')">
-                <i class="fas fa-plus"></i>
+            <div class="w-full md:w-max flex">
+                <div 
+                  class="w-1/2 md:w-max flex justify-center items-center mt-5 md:mt-0 bg-indigo-900 hover:bg-indigo-700 active:bg-indigo-500 text-white rounded-lg px-4 py-2 cursor-pointer"
+                  onclick="showCrudUsers('buat akun')">
+                    <i class="fas fa-plus"></i>
+                </div>
+                <div class="ml-2 w-1/2 md:w-max flex justify-center items-center mt-5 md:mt-0 bg-sky-400 hover:bg-sky-500 active:bg-sky-700 text-white rounded-lg px-4 py-2 cursor-pointer"
+                onclick="cetakXlsx()">
+                    <i class="fas fa-file-csv text-xl"></i>
+                </div>
             </div>
         </div>
 
@@ -490,11 +500,71 @@
             </div>
         </div>
 
+        <?php if ($previlege != 'kasubag') { ?>
         <div
-          id="table_wraper"
-          class="relative flex-1 bg-white mt-6 overflow-auto">
+        id="table_wraper_asn"
+        class="relative h-max min-h-48 max-h-48 bg-white mt-6 overflow-auto">
             <table class="w-full text-center">
-              <thead class="sticky top-0 bg-white">
+            <thead class="sticky z-20 top-0 bg-white">
+                <tr class="font-semibold text-sm">
+                <td class="text-gray-400 p-3">
+                    No
+                </td>
+                <td class="text-gray-400 p-3">
+                    username
+                </td>
+                <td class="text-gray-400 p-3">
+                    jenis akun
+                </td>
+                <td class="text-gray-400 p-3">
+                    Penempatan
+                </td>
+                <td class="text-gray-400 p-3">
+                    Action
+                </td>
+                </tr>
+            </thead>
+            <tbody class="body_skeleton hidden">
+                <?php for ($i=0; $i < 10; $i++) { ?>
+                <tr>
+                    <td class="p-4">
+                    <span class="block w-full h-5 rounded-md bg-gray-400 animate-pulse"></span>
+                    </td>
+                    <td class="p-4">
+                    <span class="block w-full h-5 rounded-md bg-gray-400 animate-pulse"></span>
+                    </td>
+                    <td class="p-4">
+                    <span class="block w-full h-5 rounded-md bg-gray-400 animate-pulse"></span>
+                    </td>
+                    <td class="p-4">
+                    <span class="block w-full h-5 rounded-md bg-gray-400 animate-pulse"></span>
+                    </td>
+                    <td class="p-4">
+                    <span class="block w-full h-5 rounded-md bg-gray-400 animate-pulse"></span>
+                    </td>
+                </tr>
+                <?php } ?>
+            </tbody>
+            <tbody class="body_main">
+
+            </tbody>
+            </table>
+        </div>
+        <?php } ?>
+
+        <div class="mt-10 mb-10 flex items-center">
+            <div class="flex-1 border-b border-zinc-400"></div>
+            <h1 class="mx-3 text-zinc-600">
+                table non asn
+            </h1>
+            <div class="flex-1 border-b border-zinc-400"></div>
+        </div>
+
+        <div
+          id="table_wraper_nonasn"
+          class="relative h-max min-h-48 max-h-96 bg-white overflow-auto rounded-b-xl">
+            <table class="w-full text-center rounded-b-xl">
+              <thead class="sticky z-20 top-0 bg-white">
                 <tr class="font-semibold text-sm">
                   <td class="text-gray-400 p-3">
                     No
@@ -509,9 +579,6 @@
                     NIK
                   </td>
                   <td class="text-gray-400 p-3">
-                    jenis akun
-                  </td>
-                  <td class="text-gray-400 p-3">
                     Penempatan
                   </td>
                   <td class="text-gray-400 p-3">
@@ -519,12 +586,9 @@
                   </td>
                 </tr>
               </thead>
-              <tbody id="body_skeleton" class="hidden">
+              <tbody class="body_skeleton hidden">
                 <?php for ($i=0; $i < 10; $i++) { ?>
                   <tr>
-                    <td class="p-4">
-                      <span class="block w-full h-5 rounded-md bg-gray-400 animate-pulse"></span>
-                    </td>
                     <td class="p-4">
                       <span class="block w-full h-5 rounded-md bg-gray-400 animate-pulse"></span>
                     </td>
@@ -546,7 +610,7 @@
                   </tr>
                 <?php } ?>
               </tbody>
-              <tbody id="body_main">
+              <tbody class="body_main">
 
               </tbody>
             </table>
@@ -573,18 +637,18 @@
                 </span>
             </div>
 
-            <div class="w-full flex-1 overflow-auto">
+            <div class="w-full flex-1 overflow-auto mb-8">
                 <!-- User id -->
                 <input id="id_crudu" type="hidden" name="id" class="">
 
                 <div class="relative mt-8 flex items-center justify-center">
                     <div class="absolute z-10 left-8 right-8 border-b border-zinc-400"></div>
                     <h1 class="z-20 px-3 bg-white text-zinc-600">
-                        wajib diisi
+                        data asn & non asn
                     </h1>
                 </div>
 
-                <div id="data_mandatory_wraper" class="h-max w-full px-8 pt-12 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 grid-rows-11 md:grid-rows-6 lg:grid-rows-3 gap-x-4 gap-y-10 md:gap-y-12">
+                <div id="data_mandatory_wraper" class="h-max w-full px-8 pt-12 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 grid-rows-4 md:grid-rows-2 lg:grid-rows-1 gap-x-4 gap-y-10 md:gap-y-12">
                     <!-- Username -->
                     <div
                     id="username_wraper_crudu"
@@ -670,6 +734,17 @@
                         </label>
                     </div>
     
+                </div>
+
+                <div id="data_optional_line" class="hidden relative mt-8 flex items-center justify-center">
+                    <div class="absolute z-10 left-8 right-8 border-b border-zinc-400"></div>
+                    <h1 class="z-20 px-3 bg-white text-zinc-600">
+                        data non asn
+                    </h1>
+                </div>
+
+                <div id="data_optional_wraper" class="h-max w-full px-8 pt-12 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 grid-rows-10 md:grid-rows-5 lg:grid-rows-3 gap-x-4 gap-y-10 md:gap-y-12">
+                    
                     <!-- nik -->
                     <div
                     id="nik_wraper_crudu"
@@ -726,60 +801,6 @@
                         </label>
                     </div>
 
-                    <!-- kedudukan -->
-                    <div
-                    id="id_kedudukan_wraper_crudu"
-                    class="label_fly data_nonasn hidden w-full h-max relative border-2 border-zinc-400 focus-within:border-zinc-600 rounded-md">
-                        <select
-                        id="id_kedudukan_crudu" name="id_kedudukan" placeholder="kedudukan" autocomplete="off" 
-                        class="validate block px-4 py-2 w-full appearance-none focus:outline-none transition-all bg-white text-zinc-600 rounded-md" >
-                            <option value="">-- pilih kedudukan --</option>
-                        </select>
-                        <label 
-                        for="id_kedudukan_crudu" 
-                        class="py-2 absolute left-2 -top-8 z-0 text-zinc-600 cursor-text text-xs">
-                            kedudukan
-                        </label>
-                    </div>
-
-                    <!-- masa_kerja -->
-                    <div
-                    id="masa_kerja_wraper_crudu"
-                    class="label_fly data_nonasn hidden w-full h-max relative border-2 border-zinc-400 focus-within:border-zinc-600 rounded-md">
-                        <input
-                        id="masa_kerja_crudu" type="number" name="masa_kerja" placeholder="masa kerja" autocomplete="off" 
-                        class="validate block px-4 py-2 w-full appearance-none focus:outline-none transition-all bg-white text-zinc-600 rounded-md" />
-                        <label 
-                        for="masa_kerja_crudu" 
-                        class="py-2 absolute left-3 top-0 text-zinc-400 duration-300 origin-0 cursor-text">
-                            masa kerja
-                        </label>
-                    </div>
-
-                    <!-- income -->
-                    <div
-                    id="income_wraper_crudu"
-                    class="label_fly data_nonasn hidden w-full h-max relative border-2 border-zinc-400 focus-within:border-zinc-600 rounded-md">
-                        <input
-                        id="income_crudu" type="number" name="income" placeholder="masa kerja" autocomplete="off" 
-                        class="validate block px-4 py-2 w-full appearance-none focus:outline-none transition-all bg-white text-zinc-600 rounded-md" />
-                        <label 
-                        for="income_crudu" 
-                        class="py-2 absolute left-3 top-0 text-zinc-400 duration-300 origin-0 cursor-text">
-                            income
-                        </label>
-                    </div>
-                </div>
-
-                <div id="data_optional_line" class="hidden relative mt-8 flex items-center justify-center">
-                    <div class="absolute z-10 left-8 right-8 border-b border-zinc-400"></div>
-                    <h1 class="z-20 px-3 bg-white text-zinc-600">
-                        tidak wajib diisi
-                    </h1>
-                </div>
-
-                <div id="data_optional_wraper" class="h-max w-full px-8 pt-12 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 grid-rows-11 md:grid-rows-6 lg:grid-rows-3 gap-x-4 gap-y-10 md:gap-y-12">
-    
                     <!-- nama_lengkap -->
                     <div
                     id="nama_lengkap_wraper_crudu"
@@ -791,6 +812,9 @@
                         for="nama_lengkap_crudu" 
                         class="py-2 absolute left-3 top-0 text-zinc-400 duration-300 origin-0 cursor-text">
                             nama lengkap
+                            <small class="w-max text-gray-400 italic">
+                                (wajib)
+                            </small>
                         </label>
                     </div>
     
