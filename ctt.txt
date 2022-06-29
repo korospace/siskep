@@ -1,92 +1,11 @@
-1- bedakan warna status di table users
-
-<a href="${e.file_sk}" class="${PREVILEGE == "nonasn" ? "hidden" : ""} px-1.5 pt-1.5 pb-1 bg-sky-400 hover:bg-sky-500 active:bg-sky-600 text-white rounded-sm">
-    <i class="fas fa-file-csv text-xl"></i>
-</a>
-
-<div class="max-h-9 overflow-visible">
-    <div
-        class="w-full h-max relative border-2 border-zinc-400 focus-within:border-zinc-600 rounded-md">
-        <input
-            type="text" name=""
-            autocomplete="off" placeholder="nama" 
-            class="block p-2 w-max max-w-10 h-8 focus:outline-none bg-white text-sm text-zinc-600 rounded-md"
-            oninput="searchPegawai(this)" />
-    </div>
-    <div class="relative z-30 mt-1 max-w-xl max-h-20 bg-white text-xs text-left border-t border-x border-slate-300 overflow-y-auto shadow-lg">
-        <div class="p-1 hover:bg-gray-200 active:bg-gray-300 border-b border-slate-300 cursor-pointer">
-            <span style="display: -webkit-box;-webkit-line-clamp: 1;-webkit-box-orient: vertical;overflow: hidden;text-overflow: ellipsis;">
-                nama pegawai hahahaha hahahaha
-            </span>
-        </div>
-        <div class="p-1 hover:bg-gray-200 active:bg-gray-300 border-b border-slate-300 cursor-pointer">
-            <span style="display: -webkit-box;-webkit-line-clamp: 1;-webkit-box-orient: vertical;overflow: hidden;text-overflow: ellipsis;">
-                nama pegawai hahahaha hahahaha
-            </span>
-        </div>
-        <div class="p-1 hover:bg-gray-200 active:bg-gray-300 border-b border-slate-300 cursor-pointer">
-            <span style="display: -webkit-box;-webkit-line-clamp: 1;-webkit-box-orient: vertical;overflow: hidden;text-overflow: ellipsis;">
-                nama pegawai hahahaha hahahaha
-            </span>
-        </div>
-        <div class="p-1 hover:bg-gray-200 active:bg-gray-300 border-b border-slate-300 cursor-pointer">
-            <span style="display: -webkit-box;-webkit-line-clamp: 1;-webkit-box-orient: vertical;overflow: hidden;text-overflow: ellipsis;">
-                nama pegawai hahahaha hahahaha
-            </span>
-        </div>
-        <div class="p-1 hover:bg-gray-200 active:bg-gray-300 border-b border-slate-300 cursor-pointer">
-            <span style="display: -webkit-box;-webkit-line-clamp: 1;-webkit-box-orient: vertical;overflow: hidden;text-overflow: ellipsis;">
-                nama pegawai hahahaha hahahaha
-            </span>
-        </div>
-        <div class="p-1 hover:bg-gray-200 active:bg-gray-300 border-b border-slate-300 cursor-pointer">
-            <span style="display: -webkit-box;-webkit-line-clamp: 1;-webkit-box-orient: vertical;overflow: hidden;text-overflow: ellipsis;">
-                nama pegawai hahahaha hahahaha
-            </span>
-        </div>
-    </div>
-</div>
-
-<!-- kedudukan -->
-<div
-id="id_kedudukan_wraper_crudu"
-class="label_fly data_nonasn hidden w-full h-max relative border-2 border-zinc-400 focus-within:border-zinc-600 rounded-md">
-    <select
-    id="id_kedudukan_crudu" name="id_kedudukan" placeholder="kedudukan" autocomplete="off" 
-    class="validate block px-4 py-2 w-full appearance-none focus:outline-none transition-all bg-white text-zinc-600 rounded-md" >
-        <option value="">-- pilih kedudukan --</option>
-    </select>
-    <label 
-    for="id_kedudukan_crudu" 
-    class="py-2 absolute left-2 -top-8 z-0 text-zinc-600 cursor-text text-xs">
-        kedudukan
-    </label>
-</div>
-
-<!-- masa_kerja -->
-<div
-id="masa_kerja_wraper_crudu"
-class="label_fly data_nonasn hidden w-full h-max relative border-2 border-zinc-400 focus-within:border-zinc-600 rounded-md">
-    <input
-    id="masa_kerja_crudu" type="number" name="masa_kerja" placeholder="masa kerja" autocomplete="off" 
-    class="validate block px-4 py-2 w-full appearance-none focus:outline-none transition-all bg-white text-zinc-600 rounded-md" />
-    <label 
-    for="masa_kerja_crudu" 
-    class="py-2 absolute left-3 top-0 text-zinc-400 duration-300 origin-0 cursor-text">
-        masa kerja
-    </label>
-</div>
-
-<!-- income -->
-<div
-id="income_wraper_crudu"
-class="label_fly data_nonasn hidden w-full h-max relative border-2 border-zinc-400 focus-within:border-zinc-600 rounded-md">
-    <input
-    id="income_crudu" type="number" name="income" placeholder="masa kerja" autocomplete="off" 
-    class="validate block px-4 py-2 w-full appearance-none focus:outline-none transition-all bg-white text-zinc-600 rounded-md" />
-    <label 
-    for="income_crudu" 
-    class="py-2 absolute left-3 top-0 text-zinc-400 duration-300 origin-0 cursor-text">
-        income
-    </label>
-</div>
+Control panel username:	b7_31997837
+Control panel password:	**********
+Control panel URL:	cpanel.byethost7.com
+MySQL username	b7_31997837
+MySQL password:	**********
+MySQL hostname:	sql205.byethost7.com
+FTP username:	b7_31997837
+FTP password:	**********
+FTP host name:	ftp.byethost7.com
+Your Website URL:	http://siskep.byethost7.com
+ 	 

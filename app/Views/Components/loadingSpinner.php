@@ -21,12 +21,14 @@
 
         // hide spinner
         function hideLoadingSpinner() {
-            $('#loading').addClass('scale-75');
-            $('#bg_loading').addClass('opacity-0');
             setTimeout(() => {
-                $('#bg_loading').removeClass('z-60 flex');
-                $('#bg_loading').addClass('-z-1 none');
-            }, 500);
+                $('#loading').addClass('scale-75');
+                $('#bg_loading').addClass('opacity-0');
+                setTimeout(() => {
+                    $('#bg_loading').removeClass('z-60 flex');
+                    $('#bg_loading').addClass('-z-1 none');
+                }, 500);
+            }, 60);
         }
     </script>
 <?= $this->endSection(); ?>

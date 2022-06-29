@@ -44,7 +44,7 @@
             showLoadingSpinner();
             let httpResponse = await httpRequestGet(`${BASE_URL}/information/show`);
             hideLoadingSpinner();
-
+            
             if (httpResponse.status === 200) {
                 let data = httpResponse.data.data;
 
