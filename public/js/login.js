@@ -38,7 +38,7 @@ $('#form_login').on('submit', function(e) {
             // error email/password
             if (error.response.status == 400) {
                 showAlert({
-                    message:"<b>Username</b> atau <b>Password</b> salah!",
+                    message:error.response.data.message,
                     type:"warning",
                     autohide:true
                 })

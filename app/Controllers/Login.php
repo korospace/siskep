@@ -97,31 +97,40 @@ class Login extends ResourceController
                         ];
                     } 
                     else {
-                        $data = [
-                            "user_id" => $dbresult["id"],
-                            "token"   => TokenUtil::generateToken([
-                                "user_id"      => $dbresult["id"],
-                                "password"     => $post["password"],
-                                "status"       => $dbresult["status"],
-                                "id_previlege" => $dbresult["id_previlege"],
-                                "previlege"    => $dbresult["previlege"],
-                                "bagian"       => $dbresult["bagian"],
-                                "id_bagian"    => $dbresult["id_bagian"],
-                                "subagian"     => $dbresult["subagian"],
-                                "id_subagian"  => $dbresult["id_subagian"],
-                            ])
-                        ];
-
-                        // $this->db->table("user_token")->insert($data);
-
-                        $respond = [
-                            'code'    => 200,
-                            'error   '=> false,
-                            'message' => "login berhasil",
-                            'data' => [
-                                "token" => $data["token"]
-                            ],
-                        ];
+                        if ($dbresult["status"] == 'nonactive') {
+                            $respond = [
+                                'code'    => 400,
+                                'error'   => true,
+                                'message' => "Maaf, akun anda <b>dinonaktifkan<b>",
+                            ];
+                        }
+                        else {
+                            $data = [
+                                "user_id" => $dbresult["id"],
+                                "token"   => TokenUtil::generateToken([
+                                    "user_id"      => $dbresult["id"],
+                                    "password"     => $post["password"],
+                                    "status"       => $dbresult["status"],
+                                    "id_previlege" => $dbresult["id_previlege"],
+                                    "previlege"    => $dbresult["previlege"],
+                                    "bagian"       => $dbresult["bagian"],
+                                    "id_bagian"    => $dbresult["id_bagian"],
+                                    "subagian"     => $dbresult["subagian"],
+                                    "id_subagian"  => $dbresult["id_subagian"],
+                                ])
+                            ];
+    
+                            // $this->db->table("user_token")->insert($data);
+    
+                            $respond = [
+                                'code'    => 200,
+                                'error   '=> false,
+                                'message' => "login berhasil",
+                                'data' => [
+                                    "token" => $data["token"]
+                                ],
+                            ];
+                        }
 
                     }
                 }
